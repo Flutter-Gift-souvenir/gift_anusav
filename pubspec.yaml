@@ -1,0 +1,54 @@
+name: gift_anusav
+description: "A Flutter app for browsing Cambodian handmade gifts and souvenirs."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # State Management
+  provider: ^6.1.2
+
+  # Local Storage
+  shared_preferences: ^2.3.0
+
+  # Network & Images
+  cached_network_image: ^3.4.0
+  http: ^1.2.0
+
+  # Map
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
+  # UI Helpers
+  shimmer: ^3.0.0
+  smooth_page_indicator: ^1.2.0
+  carousel_slider: ^5.0.0
+  flutter_rating_bar: ^4.0.1
+  gap: ^3.0.1
+
+  # Icons & SVG
+  flutter_svg: ^2.0.10
+
+  # Video
+  video_player: ^2.9.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/mock/
