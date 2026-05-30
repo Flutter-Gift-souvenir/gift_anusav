@@ -1,1 +1,142 @@
-[]
+[
+  {
+    "id": "r001",
+    "productId": "p001",
+    "userId": "u001",
+    "userName": "Sophie Laurent",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
+    "rating": 5.0,
+    "comment": "Absolutely beautiful krama scarf! The quality is exceptional and the colors are vibrant. I bought three as gifts for my family and everyone loved them. Will definitely order again.",
+    "createdAt": "2024-11-15T08:30:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r002",
+    "productId": "p001",
+    "userId": "u002",
+    "userName": "James Thornton",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100",
+    "rating": 4.5,
+    "comment": "Great quality scarf. The weaving is incredibly detailed and you can tell it was made with care. Shipping was fast and it arrived beautifully packaged.",
+    "createdAt": "2024-10-22T14:15:00Z",
+    "photoUrls": [
+      "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=200"
+    ]
+  },
+  {
+    "id": "r003",
+    "productId": "p002",
+    "userId": "u003",
+    "userName": "Yuki Tanaka",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",
+    "rating": 5.0,
+    "comment": "The silver bracelet is stunning! The Angkor Wat motifs are so detailed and the craftsmanship is superb. I wear it every day and get so many compliments.",
+    "createdAt": "2024-12-01T10:00:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r004",
+    "productId": "p002",
+    "userId": "u004",
+    "userName": "Maria Garcia",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100",
+    "rating": 4.8,
+    "comment": "Bought this as a birthday gift for my sister. She was absolutely thrilled! The packaging was elegant and the bracelet itself is gorgeous. Highly recommend.",
+    "createdAt": "2024-11-28T16:45:00Z",
+    "photoUrls": [
+      "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=200"
+    ]
+  },
+  {
+    "id": "r005",
+    "productId": "p003",
+    "userId": "u005",
+    "userName": "David Chen",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100",
+    "rating": 4.7,
+    "comment": "The silk painting of the Apsara dancer is breathtaking. It now hangs in my living room and is always the first thing guests notice. The colors are rich and the detail is incredible.",
+    "createdAt": "2024-09-10T09:20:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r006",
+    "productId": "p004",
+    "userId": "u006",
+    "userName": "Emma Wilson",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100",
+    "rating": 5.0,
+    "comment": "The Kampot pepper set is a food lover's dream! The quality difference from regular store-bought pepper is night and day. The wooden gift box is also beautiful. Perfect gift for foodies.",
+    "createdAt": "2024-12-05T11:30:00Z",
+    "photoUrls": [
+      "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=200"
+    ]
+  },
+  {
+    "id": "r007",
+    "productId": "p004",
+    "userId": "u007",
+    "userName": "Pierre Dubois",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
+    "rating": 4.9,
+    "comment": "As a chef, I can confirm these are among the finest peppers I have ever used. The flavor profile is complex and aromatic. The story card about the farmer was a touching addition.",
+    "createdAt": "2024-11-18T13:00:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r008",
+    "productId": "p005",
+    "userId": "u008",
+    "userName": "Anna Kowalski",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100",
+    "rating": 4.6,
+    "comment": "The wooden elephant is beautifully carved and much larger than I expected. The wood grain is stunning and the finish is very smooth. A wonderful piece of Cambodian craftsmanship.",
+    "createdAt": "2024-10-30T15:20:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r009",
+    "productId": "p006",
+    "userId": "u009",
+    "userName": "Lena Schmidt",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
+    "rating": 4.5,
+    "comment": "The ceramic vase is a lovely piece of art. The earth tones and geometric patterns give it a very authentic Khmer feel. It looks perfect on my bookshelf.",
+    "createdAt": "2024-09-25T08:00:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r010",
+    "productId": "p007",
+    "userId": "u010",
+    "userName": "Mei Lin",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100",
+    "rating": 5.0,
+    "comment": "The silk scarf is absolutely luxurious. The ikat pattern is mesmerizing and the colors are so vibrant yet elegant. I receive compliments every time I wear it. Worth every penny.",
+    "createdAt": "2024-12-08T09:45:00Z",
+    "photoUrls": [
+      "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=200"
+    ]
+  },
+  {
+    "id": "r011",
+    "productId": "p008",
+    "userId": "u011",
+    "userName": "Tom Bradley",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100",
+    "rating": 4.3,
+    "comment": "Nice little souvenir from my Cambodia trip. The detail on the miniature Angkor Wat is impressive for its size. Arrived well packaged with no damage.",
+    "createdAt": "2024-08-14T17:30:00Z",
+    "photoUrls": []
+  },
+  {
+    "id": "r012",
+    "productId": "p003",
+    "userId": "u012",
+    "userName": "Isabella Rossi",
+    "userAvatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100",
+    "rating": 4.8,
+    "comment": "I ordered this silk painting as a wedding anniversary gift for my husband. The Apsara dancer painting is simply magical. The artist has incredible talent. We love it.",
+    "createdAt": "2024-11-02T12:00:00Z",
+    "photoUrls": []
+  }
+]
