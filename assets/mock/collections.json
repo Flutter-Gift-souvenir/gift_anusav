@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": "c001",
+    "title": "Khmer New Year Collection",
+    "description": "Celebrate Khmer New Year with our curated selection of traditional gifts and souvenirs. Each item in this collection represents the joy, color, and cultural richness of Cambodia's most beloved festival.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=600",
+    "occasion": "Khmer New Year",
+    "productIds": ["p001", "p003", "p006", "p007"],
+    "isFeatured": true,
+    "validUntil": "2025-04-30T23:59:59Z"
+  },
+  {
+    "id": "c002",
+    "title": "Wedding & Anniversary Gifts",
+    "description": "Find the perfect handcrafted gift for a wedding or anniversary. Our selection of elegant Cambodian artisan pieces makes for truly memorable and meaningful presents that will last a lifetime.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600",
+    "occasion": "Wedding",
+    "productIds": ["p002", "p003", "p007"],
+    "isFeatured": true,
+    "validUntil": null
+  },
+  {
+    "id": "c003",
+    "title": "Pchum Ben Offerings",
+    "description": "Honor your ancestors during Pchum Ben with our collection of traditional Cambodian items. These carefully selected products reflect the spiritual and cultural significance of this important festival.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600",
+    "occasion": "Pchum Ben",
+    "productIds": ["p001", "p005", "p008"],
+    "isFeatured": false,
+    "validUntil": "2025-10-15T23:59:59Z"
+  },
+  {
+    "id": "c004",
+    "title": "Foodie Gift Sets",
+    "description": "Delight the food lovers in your life with authentic Cambodian flavors. From the world-renowned Kampot pepper to traditional condiments, these gifts bring the taste of Cambodia to any kitchen.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=600",
+    "occasion": "Birthday",
+    "productIds": ["p004"],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c005",
+    "title": "Home Décor Essentials",
+    "description": "Transform your living space with authentic Cambodian artisan pieces. From hand-carved wood sculptures to hand-thrown ceramics, each item brings a touch of Khmer elegance to your home.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600",
+    "occasion": "Housewarming",
+    "productIds": ["p005", "p006", "p008"],
+    "isFeatured": true,
+    "validUntil": null
+  },
+  {
+    "id": "c006",
+    "title": "Traveler's Souvenir Pack",
+    "description": "The perfect collection for travelers looking to bring back authentic Cambodian memories. Lightweight, meaningful, and beautifully crafted — these souvenirs tell the story of Cambodia.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600",
+    "occasion": "Travel",
+    "productIds": ["p001", "p004", "p008"],
+    "isFeatured": false,
+    "validUntil": null
+  }
+]
