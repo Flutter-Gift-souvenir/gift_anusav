@@ -1,0 +1,57 @@
+[
+  {
+    "id": "s001",
+    "name": "Artisan Central",
+    "area": "Wat Phnom Area",
+    "distance": 0.5,
+    "rating": 4.9,
+    "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+    "latitude": 11.5764,
+    "longitude": 104.9282,
+    "icon": "temple"
+  },
+  {
+    "id": "s002",
+    "name": "Silk Weavers Hut",
+    "area": "Riverside Area",
+    "distance": 1.2,
+    "rating": 4.8,
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+    "latitude": 11.5664,
+    "longitude": 104.9312,
+    "icon": "question"
+  },
+  {
+    "id": "s003",
+    "name": "Lotus Ceramics",
+    "area": "BKK1 Area",
+    "distance": 2.4,
+    "rating": 4.7,
+    "imageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400",
+    "latitude": 11.5564,
+    "longitude": 104.9222,
+    "icon": "flower"
+  },
+  {
+    "id": "s004",
+    "name": "Khmer Silver House",
+    "area": "Toul Tom Poung",
+    "distance": 3.1,
+    "rating": 4.6,
+    "imageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
+    "latitude": 11.5464,
+    "longitude": 104.9182,
+    "icon": "diamond"
+  },
+  {
+    "id": "s005",
+    "name": "Kampot Pepper Store",
+    "area": "Daun Penh Area",
+    "distance": 3.8,
+    "rating": 4.9,
+    "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
+    "latitude": 11.5614,
+    "longitude": 104.9352,
+    "icon": "store"
+  }
+]

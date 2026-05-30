@@ -5,6 +5,7 @@ import '../models/artisan_model.dart';
 import '../models/review_model.dart';
 import '../models/collection_model.dart';
 import '../models/promotion_model.dart';
+import '../models/shop_model.dart';
 
 class MockRepository {
   MockRepository._(); // prevent instantiation
@@ -129,5 +130,12 @@ class MockRepository {
     final categories = products.map((p) => p.category).toSet().toList();
     categories.sort();
     return categories;
+  }
+
+  // --- Shops ---
+  static Future<List<Shop>> getShops() async {
+    final jsonString = await _loadJson('assets/mock/shops.json');
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((e) => Shop.fromJson(e)).toList();
   }
 }
