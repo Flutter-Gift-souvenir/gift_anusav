@@ -2,6 +2,8 @@
   {
     "id": "a001",
     "name": "Sokha Meas",
+    "masterTitle": "Master Weaver",
+    "totalSales": "1,240+",
     "photoUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400",
     "specialty": "Silk & Textile Weaving",
     "story": "Sokha learned the art of silk weaving from her grandmother at the age of 10 in Takeo province. After years of practice, she now runs a small workshop employing 12 local women, preserving traditional Khmer weaving techniques that date back over 1,000 years. Her pieces have been exhibited in France and Japan.",
@@ -11,11 +13,27 @@
     "yearsOfExperience": 18,
     "productIds": ["p001", "p007"],
     "skills": ["silk weaving", "ikat dyeing", "pattern design", "natural dyeing"],
-    "isVerified": true
+    "isVerified": true,
+    "atelierGallery": [
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?w=400",
+        "caption": "Silk Preparation"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
+        "caption": "Hand Looming"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1590727263595-15104d5da470?w=400",
+        "caption": "Natural Dyeing"
+      }
+    ]
   },
   {
     "id": "a002",
     "name": "Dara Chea",
+    "masterTitle": "Master Silversmith",
+    "totalSales": "850+",
     "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
     "specialty": "Traditional Silversmithing",
     "story": "Dara is a third-generation silversmith from Phnom Penh. He trained under his father and grandfather, mastering the art of repoussé and chasing techniques used to create intricate Angkor-inspired motifs. His workshop in the heart of Phnom Penh attracts visitors from around the world.",
@@ -25,11 +43,27 @@
     "yearsOfExperience": 22,
     "productIds": ["p002"],
     "skills": ["silversmithing", "repoussé", "chasing", "engraving"],
-    "isVerified": true
+    "isVerified": true,
+    "atelierGallery": [
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
+        "caption": "Silver Melting"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1573408301185-9519f94cabe3?w=400",
+        "caption": "Detail Engraving"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
+        "caption": "Final Polishing"
+      }
+    ]
   },
   {
     "id": "a003",
     "name": "Sreymom Heng",
+    "masterTitle": "Master Ceramicist",
+    "totalSales": "2,100+",
     "photoUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
     "specialty": "Silk Painting & Ceramics",
     "story": "Sreymom is a self-taught artist who discovered her passion for silk painting during the cultural revival movement in Siem Reap. She blends traditional Khmer iconography with contemporary art styles, creating pieces that bridge Cambodia's ancient heritage with modern aesthetics.",
@@ -39,11 +73,27 @@
     "yearsOfExperience": 12,
     "productIds": ["p003", "p006"],
     "skills": ["silk painting", "ceramics", "pottery", "illustration"],
-    "isVerified": true
+    "isVerified": true,
+    "atelierGallery": [
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600",
+        "caption": "Earth Preparation"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400",
+        "caption": "Wheel Throwing"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400",
+        "caption": "Kiln Firing"
+      }
+    ]
   },
   {
     "id": "a004",
     "name": "Bunna Keo",
+    "masterTitle": "Master Cultivator",
+    "totalSales": "3,450+",
     "photoUrl": "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=400",
     "specialty": "Kampot Pepper Farming",
     "story": "Bunna is a third-generation pepper farmer from Kampot who has dedicated his life to reviving the region's legendary pepper industry. After the near-destruction of Kampot pepper during the Khmer Rouge era, his family worked for decades to restore the ancient pepper gardens and obtain GI certification.",
@@ -53,11 +103,27 @@
     "yearsOfExperience": 15,
     "productIds": ["p004"],
     "skills": ["pepper farming", "natural cultivation", "packaging", "GI certification"],
-    "isVerified": true
+    "isVerified": true,
+    "atelierGallery": [
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
+        "caption": "Vine Harvesting"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400",
+        "caption": "Sun Drying"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=400",
+        "caption": "Hand Sorting"
+      }
+    ]
   },
   {
     "id": "a005",
     "name": "Virak Pov",
+    "masterTitle": "Master Carver",
+    "totalSales": "1,890+",
     "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400",
     "specialty": "Wood Carving & Stone Sculpting",
     "story": "Virak grew up near the temples of Kampong Thom, where he was inspired by the ancient stone carvings of the Khmer Empire. He apprenticed under a master carver for 7 years before opening his own studio. His work ranges from small souvenirs to large commissioned pieces for hotels and cultural institutions.",
@@ -67,6 +133,20 @@
     "yearsOfExperience": 20,
     "productIds": ["p005", "p008"],
     "skills": ["wood carving", "stone sculpting", "sandstone work", "finishing"],
-    "isVerified": true
+    "isVerified": true,
+    "atelierGallery": [
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
+        "caption": "Wood Selection"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400",
+        "caption": "Chisel Work"
+      },
+      {
+        "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+        "caption": "Sanding & Oiling"
+      }
+    ]
   }
 ]
