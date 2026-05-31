@@ -14,46 +14,86 @@ import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
 import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
+import '../features/shell/main_shell.dart'; // ← NEW
 
 class AppRouter {
   AppRouter._(); // prevent instantiation
 
   // --- Route Names ---
   static const String onboarding = '/onboarding';
-  static const String home = '/';
-  static const String detail = '/detail';
-  static const String artisan = '/artisan';
+  static const String home       = '/';
+  static const String detail     = '/detail';
+  static const String artisan    = '/artisan';
   static const String collection = '/collection';
-  static const String booking = '/booking';
-  static const String chat = '/chat';
-  static const String reviews = '/reviews';
-  static const String gallery = '/gallery';
-  static const String map = '/map';
-  static const String nearby = '/nearby';
-  static const String favorites = '/favorites';
+  static const String booking    = '/booking';
+  static const String chat       = '/chat';
+  static const String reviews    = '/reviews';
+  static const String gallery    = '/gallery';
+  static const String map        = '/map';
+  static const String nearby     = '/nearby';
+  static const String favorites  = '/favorites';
   static const String promotions = '/promotions';
-  static const String quiz = '/quiz';
+  static const String quiz       = '/quiz';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
     initialLocation: home,
     debugLogDiagnostics: true,
     routes: [
-      // --- Onboarding ---
+
+      // ─── Onboarding (no bottom nav) ──────────────────────────────────────
       GoRoute(
         path: onboarding,
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
       ),
 
-      // --- Home ---
-      GoRoute(
-        path: home,
-        name: 'home',
-        builder: (context, state) => const HomeScreen(),
+      // ─── Shell (screens WITH bottom nav bar) ─────────────────────────────
+      ShellRoute(
+        builder: (context, state, child) => MainShell(child: child),
+        routes: [
+
+          // Home
+          GoRoute(
+            path: home,
+            name: 'home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+
+          // Map
+          GoRoute(
+            path: map,
+            name: 'map',
+            builder: (context, state) => const MapScreen(),
+          ),
+
+          // Favorites
+          GoRoute(
+            path: favorites,
+            name: 'favorites',
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+
+          // Promotions
+          GoRoute(
+            path: promotions,
+            name: 'promotions',
+            builder: (context, state) => const PromotionsScreen(),
+          ),
+
+          // Quiz
+          GoRoute(
+            path: quiz,
+            name: 'quiz',
+            builder: (context, state) => const QuizScreen(),
+          ),
+
+        ],
       ),
 
-      // --- Product Detail ---
+      // ─── Detail screens (NO bottom nav bar) ──────────────────────────────
+
+      // Product Detail
       // Usage: context.push('/detail/p001')
       GoRoute(
         path: '$detail/:productId',
@@ -64,7 +104,7 @@ class AppRouter {
         },
       ),
 
-      // --- Artisan Profile ---
+      // Artisan Profile
       // Usage: context.push('/artisan/a001')
       GoRoute(
         path: '$artisan/:artisanId',
@@ -75,7 +115,7 @@ class AppRouter {
         },
       ),
 
-      // --- Collection Detail ---
+      // Collection Detail
       // Usage: context.push('/collection/c001')
       GoRoute(
         path: '$collection/:collectionId',
@@ -86,7 +126,7 @@ class AppRouter {
         },
       ),
 
-      // --- Booking ---
+      // Booking
       // Usage: context.push('/booking/p001')
       GoRoute(
         path: '$booking/:productId',
@@ -97,7 +137,7 @@ class AppRouter {
         },
       ),
 
-      // --- Chat ---
+      // Chat
       // Usage: context.push('/chat/a001')
       GoRoute(
         path: '$chat/:artisanId',
@@ -108,7 +148,7 @@ class AppRouter {
         },
       ),
 
-      // --- Reviews ---
+      // Reviews
       // Usage: context.push('/reviews/p001')
       GoRoute(
         path: '$reviews/:productId',
@@ -119,7 +159,7 @@ class AppRouter {
         },
       ),
 
-      // --- Gallery ---
+      // Gallery
       // Usage: context.push('/gallery/a001')
       GoRoute(
         path: '$gallery/:artisanId',
@@ -130,40 +170,13 @@ class AppRouter {
         },
       ),
 
-      // --- Map ---
-      GoRoute(
-        path: map,
-        name: 'map',
-        builder: (context, state) => const MapScreen(),
-      ),
-
-      // --- Nearby ---
+      // Nearby (no bottom nav — opened from Map screen)
       GoRoute(
         path: nearby,
         name: 'nearby',
         builder: (context, state) => const NearbyScreen(),
       ),
 
-      // --- Favorites ---
-      GoRoute(
-        path: favorites,
-        name: 'favorites',
-        builder: (context, state) => const FavoritesScreen(),
-      ),
-
-      // --- Promotions ---
-      GoRoute(
-        path: promotions,
-        name: 'promotions',
-        builder: (context, state) => const PromotionsScreen(),
-      ),
-
-      // --- Quiz ---
-      GoRoute(
-        path: quiz,
-        name: 'quiz',
-        builder: (context, state) => const QuizScreen(),
-      ),
     ],
 
     // --- Error Page ---
