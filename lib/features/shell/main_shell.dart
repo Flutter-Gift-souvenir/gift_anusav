@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../widgets/app_scaffold.dart'; // Make sure this path correctly finds your AppScaffold file
+import '../../widgets/app_scaffold.dart'; 
 
 class MainShell extends StatelessWidget {
   final Widget child;
@@ -14,14 +14,14 @@ class MainShell extends StatelessWidget {
     if (location.startsWith('/booking')) return 3;
     if (location.startsWith('/account')) return 4; 
     
-    return 0; // Default to Home ('/')
+    return 0; 
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
       currentIndex: _currentIndex(context),
-      body: child, // Feeds your screens directly into the custom scaffold
+      body: child, 
     );
   }
 }
