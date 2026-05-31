@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-// Note: Ensure your Product model is imported here if you are using it
-// import '../../models/product_model.dart';
+import '../../widgets/app_scaffold.dart';
 
 class ArtisanScreen extends StatelessWidget {
   final String artisanId;
@@ -12,7 +11,6 @@ class ArtisanScreen extends StatelessWidget {
   const ArtisanScreen({Key? key, required this.artisanId}) : super(key: key);
 
   Future<Map<String, dynamic>> _loadScreenData() async {
-    // Load Artisan
     final String artisanString = await rootBundle.loadString('assets/mock/artisans.json');
     final List<dynamic> artisanList = json.decode(artisanString);
     final artisanData = artisanList.firstWhere(
@@ -20,11 +18,9 @@ class ArtisanScreen extends StatelessWidget {
       orElse: () => artisanList.first
     );
 
-    // Load Products
     final String productString = await rootBundle.loadString('assets/mock/items.json');
     final List<dynamic> productList = json.decode(productString);
     
-    // Filter products
     final List<dynamic> artisanProducts = productList
         .where((product) => (artisanData['productIds'] as List).contains(product['id']))
         .toList();
@@ -41,255 +37,242 @@ class ArtisanScreen extends StatelessWidget {
       future: _loadScreenData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: Color(0xFFFDFBF7),
+          return const AppScaffold(
+            currentIndex: 4,
             body: Center(child: CircularProgressIndicator(color: Color(0xFF8B4513))),
           );
         }
 
         if (snapshot.hasError) {
-          return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
+          return AppScaffold(
+            currentIndex: 4,
+            body: Center(child: Text('Error: ${snapshot.error}')),
+          );
         }
 
         final artisan = snapshot.data!['artisan'];
         final products = snapshot.data!['products'] as List<dynamic>;
 
-        // Safely handle new JSON fields if they don't exist yet
         final String masterTitle = artisan['masterTitle'] ?? artisan['specialty'];
         final String totalSales = artisan['totalSales'] ?? "${artisan['productCount'] * 15}+";
 
-        return Scaffold(
-          backgroundColor: const Color(0xFFFDFBF7),
-          body: CustomScrollView(
-            slivers: [
-              // Immersive Hero Section
-              SliverAppBar(
-                expandedHeight: 450.0,
-                pinned: true,
-                backgroundColor: const Color(0xFF4A3B32),
-                iconTheme: const IconThemeData(color: Colors.white),
-                actions: [
-                  IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () {}),
-                  IconButton(icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white), onPressed: () {}),
-                  const Gap(8),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: artisan['photoUrl'],
-                        fit: BoxFit.cover,
-                      ),
-                      // Dark gradient overlay at bottom
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                            stops: const [0.5, 1.0],
+        return AppScaffold(
+          currentIndex: 4,
+          body: Container(
+            color: const Color(0xFFFDFBF7),
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 450.0,
+                  pinned: false,
+                  backgroundColor: const Color(0xFF4A3B32),
+                  iconTheme: const IconThemeData(color: Colors.white),
+                  actions: [
+                    IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () {}),
+                    IconButton(icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white), onPressed: () {}),
+                    const Gap(8),
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: artisan['photoUrl'],
+                          fit: BoxFit.cover,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                              stops: const [0.5, 1.0],
+                            ),
                           ),
                         ),
-                      ),
-                      // Artisan Details Overlay
-                      Positioned(
-                        bottom: 24,
-                        left: 24,
-                        right: 24,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF2C94C),
-                                borderRadius: BorderRadius.circular(20),
+                        Positioned(
+                          bottom: 24,
+                          left: 24,
+                          right: 24,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF2C94C),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.verified, size: 14, color: Color(0xFF8B4513)),
+                                    const Gap(4),
+                                    Text(
+                                      masterTitle.toUpperCase(),
+                                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
+                              const Gap(8),
+                              Text(
+                                artisan['name'],
+                                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+                              ),
+                              const Gap(16),
+                              Row(
                                 children: [
-                                  const Icon(Icons.verified, size: 14, color: Color(0xFF8B4513)),
-                                  const Gap(4),
-                                  Text(
-                                    masterTitle.toUpperCase(),
-                                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(0xFF8B4513),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                      ),
+                                      icon: const Icon(Icons.person_add_alt_1, size: 18),
+                                      label: const Text("Follow", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                                  const Gap(12),
+                                  Expanded(
+                                    child: OutlinedButton.icon(
+                                      onPressed: () {},
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        side: BorderSide(color: Colors.white.withOpacity(0.5)),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        backgroundColor: Colors.white.withOpacity(0.1),
+                                      ),
+                                      icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                                      label: const Text("Chat", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    ),
                                   ),
                                 ],
-                              ),
-                            ),
-                            const Gap(8),
-                            Text(
-                              artisan['name'],
-                              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
-                            ),
-                            const Gap(16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF8B4513),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    ),
-                                    icon: const Icon(Icons.person_add_alt_1, size: 18),
-                                    label: const Text("Follow", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                                const Gap(12),
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () {},
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      side: BorderSide(color: Colors.white.withOpacity(0.5)),
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                      backgroundColor: Colors.white.withOpacity(0.1),
-                                    ),
-                                    icon: const Icon(Icons.chat_bubble_outline, size: 18),
-                                    label: const Text("Chat", style: TextStyle(fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ],
-                            )
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildStatColumn('GIFTS', totalSales),
+                            _buildDivider(),
+                            _buildStatColumn('YEARS', artisan['yearsOfExperience'].toString()),
+                            _buildDivider(),
+                            _buildRatingColumn('RATING', artisan['rating'].toString()),
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(width: 24, height: 2, color: const Color(0xFF8B4513)),
+                                const Gap(8),
+                                const Text("Meet the Maker", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                              ],
+                            ),
+                            const Gap(16),
+                            Text(
+                              artisan['story'],
+                              style: const TextStyle(fontSize: 14, height: 1.6, color: Color(0xFF555555)),
+                            ),
+                            const Gap(40),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("Signature Collection", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                                TextButton(
+                                  onPressed: () {}, 
+                                  child: const Text("View All", style: TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.bold)),
+                                )
+                              ],
+                            ),
+                            const Gap(12),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 260,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return _buildNewProductCard(
+                              product['name'], 
+                              "\$${product['price'].toStringAsFixed(2)}", 
+                              "${(product['price'] * 4100).toInt()} KHR",
+                              product['imageUrl']
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Inside the Atelier", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                            const Gap(16),
+                            _buildGalleryGrid(),
+                            const Gap(40),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("Artisan Stories", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                                Row(
+                                  children: [
+                                    Text(artisan['rating'].toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF8B4513))),
+                                    const Icon(Icons.star, color: Color(0xFFF2C94C), size: 16),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const Gap(16),
+                            _buildReviewCard(
+                              initials: "JD", name: "Jane Doe", purchasedItem: "Lotus Bowl",
+                              reviewText: "The texture on Srey Mao's work is unlike anything I've seen. You can feel the history in every curve of the clay. Truly a masterpiece for my home.",
+                              avatarColor: const Color(0xFF475B6B),
+                            ),
+                            _buildReviewCard(
+                              initials: "MK", name: "Mean Kim", purchasedItem: "Clay Vase",
+                              reviewText: "Beautifully packaged and the story of the artisan made it such a special gift. Supporting local Cambodian talent through Kado has been wonderful.",
+                              avatarColor: const Color(0xFFF2C94C),
+                            ),
+                            const Gap(40),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
-              ),
-              
-              // Content Body
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stats Row
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatColumn('GIFTS', totalSales),
-                          _buildDivider(),
-                          _buildStatColumn('YEARS', artisan['yearsOfExperience'].toString()),
-                          _buildDivider(),
-                          _buildRatingColumn('RATING', artisan['rating'].toString()),
-                        ],
-                      ),
-                    ),
-
-                    // Meet the Maker
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(width: 24, height: 2, color: const Color(0xFF8B4513)),
-                              const Gap(8),
-                              const Text("Meet the Maker", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
-                            ],
-                          ),
-                          const Gap(16),
-                          Text(
-                            artisan['story'],
-                            style: const TextStyle(fontSize: 14, height: 1.6, color: Color(0xFF555555)),
-                          ),
-                          const Gap(40),
-
-                          // Signature Collection
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Signature Collection", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
-                              TextButton(
-                                onPressed: () {}, 
-                                child: const Text("View All", style: TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.bold)),
-                              )
-                            ],
-                          ),
-                          const Gap(12),
-                        ],
-                      ),
-                    ),
-
-                    // Horizontal Scrolling Products
-                    SizedBox(
-                      height: 260,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: products.length,
-                        itemBuilder: (context, index) {
-                          final product = products[index];
-                          return _buildNewProductCard(
-                            product['name'], 
-                            "\$${product['price'].toStringAsFixed(2)}", 
-                            "${(product['price'] * 4100).toInt()} KHR", // Dummy KHR conversion
-                            product['imageUrl']
-                          );
-                        },
-                      ),
-                    ),
-
-                    // Inside the Atelier (Gallery)
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Inside the Atelier", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
-                          const Gap(16),
-                          _buildGalleryGrid(), // Helper handles the UI layout for this
-                          const Gap(40),
-
-                          // Artisan Stories (Reviews)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Artisan Stories", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
-                              Row(
-                                children: [
-                                  Text(artisan['rating'].toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF8B4513))),
-                                  const Icon(Icons.star, color: Color(0xFFF2C94C), size: 16),
-                                ],
-                              )
-                            ],
-                          ),
-                          const Gap(16),
-                          // Hardcoded reviews for now to match UI perfectly
-                          _buildReviewCard(
-                            initials: "JD", name: "Jane Doe", purchasedItem: "Lotus Bowl",
-                            reviewText: "The texture on Srey Mao's work is unlike anything I've seen. You can feel the history in every curve of the clay. Truly a masterpiece for my home.",
-                            avatarColor: const Color(0xFF475B6B),
-                          ),
-                          _buildReviewCard(
-                            initials: "MK", name: "Mean Kim", purchasedItem: "Clay Vase",
-                            reviewText: "Beautifully packaged and the story of the artisan made it such a special gift. Supporting local Cambodian talent through Kado has been wonderful.",
-                            avatarColor: const Color(0xFFF2C94C),
-                          ),
-                          const Gap(40),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
     );
   }
-
-  // --- HELPER WIDGETS ---
 
   Widget _buildStatColumn(String label, String value) {
     return Column(
@@ -321,7 +304,6 @@ class ArtisanScreen extends StatelessWidget {
     return Container(height: 30, width: 1, color: Colors.grey.shade300);
   }
 
-  // Updated Product Card
   Widget _buildNewProductCard(String title, String usdPrice, String khrPrice, String imageUrl) {
     return Container(
       width: 160,
@@ -393,7 +375,6 @@ class ArtisanScreen extends StatelessWidget {
     );
   }
 
-  // Hardcoded Gallery Grid (Until JSON is updated)
   Widget _buildGalleryGrid() {
     return Column(
       children: [
