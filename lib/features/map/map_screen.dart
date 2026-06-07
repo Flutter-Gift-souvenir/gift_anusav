@@ -254,7 +254,7 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => context.go('/promotions'),
                         child: Text(
                           'View All',
                           style: AppTextStyles.labelMedium.copyWith(

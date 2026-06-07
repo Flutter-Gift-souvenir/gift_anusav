@@ -152,7 +152,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
               Icons.arrow_back_ios,
               color: AppColors.textPrimaryLight,
             ),
-            onPressed: () => context.pop(),
+            onPressed: () => context.go('/map'),
           ),
           Expanded(
             child: Text(
