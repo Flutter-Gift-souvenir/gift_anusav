@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/app_scaffold.dart';
 
 class ArtisanScreen extends StatelessWidget {
@@ -140,7 +141,7 @@ class ArtisanScreen extends StatelessWidget {
                                   const Gap(12),
                                   Expanded(
                                     child: OutlinedButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {context.push('/chat/$artisanId');},
                                       style: OutlinedButton.styleFrom(
                                         foregroundColor: Colors.white,
                                         side: BorderSide(color: Colors.white.withOpacity(0.5)),

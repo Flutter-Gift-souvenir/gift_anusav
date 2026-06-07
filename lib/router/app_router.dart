@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/home/home_screen.dart';
-import '../features/detail/detail_screen.dart';
+// import '../features/detail/detail_screen.dart';
 import '../features/artisan/artisan_screen.dart';
-import '../features/collection/collection_screen.dart';
-import '../features/booking/booking_screen.dart';
-import '../features/chat/chat_screen.dart';
-import '../features/reviews/reviews_screen.dart';
-import '../features/gallery/gallery_screen.dart';
+// import '../features/collection/collection_screen.dart';
+// import '../features/booking/booking_screen.dart';
+// import '../features/chat/chat_screen.dart';
+// import '../features/reviews/reviews_screen.dart';
+// import '../features/gallery/gallery_screen.dart';
 import '../features/map/map_screen.dart';
 import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
@@ -66,11 +66,11 @@ class AppRouter {
           ),
 
           // Favorites
-          GoRoute(
-            path: favorites,
-            name: 'favorites',
-            builder: (context, state) => const FavoritesScreen(),
-          ),
+          // GoRoute(
+          //   path: favorites,
+          //   name: 'favorites',
+          //   builder: (context, state) => const FavoritesScreen(),
+          // ),
 
           // Promotions
           GoRoute(
@@ -102,71 +102,71 @@ class AppRouter {
 
       // Product Detail
       // Usage: context.push('/detail/p001')
-      GoRoute(
-        path: '$detail/:productId',
-        name: 'detail',
-        builder: (context, state) {
-          final productId = state.pathParameters['productId']!;
-          return DetailScreen(productId: productId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$detail/:productId',
+      //   name: 'detail',
+      //   builder: (context, state) {
+      //     final productId = state.pathParameters['productId']!;
+      //     return DetailScreen(productId: productId);
+      //   },
+      // ),
 
       // Collection Detail
       // Usage: context.push('/collection/c001')
-      GoRoute(
-        path: '$collection/:collectionId',
-        name: 'collection',
-        builder: (context, state) {
-          final collectionId = state.pathParameters['collectionId']!;
-          return CollectionScreen(collectionId: collectionId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$collection/:collectionId',
+      //   name: 'collection',
+      //   builder: (context, state) {
+      //     final collectionId = state.pathParameters['collectionId']!;
+      //     return CollectionScreen(collectionId: collectionId);
+      //   },
+      // ),
 
       // Booking
       // Usage: context.push('/booking/p001')
-      GoRoute(
-        path: '$booking/:productId',
-        name: 'booking',
-        builder: (context, state) {
-          final productId = state.pathParameters['productId']!;
-          return BookingScreen(productId: productId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$booking/:productId',
+      //   name: 'booking',
+      //   builder: (context, state) {
+      //     final productId = state.pathParameters['productId']!;
+      //     return BookingScreen(productId: productId);
+      //   },
+      // ),
 
       // Chat
       // Usage: context.push('/chat/a001')
-      GoRoute(
-        path: '$chat/:artisanId',
-        name: 'chat',
-        builder: (context, state) {
-          final artisanId = state.pathParameters['artisanId']!;
-          return ChatScreen(artisanId: artisanId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$chat/:artisanId',
+      //   name: 'chat',
+      //   builder: (context, state) {
+      //     final artisanId = state.pathParameters['artisanId']!;
+      //     return ChatScreen(artisanId: artisanId);
+      //   },
+      // ),
 
       // Reviews
       // Usage: context.push('/reviews/p001')
-      GoRoute(
-        path: '$reviews/:productId',
-        name: 'reviews',
-        builder: (context, state) {
-          final productId = state.pathParameters['productId']!;
-          return ReviewsScreen(productId: productId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$reviews/:productId',
+      //   name: 'reviews',
+      //   builder: (context, state) {
+      //     final productId = state.pathParameters['productId']!;
+      //     return ReviewsScreen(productId: productId);
+      //   },
+      // ),
 
       // Gallery
       // Usage: context.push('/gallery/a001')
-      GoRoute(
-        path: '$gallery/:artisanId',
-        name: 'gallery',
-        builder: (context, state) {
-          final artisanId = state.pathParameters['artisanId']!;
-          return GalleryScreen(artisanId: artisanId);
-        },
-      ),
+      // GoRoute(
+      //   path: '$gallery/:artisanId',
+      //   name: 'gallery',
+      //   builder: (context, state) {
+      //     final artisanId = state.pathParameters['artisanId']!;
+      //     return GalleryScreen(artisanId: artisanId);
+      //   },
+      // ),
 
-      // Nearby (no bottom nav — opened from Map screen)
+      // Nearby (no bottom nav — opened from Map screen),
       GoRoute(
         path: nearby,
         name: 'nearby',
