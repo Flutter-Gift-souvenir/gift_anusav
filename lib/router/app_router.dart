@@ -6,7 +6,7 @@ import '../features/home/home_screen.dart';
 import '../features/artisan/artisan_screen.dart';
 // import '../features/collection/collection_screen.dart';
 // import '../features/booking/booking_screen.dart';
-// import '../features/chat/chat_screen.dart';
+ import '../features/chat/chat_screen.dart';
 // import '../features/reviews/reviews_screen.dart';
 // import '../features/gallery/gallery_screen.dart';
 import '../features/map/map_screen.dart';
@@ -180,6 +180,21 @@ class AppRouter {
         builder: (context, state) {
           final artisanId = state.pathParameters['artisanId']!;
           return ArtisanScreen(artisanId: artisanId);
+        },
+      ),
+
+      GoRoute(
+        path: '$chat/:artisanId',
+        name: 'chat',
+        // 1. Change 'builder' to 'pageBuilder'
+        pageBuilder: (context, state) {
+          final artisanId = state.pathParameters['artisanId']!;
+          
+          // 2. Wrap the screen in a MaterialPage and force a UniqueKey
+          return MaterialPage(
+            key: UniqueKey(), 
+            child: ChatScreen(artisanId: artisanId),
+          );
         },
       ),
     ],
