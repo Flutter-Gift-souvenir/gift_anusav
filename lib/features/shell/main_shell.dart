@@ -9,7 +9,7 @@ class MainShell extends StatelessWidget {
   int _currentIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     
-    if (location.startsWith('/favorites')) return 1;
+    if (location.startsWith('/gift')) return 1;
     if (location.startsWith('/map')) return 2;
     if (location.startsWith('/booking')) return 3;
     if (location.startsWith('/account')) return 4; 
