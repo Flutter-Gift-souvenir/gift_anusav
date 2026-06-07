@@ -11,10 +11,10 @@ import '../features/artisan/artisan_screen.dart';
 // import '../features/gallery/gallery_screen.dart';
 import '../features/map/map_screen.dart';
 import '../features/nearby/nearby_screen.dart';
-// import '../features/favorites/favorites_screen.dart';
-// import '../features/promotions/promotions_screen.dart';
-// import '../features/quiz/quiz_screen.dart';
-import '../features/shell/main_shell.dart'; // ← NEW
+import '../features/favorites/favorites_screen.dart';
+import '../features/promotions/promotions_screen.dart';
+import '../features/quiz/quiz_screen.dart';
+import '../features/shell/main_shell.dart';
 
 class AppRouter {
   AppRouter._(); // prevent instantiation
@@ -33,7 +33,7 @@ class AppRouter {
   static const String nearby = '/nearby';
   static const String favorites = '/favorites';
   static const String promotions = '/promotions';
-  // static const String quiz       = '/quiz';
+  static const String quiz = '/quiz';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -73,17 +73,27 @@ class AppRouter {
           // ),
 
           // Promotions
-          // GoRoute(
-          //   path: promotions,
-          //   name: 'promotions',
-          //   builder: (context, state) => const PromotionsScreen(),
-          // ),
+          GoRoute(
+            path: promotions,
+            name: 'promotions',
+            builder: (context, state) => const PromotionsScreen(),
+          ),
 
-          // Quiz (disabled)
+          // Quiz
+          GoRoute(
+            path: quiz,
+            name: 'quiz',
+            builder: (context, state) => const QuizScreen(),
+          ),
+
+          // ← MOVED INSIDE ShellRoute: Artisan Profile (WITH header + footer)
           // GoRoute(
-          //   path: quiz,
-          //   name: 'quiz',
-          //   builder: (context, state) => const QuizScreen(),
+          //   path: '$artisan/:artisanId',
+          //   name: 'artisan',
+          //   builder: (context, state) {
+          //     final artisanId = state.pathParameters['artisanId']!;
+          //     return ArtisanScreen(artisanId: artisanId);
+          //   },
           // ),
         ],
       ),
@@ -100,17 +110,6 @@ class AppRouter {
       //     return DetailScreen(productId: productId);
       //   },
       // ),
-
-      // Artisan Profile
-      // Usage: context.push('/artisan/a001')
-      GoRoute(
-        path: '$artisan/:artisanId',
-        name: 'artisan',
-        builder: (context, state) {
-          final artisanId = state.pathParameters['artisanId']!;
-          return ArtisanScreen(artisanId: artisanId);
-        },
-      ),
 
       // Collection Detail
       // Usage: context.push('/collection/c001')
@@ -173,8 +172,17 @@ class AppRouter {
         name: 'nearby',
         builder: (context, state) => const NearbyScreen(),
       ),
-    ],
 
+      // Artisan Profile (no bottom nav)
+      GoRoute(
+        path: '$artisan/:artisanId',
+        name: 'artisan',
+        builder: (context, state) {
+          final artisanId = state.pathParameters['artisanId']!;
+          return ArtisanScreen(artisanId: artisanId);
+        },
+      ),
+    ],
     // --- Error Page ---
     errorBuilder: (context, state) => Scaffold(
       body: Center(
