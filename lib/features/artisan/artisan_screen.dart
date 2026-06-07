@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../widgets/app_scaffold.dart';
 
 class ArtisanScreen extends StatelessWidget {
   final String artisanId;
@@ -38,17 +37,11 @@ class ArtisanScreen extends StatelessWidget {
       future: _loadScreenData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const AppScaffold(
-            currentIndex: 4,
-            body: Center(child: CircularProgressIndicator(color: Color(0xFF8B4513))),
-          );
+          return const Center(child: CircularProgressIndicator(color: Color(0xFF8B4513)));
         }
 
         if (snapshot.hasError) {
-          return AppScaffold(
-            currentIndex: 4,
-            body: Center(child: Text('Error: ${snapshot.error}')),
-          );
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         final artisan = snapshot.data!['artisan'];
@@ -57,9 +50,8 @@ class ArtisanScreen extends StatelessWidget {
         final String masterTitle = artisan['masterTitle'] ?? artisan['specialty'];
         final String totalSales = artisan['totalSales'] ?? "${artisan['productCount'] * 15}+";
 
-        return AppScaffold(
-          currentIndex: 4,
-          body: Container(
+        return Center(
+          child: Container(
             color: const Color(0xFFFDFBF7),
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),

@@ -14,6 +14,7 @@ import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
 import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
+import '../features/account/account_screen.dart';
 import '../features/shell/main_shell.dart';
 
 class AppRouter {
@@ -34,6 +35,7 @@ class AppRouter {
   static const String favorites = '/favorites';
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
+  static const String account = '/account';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -85,6 +87,13 @@ class AppRouter {
             path: quiz,
             name: 'quiz',
             builder: (context, state) => const QuizScreen(),
+          ),
+
+          // Account
+          GoRoute(
+            path: account,
+            name: 'account',
+            builder: (context, state) => const AccountScreen(),
           ),
 
           // ← MOVED INSIDE ShellRoute: Artisan Profile (WITH header + footer)
