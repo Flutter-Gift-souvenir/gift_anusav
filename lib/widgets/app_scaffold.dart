@@ -21,7 +21,7 @@ class AppScaffold extends StatelessWidget {
         context.go(AppRouter.home);
         break;
       case 1:
-        context.go(AppRouter.favorites);
+        context.go(AppRouter.gifts);
         break;
       case 2:
         context.go(AppRouter.map);
