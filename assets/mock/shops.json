@@ -8,7 +8,9 @@
     "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
     "latitude": 11.5764,
     "longitude": 104.9282,
-    "icon": "temple"
+    "icon": "temple",
+    "status": "Open Now",
+    "tags": ["SILK", "CERAMICS"]
   },
   {
     "id": "s002",
@@ -19,7 +21,9 @@
     "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
     "latitude": 11.5664,
     "longitude": 104.9312,
-    "icon": "question"
+    "icon": "question",
+    "status": "Closing Soon",
+    "tags": ["POTTERY", "WOOD"]
   },
   {
     "id": "s003",
@@ -30,7 +34,9 @@
     "imageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400",
     "latitude": 11.5564,
     "longitude": 104.9222,
-    "icon": "flower"
+    "icon": "flower",
+    "status": "Open Now",
+    "tags": ["CERAMICS", "POTTERY"]
   },
   {
     "id": "s004",
@@ -41,7 +47,9 @@
     "imageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
     "latitude": 11.5464,
     "longitude": 104.9182,
-    "icon": "diamond"
+    "icon": "diamond",
+    "status": "Open Now",
+    "tags": ["JEWELRY", "SILVER"]
   },
   {
     "id": "s005",
@@ -52,6 +60,8 @@
     "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
     "latitude": 11.5614,
     "longitude": 104.9352,
-    "icon": "store"
+    "icon": "store",
+    "status": "Closing Soon",
+    "tags": ["SPICES", "FOOD"]
   }
 ]
