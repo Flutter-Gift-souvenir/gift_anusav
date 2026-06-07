@@ -135,7 +135,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
               Icons.arrow_back_ios,
               color: AppColors.textPrimaryLight,
             ),
-            onPressed: () => context.pop(),
+            onPressed: () => context.go('/map'),
           ),
 
           // Title or Search Field
