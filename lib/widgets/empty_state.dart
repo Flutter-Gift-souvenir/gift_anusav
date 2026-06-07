@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/constants.dart';
-import 'custom_button.dart';
+import 'package:gift_anusav/widgets/custom_button.dart'; // Make sure the path matches your project
 
 class EmptyState extends StatelessWidget {
   final IconData icon;
@@ -64,15 +64,25 @@ class EmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            // --- Optional Button ---
-            if (buttonLabel != null && onButtonPressed != null) ...[
-              const Gap(32),
-              CustomButton(
-                label: buttonLabel!,
-                onPressed: onButtonPressed,
-                width: 200,
-              ),
-            ],
+// --- Optional Button ---
+              if (buttonLabel != null && onButtonPressed != null) ...[
+                const Gap(32),
+                ElevatedButton(
+                  onPressed: onButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: Text(
+                    buttonLabel!,
+                    style: AppTextStyles.labelMedium.copyWith(color: AppColors.white),
+                  ),
+                ),
+              ],
           ],
         ),
       ),
