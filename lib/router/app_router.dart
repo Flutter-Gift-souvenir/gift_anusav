@@ -46,6 +46,12 @@ class AppRouter {
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
       ),
+                // Promotions
+          GoRoute(
+            path: promotions,
+            name: 'promotions',
+            builder: (context, state) => const PromotionsScreen(),
+          ),
 
       // ─── Shell (screens WITH bottom nav bar) ─────────────────────────────
       ShellRoute(
@@ -72,12 +78,7 @@ class AppRouter {
           //   builder: (context, state) => const FavoritesScreen(),
           // ),
 
-          // Promotions
-          GoRoute(
-            path: promotions,
-            name: 'promotions',
-            builder: (context, state) => const PromotionsScreen(),
-          ),
+
 
           // Quiz
           GoRoute(
