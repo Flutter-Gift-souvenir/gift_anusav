@@ -14,9 +14,9 @@ import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
 import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
-import '../features/account/account_screen.dart';
 import '../features/shell/main_shell.dart';
 import '../features/gifts/gifts_screen.dart';
+
 
 class AppRouter {
   AppRouter._(); // prevent instantiation
@@ -27,15 +27,16 @@ class AppRouter {
   static const String detail = '/detail';
   static const String artisan = '/artisan';
   static const String collection = '/collection';
+  static const String gifts = '/gifts';
   static const String booking = '/booking';
   static const String chat = '/chat';
   static const String reviews = '/reviews';
   static const String gallery = '/gallery';
   static const String map = '/map';
   static const String nearby = '/nearby';
+  static const String favorites = '/favorites';
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
-  static const String account = '/account';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -66,30 +67,34 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
 
+          // Gifts
+          GoRoute(
+            path: gifts,
+            name: 'gifts',
+            builder: (context, state) => const GiftsScreen(),
+          ),
+
           // Map
           GoRoute(
             path: map,
             name: 'map',
             builder: (context, state) => const MapScreen(),
           ),
-          // Gifts
-          GoRoute(
-          path: gifts,
-          name: 'gifts',
-          builder: (context, state) => const GiftsScreen(),
-          ),
+
+          // Favorites
+          // GoRoute(
+          //   path: favorites,
+          //   name: 'favorites',
+          //   builder: (context, state) => const FavoritesScreen(),
+          // ),
+
+
+
           // Quiz
           GoRoute(
             path: quiz,
             name: 'quiz',
             builder: (context, state) => const QuizScreen(),
-          ),
-
-          // Account
-          GoRoute(
-            path: account,
-            name: 'account',
-            builder: (context, state) => const AccountScreen(),
           ),
 
           // ← MOVED INSIDE ShellRoute: Artisan Profile (WITH header + footer)
