@@ -16,6 +16,7 @@ import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/account/account_screen.dart';
 import '../features/shell/main_shell.dart';
+import '../features/gifts/gifts_screen.dart';
 
 class AppRouter {
   AppRouter._(); // prevent instantiation
@@ -32,7 +33,6 @@ class AppRouter {
   static const String gallery = '/gallery';
   static const String map = '/map';
   static const String nearby = '/nearby';
-  static const String favorites = '/favorites';
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
   static const String account = '/account';
@@ -72,16 +72,12 @@ class AppRouter {
             name: 'map',
             builder: (context, state) => const MapScreen(),
           ),
-
-          // Favorites
-          // GoRoute(
-          //   path: favorites,
-          //   name: 'favorites',
-          //   builder: (context, state) => const FavoritesScreen(),
-          // ),
-
-
-
+          // Gifts
+          GoRoute(
+          path: gifts,
+          name: 'gifts',
+          builder: (context, state) => const GiftsScreen(),
+          ),
           // Quiz
           GoRoute(
             path: quiz,
