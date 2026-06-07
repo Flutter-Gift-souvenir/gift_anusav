@@ -8,6 +8,8 @@ class Shop {
   final double latitude;
   final double longitude;
   final String icon;
+  final String status;
+  final List<String> tags;
 
   const Shop({
     required this.id,
@@ -19,6 +21,8 @@ class Shop {
     required this.latitude,
     required this.longitude,
     required this.icon,
+    required this.status,
+    required this.tags,
   });
 
   // Convert JSON map to Shop object
@@ -33,6 +37,8 @@ class Shop {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       icon: json['icon'] as String,
+      status: json['status'] as String,
+      tags: List<String>.from(json['tags'] as List<dynamic>),
     );
   }
 
