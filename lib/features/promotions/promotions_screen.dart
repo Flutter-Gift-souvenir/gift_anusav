@@ -9,6 +9,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/shimmer_card.dart';
+import '../../utils/helpers.dart';
 
 class PromotionsScreen extends StatefulWidget {
   const PromotionsScreen({super.key});
@@ -236,7 +237,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
 
           // View all
           TextButton(
-            onPressed: () {},
+            onPressed: () => AppHelpers.showComingSoon(context, 'Coupon list'),
             child: Text(
               'View all',
               style: AppTextStyles.labelMedium.copyWith(

@@ -9,6 +9,7 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/shimmer_card.dart';
+import '../../utils/helpers.dart';
 
 class NearbyScreen extends StatefulWidget {
   const NearbyScreen({super.key});
@@ -395,7 +396,7 @@ class _NearbyShopCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () => AppHelpers.showComingSoon(context, 'Directions'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
                           side: const BorderSide(
@@ -418,7 +419,7 @@ class _NearbyShopCard extends StatelessWidget {
                     const Gap(12),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => AppHelpers.showComingSoon(context, 'View Store'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: AppColors.white,

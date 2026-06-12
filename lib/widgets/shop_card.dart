@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
@@ -7,6 +6,7 @@ import '../models/shop_model.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/constants.dart';
+import '../utils/helpers.dart';
 
 class ShopCard extends StatelessWidget {
   final Shop shop;
@@ -85,7 +85,7 @@ class ShopCard extends StatelessWidget {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: onViewStore,
+                    onPressed: onViewStore ?? () => AppHelpers.showComingSoon(context, 'View Store'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: AppColors.white,

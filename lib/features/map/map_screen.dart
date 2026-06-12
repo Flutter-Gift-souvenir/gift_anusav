@@ -12,7 +12,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/shop_card.dart';
-
+import '../../utils/helpers.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -78,9 +78,9 @@ class _MapScreenState extends State<MapScreen> {
                   child: Column(
                     children: [
                       _MapButton(
-                        icon: Icons.my_location,
-                        onTap: _goToMyLocation,
-                      ),
+  icon: Icons.layers_outlined,
+  onTap: () => AppHelpers.showComingSoon(context, 'Map layers'),
+),
                       const Gap(8),
                       _MapButton(icon: Icons.layers_outlined, onTap: () {}),
                     ],

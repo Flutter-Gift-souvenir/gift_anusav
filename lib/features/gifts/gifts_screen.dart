@@ -8,6 +8,7 @@ import '../../utils/constants.dart';
 import '../../data/mock_repository.dart';
 import '../../models/product_model.dart';
 import '../../models/collection_model.dart';
+import '../../utils/helpers.dart';
 
 class GiftsScreen extends StatefulWidget {
   const GiftsScreen({super.key});
@@ -107,7 +108,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () => AppHelpers.showComingSoon(context, '$title - View All'),
             child: Text(
               'View All',
               style: AppTextStyles.labelMedium.copyWith(
@@ -411,7 +412,7 @@ class _GiftSetCard extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => AppHelpers.showComingSoon(context, 'Add to cart'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(
