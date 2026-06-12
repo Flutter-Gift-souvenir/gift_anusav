@@ -12,7 +12,7 @@ class MainShell extends StatelessWidget {
     if (location.startsWith('/gift')) return 1;
     if (location.startsWith('/map')) return 2;
     if (location.startsWith('/booking')) return 3;
-    if (location.startsWith('/account')) return 4; 
+    if (location.startsWith('/settings')) return 4; 
     
     return 0; 
   }

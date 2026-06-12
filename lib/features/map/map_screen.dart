@@ -13,6 +13,7 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/shop_card.dart';
 
+
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
