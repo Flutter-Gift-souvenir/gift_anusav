@@ -6,6 +6,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/app_scaffold.dart';
+import '../../utils/helpers.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -107,7 +108,7 @@ Text(
 
                   // Edit Profile
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => AppHelpers.showComingSoon(context, 'Edit Profile'),
                     child: Text(
                       'Edit Profile',
                       style: AppTextStyles.labelMedium.copyWith(
@@ -144,7 +145,7 @@ Text(
                 icon: Icons.translate,
                 label: 'Language',
                 subtitle: 'English/Khmer',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'Language settings'),
               ),
               // Notifications
               _SettingsTile(
@@ -153,7 +154,7 @@ Text(
                 trailing: Switch(
                   value: true,
                   activeColor: AppColors.primary,
-                  onChanged: (_) {},
+                  onChanged: (_) => AppHelpers.showComingSoon(context, 'Notifications'),
                 ),
               ),
             ]),
@@ -167,17 +168,17 @@ Text(
               _SettingsTile(
                 icon: Icons.shopping_bag_outlined,
                 label: 'My Orders',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'My Orders'),
               ),
               _SettingsTile(
                 icon: Icons.location_on_outlined,
                 label: 'Saved Addresses',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'Saved Addresses'),
               ),
               _SettingsTile(
                 icon: Icons.payment_outlined,
                 label: 'Payment Methods',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'Payment Methods'),
               ),
             ]),
 
@@ -190,12 +191,12 @@ Text(
               _SettingsTile(
                 icon: Icons.help_outline,
                 label: 'Help & Support',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'Help & Support'),
               ),
               _SettingsTile(
                 icon: Icons.info_outline,
                 label: 'About Anusav',
-                onTap: () {},
+                onTap: () => AppHelpers.showComingSoon(context, 'About Anusav'),
               ),
             ]),
 
@@ -205,7 +206,7 @@ Text(
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () => AppHelpers.showComingSoon(context, 'Logout'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
                   side: const BorderSide(color: AppColors.error, width: 1.5),

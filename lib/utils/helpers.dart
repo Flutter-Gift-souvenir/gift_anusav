@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'constants.dart';
+import '../theme/app_colors.dart';
 
 class AppHelpers {
   AppHelpers._(); // prevent instantiation
@@ -92,6 +93,24 @@ class AppHelpers {
       ),
     );
   }
+
+  // --- Show "Coming Soon" message for unfinished features ---
+static void showComingSoon(BuildContext context, [String? feature]) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        feature != null ? '$feature — Coming Soon!' : 'Coming Soon!',
+      ),
+      backgroundColor: AppColors.primary,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppConstants.buttonBorderRadius),
+      ),
+      margin: const EdgeInsets.all(AppConstants.defaultPadding),
+      duration: const Duration(seconds: 2),
+    ),
+  );
+}
 
   // --- Show a confirmation dialog ---
   static Future<bool> showConfirmDialog(
