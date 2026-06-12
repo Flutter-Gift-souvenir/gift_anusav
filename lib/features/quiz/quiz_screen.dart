@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
+import '../../models/product_model.dart';
+import '../../data/mock_repository.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -14,6 +16,19 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
+  @override
+void initState() {
+  super.initState();
+  _loadProducts();
+}
+
+Future<void> _loadProducts() async {
+  final products = await MockRepository.getProducts();
+  setState(() {
+    _allProducts = products;
+    _productsLoaded = true;
+  });
+}
   // --- State ---
   int _currentStep = 0;
   String? _selectedRecipient;
@@ -21,6 +36,8 @@ class _QuizScreenState extends State<QuizScreen> {
   String? _selectedBudget;
   String? _selectedOccasion;
   String? _selectedPreference;
+  List<Product> _allProducts = [];
+  bool _productsLoaded = false;
 
   // --- Quiz Data ---
   final List<Map<String, String>> _recipients = [
@@ -279,44 +296,245 @@ Widget _buildStep4() {
 }
 
 Widget _buildResults() {
+  if (!_productsLoaded) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(40),
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  final matched = _getMatchedProducts();
+  final topMatch = matched.isNotEmpty ? matched.first : null;
+  final others = matched.length > 1 ? matched.sublist(1, matched.length > 4 ? 4 : matched.length) : [];
+
+  const khrRate = 4000;
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Gap(24),
-      Center(
-        child: Container(
-          width: 96,
-          height: 96,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.card_giftcard,
-            size: 48,
-            color: AppColors.primary,
-          ),
-        ),
-      ),
-      const Gap(24),
-      Center(
-        child: Text(
-          'Your Perfect Gift!',
-          style: AppTextStyles.headlineMedium.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w800,
-          ),
+      const Gap(16),
+
+      // --- Title ---
+      Text(
+        'Handpicked for You',
+        style: AppTextStyles.headlineMedium.copyWith(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w800,
         ),
       ),
       const Gap(8),
+      Text(
+        'Based on your love for $_selectedPreference and ${_selectedOccasion?.toLowerCase()} gifts.',
+        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
+        textAlign: TextAlign.center,
+      ),
+
+      const Gap(20),
+
+      // --- Top Match Card ---
+      if (topMatch != null) ...[
+        Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+              child: CachedNetworkImage(
+                imageUrl: topMatch.imageUrl,
+                height: 220,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  height: 220,
+                  color: AppColors.grey200,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 220,
+                  color: AppColors.grey200,
+                  child: const Icon(Icons.image, color: AppColors.grey400),
+                ),
+              ),
+            ),
+            // Top Match badge
+            Positioned(
+              top: 12,
+              left: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.gold,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star, size: 14, color: AppColors.white),
+                    const Gap(4),
+                    Text(
+                      'TOP MATCH',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const Gap(12),
+
+        // Name + price row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    topMatch.name,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Gap(4),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 14, color: AppColors.gold),
+                      const Gap(4),
+                      Text(
+                        topMatch.rating.toString(),
+                        style: AppTextStyles.labelMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Gap(4),
+                      Text(
+                        '(${topMatch.reviewCount} reviews)',
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.grey600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '\$${topMatch.price.toStringAsFixed(2)}',
+                  style: AppTextStyles.titleLarge.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '${(topMatch.price * khrRate).toInt()} KHR',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.grey600,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        const Gap(12),
+
+        // Why it's a match box
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.grey100,
+            borderRadius: BorderRadius.circular(8),
+            border: const Border(
+              left: BorderSide(color: AppColors.gold, width: 3),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'WHY IT\'S A MATCH',
+                style: AppTextStyles.labelSmall.copyWith(
+                  color: AppColors.goldDark,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1,
+                ),
+              ),
+              const Gap(6),
+              Text(
+                '"Perfect for your $_selectedBudget budget and expressed interest in $_selectedPreference for $_selectedOccasion."',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textPrimaryLight,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const Gap(24),
+      ],
+
+      // --- Other Recommendations ---
+      if (others.isNotEmpty) ...[
+        Text(
+          'OTHER RECOMMENDATIONS',
+          style: AppTextStyles.labelMedium.copyWith(
+            color: AppColors.grey600,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1,
+          ),
+        ),
+        const Gap(12),
+        ...others.map((product) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _RecommendationCard(
+                product: product,
+                khrRate: khrRate,
+              ),
+            )),
+      ],
+
+      const Gap(16),
+
+      // --- Retake Quiz ---
       Center(
-        child: Text(
-          'Based on your answers, we recommend $_selectedPreference gifts for $_selectedRecipient on a $_selectedBudget budget for $_selectedOccasion.',
-          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-          textAlign: TextAlign.center,
+        child: TextButton.icon(
+          onPressed: () {
+            setState(() {
+              _currentStep = 0;
+              _selectedRecipient = null;
+              _selectedBudget = null;
+              _selectedOccasion = null;
+              _selectedPreference = null;
+              _selectedVibe = null;
+            });
+          },
+          icon: const Icon(Icons.refresh, size: 18, color: AppColors.gold),
+          label: Text(
+            'Retake Quiz',
+            style: AppTextStyles.labelLarge.copyWith(
+              color: AppColors.goldDark,
+              fontWeight: FontWeight.w700,
+              decoration: TextDecoration.underline,
+            ),
+          ),
         ),
       ),
-      const Gap(32),
+
+      const Gap(8),
+
+      // --- Browse All Collections ---
       SizedBox(
         width: double.infinity,
         child: ElevatedButton(
@@ -329,33 +547,20 @@ Widget _buildResults() {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Text(
-            'View Recommended Gifts',
-            style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-      const Gap(16),
-      Center(
-        child: TextButton(
-          onPressed: () {
-            setState(() {
-              _currentStep = 0;
-              _selectedRecipient = null;
-              _selectedBudget = null;
-              _selectedOccasion = null;
-              _selectedPreference = null;
-              _selectedVibe = null;
-            });
-          },
-          child: Text(
-            'Retake Quiz',
-            style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.grey600,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Browse All Collections',
+                style: AppTextStyles.labelLarge.copyWith(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Gap(8),
+              const Icon(Icons.arrow_forward, size: 18, color: AppColors.white),
+            ],
           ),
         ),
       ),
@@ -373,6 +578,37 @@ Widget _buildStepLabel(int step) {
       letterSpacing: 1.5,
     ),
   );
+}
+
+// --- Map quiz preference to product categories ---
+List<String> _preferenceCategories(String? preference) {
+  switch (preference) {
+    case 'Handcrafted':
+      return ['Silverware', 'Ceramics'];
+    case 'Wearables':
+      return ['Textiles'];
+    case 'Food & Spices':
+      return ['Food & Spices'];
+    case 'Home Decor':
+      return ['Wood Carvings', 'Ceramics', 'Paintings'];
+    default:
+      return [];
+  }
+}
+
+// --- Get matched products based on preference ---
+List<Product> _getMatchedProducts() {
+  final categories = _preferenceCategories(_selectedPreference);
+  final matched = _allProducts
+      .where((p) => categories.contains(p.category))
+      .toList();
+  if (matched.isEmpty) {
+    final sorted = List<Product>.from(_allProducts)
+      ..sort((a, b) => b.rating.compareTo(a.rating));
+    return sorted;
+  }
+  matched.sort((a, b) => b.rating.compareTo(a.rating));
+  return matched;
 }
 
   // --- Progress Bar ---
@@ -705,6 +941,112 @@ class _OptionCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// --- Recommendation Card ---
+class _RecommendationCard extends StatelessWidget {
+  final Product product;
+  final int khrRate;
+
+  const _RecommendationCard({
+    required this.product,
+    required this.khrRate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.grey200),
+      ),
+      child: Row(
+        children: [
+          // Image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              imageUrl: product.imageUrl,
+              width: 70,
+              height: 70,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: 70,
+                height: 70,
+                color: AppColors.grey200,
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 70,
+                height: 70,
+                color: AppColors.grey200,
+                child: const Icon(Icons.image, color: AppColors.grey400),
+              ),
+            ),
+          ),
+
+          const Gap(12),
+
+          // Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name,
+                  style: AppTextStyles.titleSmall.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Gap(4),
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 14, color: AppColors.gold),
+                    Text(
+                      ' ${product.rating}',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: AppColors.grey600,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(4),
+                Text(
+                  '\$${product.price.toStringAsFixed(2)}',
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  '${(product.price * khrRate).toInt()} KHR',
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: AppColors.grey600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Cart icon (visual only)
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.primary, width: 1.5),
+            ),
+            child: const Icon(
+              Icons.shopping_cart_outlined,
+              size: 18,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
       ),
     );
   }

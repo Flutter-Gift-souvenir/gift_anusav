@@ -30,7 +30,7 @@ class AppScaffold extends StatelessWidget {
         context.go(AppRouter.booking);
         break;
       case 4:
-        context.go('/account');
+        context.go(AppRouter.settings);
         break;
     }
   }

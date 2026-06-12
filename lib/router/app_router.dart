@@ -16,6 +16,7 @@ import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/shell/main_shell.dart';
 import '../features/gifts/gifts_screen.dart';
+import '../features/settings/settings_screen.dart';
 
 
 class AppRouter {
@@ -37,6 +38,7 @@ class AppRouter {
   static const String favorites = '/favorites';
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
+  static const String settings = '/settings';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -94,6 +96,9 @@ class AppRouter {
           //   builder: (context, state) => const FavoritesScreen(),
           // ),
 
+          // Settings
+
+
 
 
           // Quiz
@@ -110,6 +115,11 @@ class AppRouter {
           // ),
         ],
       ),
+      GoRoute(
+  path: settings,
+  name: 'settings',
+  builder: (context, state) => const SettingsScreen(),
+),
 
       // ─── Detail screens (NO bottom nav bar) ──────────────────────────────
 
