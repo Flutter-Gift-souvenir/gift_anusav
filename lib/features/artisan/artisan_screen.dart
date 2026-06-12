@@ -5,6 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../theme/app_colors.dart';
+
 class ArtisanScreen extends StatelessWidget {
   final String artisanId;
 
@@ -33,6 +35,8 @@ class ArtisanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return FutureBuilder<Map<String, dynamic>>(
       future: _loadScreenData(),
       builder: (context, snapshot) {
@@ -52,14 +56,14 @@ class ArtisanScreen extends StatelessWidget {
 
         return Center(
           child: Container(
-            color: const Color(0xFFFDFBF7),
+            color: isDark ? AppColors.backgroundDark : const Color(0xFFFDFBF7),
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
                   expandedHeight: 450.0,
                   pinned: false,
-                  backgroundColor: const Color(0xFF4A3B32),
+                  backgroundColor: isDark ? AppColors.surfaceDark : const Color(0xFF4A3B32),
                   iconTheme: const IconThemeData(color: Colors.white),
                   actions: [
                     IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () {}),
@@ -164,9 +168,9 @@ class ArtisanScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildStatColumn('GIFTS', totalSales),
-                            _buildDivider(),
+                            _buildDivider(context),
                             _buildStatColumn('YEARS', artisan['yearsOfExperience'].toString()),
-                            _buildDivider(),
+                            _buildDivider(context),
                             _buildRatingColumn('RATING', artisan['rating'].toString()),
                           ],
                         ),
@@ -180,19 +184,37 @@ class ArtisanScreen extends StatelessWidget {
                               children: [
                                 Container(width: 24, height: 2, color: const Color(0xFF8B4513)),
                                 const Gap(8),
-                                const Text("Meet the Maker", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                                Text(
+                                  "Meet the Maker", 
+                                  style: TextStyle(
+                                    fontSize: 20, 
+                                    fontWeight: FontWeight.bold, 
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF4A3B32)
+                                  )
+                                ),
                               ],
                             ),
                             const Gap(16),
                             Text(
                               artisan['story'],
-                              style: const TextStyle(fontSize: 14, height: 1.6, color: Color(0xFF555555)),
+                              style: TextStyle(
+                                fontSize: 14, 
+                                height: 1.6, 
+                                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF555555)
+                              ),
                             ),
                             const Gap(40),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Signature Collection", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                                Text(
+                                  "Signature Collection", 
+                                  style: TextStyle(
+                                    fontSize: 20, 
+                                    fontWeight: FontWeight.bold, 
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF4A3B32)
+                                  )
+                                ),
                                 TextButton(
                                   onPressed: () {}, 
                                   child: const Text("View All", style: TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.bold)),
@@ -212,6 +234,7 @@ class ArtisanScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final product = products[index];
                             return _buildNewProductCard(
+                              context,
                               product['name'], 
                               "\$${product['price'].toStringAsFixed(2)}", 
                               "${(product['price'] * 4100).toInt()} KHR",
@@ -225,14 +248,28 @@ class ArtisanScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Inside the Atelier", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                            Text(
+                              "Inside the Atelier", 
+                              style: TextStyle(
+                                fontSize: 20, 
+                                fontWeight: FontWeight.bold, 
+                                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF4A3B32)
+                              )
+                            ),
                             const Gap(16),
                             _buildGalleryGrid(),
                             const Gap(40),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Artisan Stories", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF4A3B32))),
+                                Text(
+                                  "Artisan Stories", 
+                                  style: TextStyle(
+                                    fontSize: 20, 
+                                    fontWeight: FontWeight.bold, 
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF4A3B32)
+                                  )
+                                ),
                                 Row(
                                   children: [
                                     Text(artisan['rating'].toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF8B4513))),
@@ -243,11 +280,13 @@ class ArtisanScreen extends StatelessWidget {
                             ),
                             const Gap(16),
                             _buildReviewCard(
+                              context,
                               initials: "JD", name: "Jane Doe", purchasedItem: "Lotus Bowl",
                               reviewText: "The texture on Srey Mao's work is unlike anything I've seen. You can feel the history in every curve of the clay. Truly a masterpiece for my home.",
                               avatarColor: const Color(0xFF475B6B),
                             ),
                             _buildReviewCard(
+                              context,
                               initials: "MK", name: "Mean Kim", purchasedItem: "Clay Vase",
                               reviewText: "Beautifully packaged and the story of the artisan made it such a special gift. Supporting local Cambodian talent through Kado has been wonderful.",
                               avatarColor: const Color(0xFFF2C94C),
@@ -293,19 +332,26 @@ class ArtisanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDivider() {
-    return Container(height: 30, width: 1, color: Colors.grey.shade300);
+  Widget _buildDivider(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(height: 30, width: 1, color: isDark ? AppColors.grey800 : Colors.grey.shade300);
   }
 
-  Widget _buildNewProductCard(String title, String usdPrice, String khrPrice, String imageUrl) {
+  Widget _buildNewProductCard(BuildContext context, String title, String usdPrice, String khrPrice, String imageUrl) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.03), 
+            blurRadius: 10, 
+            offset: const Offset(0, 4)
+          ),
         ],
       ),
       child: Column(
@@ -322,12 +368,12 @@ class ArtisanScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              const Positioned(
+              Positioned(
                 top: 8, right: 8,
                 child: CircleAvatar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: isDark ? AppColors.grey800 : Colors.white,
                   radius: 14,
-                  child: Icon(Icons.favorite_border, size: 16, color: Colors.grey),
+                  child: Icon(Icons.favorite_border, size: 16, color: isDark ? AppColors.grey400 : Colors.grey),
                 ),
               )
             ],
@@ -337,7 +383,16 @@ class ArtisanScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF333333)), maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(
+                  title, 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 13, 
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF333333)
+                  ), 
+                  maxLines: 2, 
+                  overflow: TextOverflow.ellipsis
+                ),
                 const Gap(8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -347,7 +402,7 @@ class ArtisanScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(usdPrice, style: const TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.bold, fontSize: 14)),
-                        Text(khrPrice, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                        Text(khrPrice, style: TextStyle(color: isDark ? AppColors.textSecondaryDark : Colors.grey, fontSize: 10)),
                       ],
                     ),
                     Container(
@@ -413,11 +468,16 @@ class ArtisanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewCard({required String initials, required String name, required String purchasedItem, required String reviewText, required Color avatarColor}) {
+  Widget _buildReviewCard(BuildContext context, {required String initials, required String name, required String purchasedItem, required String reviewText, required Color avatarColor}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFFF7F5F0), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.surfaceDark : const Color(0xFFF7F5F0), 
+        borderRadius: BorderRadius.circular(12)
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -429,8 +489,20 @@ class ArtisanScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF333333))),
-                    Text('Purchased: $purchasedItem', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    Text(
+                      name, 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF333333)
+                      )
+                    ),
+                    Text(
+                      'Purchased: $purchasedItem', 
+                      style: TextStyle(
+                        fontSize: 12, 
+                        color: isDark ? AppColors.textSecondaryDark : Colors.grey
+                      )
+                    ),
                   ],
                 ),
               ),
@@ -438,7 +510,15 @@ class ArtisanScreen extends StatelessWidget {
             ],
           ),
           const Gap(12),
-          Text('"$reviewText"', style: const TextStyle(fontStyle: FontStyle.italic, color: Color(0xFF555555), height: 1.5, fontSize: 14)),
+          Text(
+            '"$reviewText"', 
+            style: TextStyle(
+              fontStyle: FontStyle.italic, 
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF555555), 
+              height: 1.5, 
+              fontSize: 14
+            )
+          ),
         ],
       ),
     );

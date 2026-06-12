@@ -5,13 +5,14 @@ import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../widgets/app_scaffold.dart';
 
+import '../../theme/app_colors.dart';
+
 class CollectionScreen extends StatelessWidget {
   final String collectionId;
 
   const CollectionScreen({Key? key, required this.collectionId}) : super(key: key);
 
   Future<Map<String, dynamic>> _loadScreenData() async {
-    
     final String collectionString = await rootBundle.loadString('assets/mock/collections.json');
     final List<dynamic> collectionList = json.decode(collectionString);
     final collectionData = collectionList.firstWhere(
@@ -19,10 +20,8 @@ class CollectionScreen extends StatelessWidget {
       orElse: () => collectionList.first
     );
 
-    
     final String productString = await rootBundle.loadString('assets/mock/items.json');
     final List<dynamic> productList = json.decode(productString);
-    
     
     final List<dynamic> collectionProducts = productList
         .where((product) => (collectionData['productIds'] as List).contains(product['id']))
@@ -36,10 +35,11 @@ class CollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return FutureBuilder<Map<String, dynamic>>(
       future: _loadScreenData(),
       builder: (context, snapshot) {
-        
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const AppScaffold(
             currentIndex: 1, 
@@ -47,7 +47,6 @@ class CollectionScreen extends StatelessWidget {
           );
         }
 
-      
         if (snapshot.hasError) {
           return AppScaffold(
             currentIndex: 1,
@@ -61,15 +60,14 @@ class CollectionScreen extends StatelessWidget {
         return AppScaffold(
           currentIndex: 1,
           body: Container(
-            color: const Color(0xFFFDFBF7),
+            color: isDark ? AppColors.backgroundDark : const Color(0xFFFDFBF7),
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-               
                 SliverAppBar(
                   expandedHeight: 300.0,
                   pinned: true,
-                  backgroundColor: const Color(0xFF4A3B32),
+                  backgroundColor: isDark ? AppColors.surfaceDark : const Color(0xFF4A3B32),
                   iconTheme: const IconThemeData(color: Colors.white),
                   actions: [
                     IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () {}),
@@ -77,7 +75,7 @@ class CollectionScreen extends StatelessWidget {
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
                       collection['title'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
                     ),
                     centerTitle: true,
                     background: Stack(
@@ -87,14 +85,12 @@ class CollectionScreen extends StatelessWidget {
                           imageUrl: collection['coverImageUrl'],
                           fit: BoxFit.cover,
                         ),
-                        
                         Container(color: Colors.black.withOpacity(0.4)),
                       ],
                     ),
                   ),
                 ),
 
-                
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -121,17 +117,25 @@ class CollectionScreen extends StatelessWidget {
                         Text(
                           collection['description'],
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 15, color: Color(0xFF555555), height: 1.6),
+                          style: TextStyle(
+                            fontSize: 15, 
+                            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF555555), 
+                            height: 1.6
+                          ),
                         ),
                         const Gap(32),
-                        const Divider(color: Color(0xFFE0D8D0)),
+                        Divider(color: isDark ? AppColors.grey800 : const Color(0xFFE0D8D0)),
                         const Gap(16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "${products.length} Exclusive Items",
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF4A3B32)),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold, 
+                                fontSize: 16, 
+                                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF4A3B32)
+                              ),
                             ),
                             const Icon(Icons.tune, color: Color(0xFF8B4513)),
                           ],
@@ -141,7 +145,6 @@ class CollectionScreen extends StatelessWidget {
                   ),
                 ),
 
-                
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   sliver: SliverGrid(
@@ -154,13 +157,12 @@ class CollectionScreen extends StatelessWidget {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final product = products[index];
-                        return _buildGridProductCard(product);
+                        return _buildGridProductCard(context, product);
                       },
                       childCount: products.length,
                     ),
                   ),
                 ),
-                
                 
                 const SliverToBoxAdapter(child: Gap(40)),
               ],
@@ -171,20 +173,24 @@ class CollectionScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildGridProductCard(BuildContext context, Map<String, dynamic> product) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  Widget _buildGridProductCard(Map<String, dynamic> product) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.04), 
+            blurRadius: 10, 
+            offset: const Offset(0, 4)
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Expanded(
             child: Stack(
               fit: StackFit.expand,
@@ -196,12 +202,12 @@ class CollectionScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                const Positioned(
+                Positioned(
                   top: 8, right: 8,
                   child: CircleAvatar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: isDark ? AppColors.grey800 : Colors.white,
                     radius: 14,
-                    child: Icon(Icons.favorite_border, size: 16, color: Colors.grey),
+                    child: Icon(Icons.favorite_border, size: 16, color: isDark ? AppColors.grey400 : Colors.grey),
                   ),
                 )
               ],
@@ -215,7 +221,11 @@ class CollectionScreen extends StatelessWidget {
               children: [
                 Text(
                   product['name'], 
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF333333)), 
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold, 
+                    fontSize: 13, 
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF333333)
+                  ), 
                   maxLines: 1, 
                   overflow: TextOverflow.ellipsis
                 ),
