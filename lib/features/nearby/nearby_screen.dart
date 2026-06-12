@@ -487,41 +487,49 @@ class _DistanceChip extends StatelessWidget {
   });
 
   void _showOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Distance',
-              style: AppTextStyles.titleLarge.copyWith(
-                color: AppColors.primary,
-              ),
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: isDark ? AppColors.surfaceDark : AppColors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) => Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Distance',
+            style: AppTextStyles.titleLarge.copyWith(
+              color: AppColors.primary,
             ),
-            const Gap(12),
-            ...options.map(
-              (option) => ListTile(
-                title: Text(option, style: AppTextStyles.bodyLarge),
-                trailing: value == option
-                    ? const Icon(Icons.check, color: AppColors.primary)
-                    : null,
-                onTap: () {
-                  onChanged(option);
-                  Navigator.pop(context);
-                },
+          ),
+          const Gap(12),
+          ...options.map(
+            (option) => ListTile(
+              title: Text(
+                option,
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.textPrimaryLight,
+                ),
               ),
+              trailing: value == option
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                onChanged(option);
+                Navigator.pop(context);
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
