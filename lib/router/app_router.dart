@@ -19,6 +19,7 @@ import '../features/gifts/gifts_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/edit_profile_screen.dart';
  import '../features/settings/saved_addresses_screen.dart';
+import '../features/settings/add_address_screen.dart';
 
 
 
@@ -44,6 +45,7 @@ class AppRouter {
   static const String settings = '/settings';
   static const String editProfile = '/edit-profile';
   static const String savedAddresses = '/saved-addresses';
+  static const String addAddress = '/add-address';
 
 
   // --- Router Config ---
@@ -123,7 +125,13 @@ class AppRouter {
           // ),
         ],
       ),
-      // Saved Addresses (no bottom nav — opened from Settings)
+      // Add New Address (no bottom nav — opened from Saved Addresses)
+GoRoute(
+  path: addAddress,
+  name: 'addAddress',
+  builder: (context, state) => const AddAddressScreen(),
+),
+      //Saved Addresses (no bottom nav — opened from Settings)
 GoRoute(
   path: savedAddresses,
   name: 'savedAddresses',

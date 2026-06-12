@@ -157,8 +157,7 @@ class SavedAddressesScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () =>
-                            AppHelpers.showComingSoon(context, 'Add New Address'),
+                        onPressed: () => context.push('/add-address'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: AppColors.white,
