@@ -37,15 +37,21 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final headerTextColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final navBgColor = isDark ? AppColors.surfaceDark : AppColors.white;
+    final shadowColor = isDark ? AppColors.black.withOpacity(0.25) : AppColors.black.withOpacity(0.06);
+
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // --- Header ---
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundLight,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.menu,
-            color: AppColors.textPrimaryLight,
+            color: headerTextColor,
           ),
           onPressed: () {
             // TODO: open drawer
@@ -61,9 +67,9 @@ class AppScaffold extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.shopping_bag_outlined,
-              color: AppColors.textPrimaryLight,
+              color: headerTextColor,
             ),
             onPressed: () {
               // TODO: open cart
@@ -78,10 +84,10 @@ class AppScaffold extends StatelessWidget {
       // --- Footer ---
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: navBgColor,
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.06),
+              color: shadowColor,
               blurRadius: 12,
               offset: const Offset(0, -4),
             ),
@@ -155,6 +161,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final unselectedColor = isDark ? AppColors.textSecondaryDark : AppColors.grey600;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -170,7 +179,7 @@ class _NavItem extends StatelessWidget {
             Icon(
               isSelected ? activeIcon : icon,
               size: 22,
-              color: isSelected ? AppColors.white : AppColors.grey600,
+              color: isSelected ? AppColors.white : unselectedColor,
             ),
             if (isSelected) ...[
               const Gap(6),

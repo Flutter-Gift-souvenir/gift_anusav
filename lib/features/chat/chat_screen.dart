@@ -92,6 +92,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (_isLoading || _artisan == null) {
       return const Scaffold(
         backgroundColor: AppColors.backgroundLight,
@@ -100,12 +102,11 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F5F0), // A slightly cooler background for chat
+      backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF7F5F0),
       appBar: _buildChatAppBar(context),
       body: SafeArea(
         child: Column(
           children: [
-            
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
@@ -121,8 +122,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
               ),
             ),
-
-            
             _buildMessageInput(),
           ],
         ),
@@ -130,14 +129,15 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-
-
   PreferredSizeWidget _buildChatAppBar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final headerTextColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+
     return AppBar(
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.white,
       elevation: 1,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.textPrimaryLight, size: 20),
+        icon: Icon(Icons.arrow_back_ios_new, color: headerTextColor, size: 20),
         onPressed: () => context.pop(),
       ),
       title: Row(
@@ -152,7 +152,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Text(
                 _artisan!.name,
-                style: AppTextStyles.titleMedium,
+                style: AppTextStyles.titleMedium.copyWith(color: headerTextColor),
               ),
               Row(
                 children: [
@@ -161,7 +161,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
                   ),
                   const Gap(4),
-                  Text('Online', style: AppTextStyles.labelSmall.copyWith(color: AppColors.grey600)),
+                  Text(
+                    'Online', 
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+                    )
+                  ),
                 ],
               )
             ],
@@ -170,7 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.more_vert, color: AppColors.textPrimaryLight),
+          icon: Icon(Icons.more_vert, color: headerTextColor),
           onPressed: () {},
         ),
       ],
@@ -178,12 +183,14 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble({required String text, required bool isMe, required String time}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75, // Bubble max width
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         child: Column(
           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -191,7 +198,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isMe ? AppColors.primary : AppColors.white,
+                color: isMe ? AppColors.primary : (isDark ? AppColors.surfaceDark : AppColors.white),
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
                   topRight: const Radius.circular(16),
@@ -205,13 +212,18 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Text(
                 text,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: isMe ? AppColors.white : AppColors.textPrimaryLight,
+                  color: isMe ? AppColors.white : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
                   height: 1.4,
                 ),
               ),
             ),
             const Gap(4),
-            Text(time, style: AppTextStyles.labelSmall.copyWith(color: AppColors.grey400)),
+            Text(
+              time, 
+              style: AppTextStyles.labelSmall.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.grey400
+              )
+            ),
           ],
         ),
       ),
@@ -219,10 +231,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageInput() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.white,
         boxShadow: [
           BoxShadow(color: AppColors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -4)),
         ],
@@ -230,7 +244,7 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.add_photo_alternate_outlined, color: AppColors.grey600),
+            icon: Icon(Icons.add_photo_alternate_outlined, color: isDark ? AppColors.textSecondaryDark : AppColors.grey600),
             onPressed: () {},
           ),
           const Gap(8),
@@ -238,11 +252,12 @@ class _ChatScreenState extends State<ChatScreen> {
             child: TextField(
               controller: _textController,
               maxLines: null, 
+              style: TextStyle(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight),
               decoration: InputDecoration(
                 hintText: 'Type a message...',
-                hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey400),
+                hintStyle: AppTextStyles.bodyMedium.copyWith(color: isDark ? AppColors.textSecondaryDark : AppColors.grey400),
                 filled: true,
-                fillColor: AppColors.grey100,
+                fillColor: isDark ? AppColors.grey800 : AppColors.grey100,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
                 focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),

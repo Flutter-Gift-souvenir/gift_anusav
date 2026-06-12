@@ -175,6 +175,22 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
+  Color get _themedTextDark => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFFFFF8F0)
+      : const Color(0xFF1A1208);
+
+  Color get _themedTextGrey => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFFBFAA8E)
+      : const Color(0xFF6B5B45);
+
+  Color get _themedSurface => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFF2C1F0E)
+      : Colors.white;
+
+  Color get _themedBorder => Theme.of(context).brightness == Brightness.dark
+      ? const Color(0xFF423525)
+      : const Color(0xFFE8D5B7);
+
   @override
   void initState() {
     super.initState();
@@ -388,12 +404,12 @@ class _HomeScreenState extends State<HomeScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Browse by Craft',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textDark,
+                  color: _themedTextDark,
                 ),
               ),
               TextButton(
@@ -439,9 +455,9 @@ class _HomeScreenState extends State<HomeScreen>
             width: 62,
             height: 62,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: _themedSurface,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.border, width: 1.5),
+              border: Border.all(color: _themedBorder, width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -455,10 +471,10 @@ class _HomeScreenState extends State<HomeScreen>
           const SizedBox(height: 6),
           Text(
             item.label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppColors.textGrey,
+              color: _themedTextGrey,
             ),
           ),
         ],
@@ -473,20 +489,20 @@ class _HomeScreenState extends State<HomeScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Curated Collections',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.textDark,
+              color: _themedTextDark,
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Handpicked for every meaningful moment.',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textGrey,
+              color: _themedTextGrey,
             ),
           ),
           const SizedBox(height: 16),
@@ -602,33 +618,30 @@ class _HomeScreenState extends State<HomeScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Meet the Artisans',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textDark,
+                    color: _themedTextDark,
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_forward,
-                    color: AppColors.textDark,
+                    color: _themedTextDark,
                     size: 20,
                   ),
                 ),
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: Text(
-              'The hands behind the heritage.',
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.textGrey,
-              ),
+          Text(
+            'The hands behind the heritage.',
+            style: TextStyle(
+              fontSize: 13,
+              color: _themedTextGrey,
             ),
           ),
           const SizedBox(height: 16),
@@ -655,9 +668,9 @@ class _HomeScreenState extends State<HomeScreen>
       child: Container(
         width: 160,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: _themedSurface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border, width: 1),
+          border: Border.all(color: _themedBorder, width: 1),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
@@ -716,10 +729,10 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Text(
                     artisan.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textDark,
+                      color: _themedTextDark,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -728,14 +741,14 @@ class _HomeScreenState extends State<HomeScreen>
                   Row(
                     children: [
                       const Icon(Icons.location_on_outlined,
-                          size: 11, color: AppColors.textGrey),
+                          size: 11, color: Colors.grey),
                       const SizedBox(width: 2),
                       Expanded(
                         child: Text(
                           artisan.location,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
-                            color: AppColors.textGrey,
+                            color: _themedTextGrey,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -750,9 +763,9 @@ class _HomeScreenState extends State<HomeScreen>
                       Expanded(
                         child: Text(
                           artisan.craft,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
-                            color: AppColors.textGrey,
+                            color: _themedTextGrey,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -765,10 +778,10 @@ class _HomeScreenState extends State<HomeScreen>
                           const SizedBox(width: 2),
                           Text(
                             '${artisan.rating}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textDark,
+                              color: _themedTextDark,
                             ),
                           ),
                         ],

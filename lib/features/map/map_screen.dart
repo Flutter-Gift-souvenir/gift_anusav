@@ -77,12 +77,10 @@ class _MapScreenState extends State<MapScreen> {
                   right: 16,
                   child: Column(
                     children: [
-                      _MapButton(
+_MapButton(
   icon: Icons.layers_outlined,
   onTap: () => AppHelpers.showComingSoon(context, 'Map layers'),
 ),
-                      const Gap(8),
-                      _MapButton(icon: Icons.layers_outlined, onTap: () {}),
                     ],
                   ),
                 ),
@@ -210,10 +208,12 @@ class _MapScreenState extends State<MapScreen> {
       minChildSize: 0.15,
       maxChildSize: 0.85,
       builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+return Container(
+  decoration: BoxDecoration(
+    color: isDark ? AppColors.surfaceDark : AppColors.white,
+    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -232,10 +232,10 @@ class _MapScreenState extends State<MapScreen> {
                   margin: const EdgeInsets.only(top: 12, bottom: 16),
                   width: 40,
                   height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.grey400,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+decoration: BoxDecoration(
+  color: isDark ? AppColors.grey600 : AppColors.grey400,
+  borderRadius: BorderRadius.circular(2),
+),
                 ),
               ),
 

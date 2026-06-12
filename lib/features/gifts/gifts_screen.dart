@@ -52,36 +52,38 @@ class _GiftsScreenState extends State<GiftsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return _isLoading
         ? const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           )
         : Scaffold(
-            backgroundColor: AppColors.backgroundLight,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: ListView(
               padding: EdgeInsets.zero,
               children: [
                 // --- Quiz Banner ---
-                _buildQuizBanner(),
+                _buildQuizBanner(isDark),
 
                 const Gap(24),
 
                 // --- Explore by Recipient ---
-                _buildSectionHeader('Explore by Recipient'),
+                _buildSectionHeader('Explore by Recipient', isDark),
                 const Gap(12),
-                _buildRecipientRow(),
+                _buildRecipientRow(isDark),
 
                 const Gap(24),
 
                 // --- Themed Gift Sets ---
-                _buildSectionHeader('Themed Gift Sets'),
+                _buildSectionHeader('Themed Gift Sets', isDark),
                 const Gap(12),
                 _buildGiftSetsGrid(),
 
                 const Gap(24),
 
                 // --- Cultural Occasions ---
-                _buildSectionHeader('Cultural Occasions'),
+                _buildSectionHeader('Cultural Occasions', isDark),
                 const Gap(12),
                 _buildCulturalOccasions(),
 
@@ -92,7 +94,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
   }
 
   // --- Section Header ---
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.defaultPadding,
@@ -104,7 +106,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
             title,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimaryLight,
+              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
             ),
           ),
           TextButton(
@@ -122,12 +124,12 @@ class _GiftsScreenState extends State<GiftsScreen> {
   }
 
   // --- Quiz Banner ---
-  Widget _buildQuizBanner() {
+  Widget _buildQuizBanner(bool isDark) {
   return Container(
     margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
     height: 180,
     decoration: BoxDecoration(
-      color: AppColors.grey100,
+      color: isDark ? AppColors.surfaceDark : AppColors.grey100,
       borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
     ),
     child: Row(
@@ -152,7 +154,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
                 Text(
                   'Take our quick quiz to find a gift they\'ll love.',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.grey600,
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
                   ),
                   maxLines: 2,
                 ),
@@ -197,10 +199,10 @@ class _GiftsScreenState extends State<GiftsScreen> {
             height: 180,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
-              color: AppColors.grey200,
+              color: isDark ? AppColors.grey800 : AppColors.grey200,
             ),
             errorWidget: (context, url, error) => Container(
-              color: AppColors.grey200,
+              color: isDark ? AppColors.grey800 : AppColors.grey200,
               child: const Icon(
                 Icons.card_giftcard,
                 color: AppColors.grey400,
@@ -215,7 +217,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
 }
 
   // --- Recipient Row ---
-  Widget _buildRecipientRow() {
+  Widget _buildRecipientRow(bool isDark) {
     return SizedBox(
       height: 100,
       child: ListView.separated(
@@ -245,10 +247,10 @@ class _GiftsScreenState extends State<GiftsScreen> {
                     imageUrl: recipient['image']!,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: AppColors.grey200,
+                      color: isDark ? AppColors.grey800 : AppColors.grey200,
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: AppColors.grey200,
+                      color: isDark ? AppColors.grey800 : AppColors.grey200,
                       child: const Icon(Icons.person,
                           color: AppColors.grey400),
                     ),
@@ -259,7 +261,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
               Text(
                 recipient['label']!,
                 style: AppTextStyles.labelSmall.copyWith(
-                  color: AppColors.textPrimaryLight,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                 ),
               ),
             ],
@@ -332,15 +334,16 @@ class _GiftSetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final khrPrice = (product.price * khrRate).toInt();
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
+            color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -361,11 +364,11 @@ class _GiftSetCard extends StatelessWidget {
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 height: 130,
-                color: AppColors.grey200,
+                color: isDark ? AppColors.grey800 : AppColors.grey200,
               ),
               errorWidget: (context, url, error) => Container(
                 height: 130,
-                color: AppColors.grey200,
+                color: isDark ? AppColors.grey800 : AppColors.grey200,
                 child: const Icon(Icons.image, color: AppColors.grey400),
               ),
             ),
@@ -381,7 +384,7 @@ class _GiftSetCard extends StatelessWidget {
                   product.name,
                   style: AppTextStyles.labelMedium.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimaryLight,
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -402,7 +405,7 @@ class _GiftSetCard extends StatelessWidget {
                 Text(
                   '$khrPrice KHR',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.grey600,
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
                   ),
                 ),
 
