@@ -18,6 +18,7 @@ import '../features/shell/main_shell.dart';
 import '../features/gifts/gifts_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/settings/edit_profile_screen.dart';
+ import '../features/settings/saved_addresses_screen.dart';
 
 
 
@@ -42,6 +43,8 @@ class AppRouter {
   static const String quiz = '/quiz';
   static const String settings = '/settings';
   static const String editProfile = '/edit-profile';
+  static const String savedAddresses = '/saved-addresses';
+
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -120,6 +123,12 @@ class AppRouter {
           // ),
         ],
       ),
+      // Saved Addresses (no bottom nav — opened from Settings)
+GoRoute(
+  path: savedAddresses,
+  name: 'savedAddresses',
+  builder: (context, state) => const SavedAddressesScreen(),
+),
       GoRoute(
   path: editProfile,
   name: 'editProfile',
