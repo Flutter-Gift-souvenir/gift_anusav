@@ -1,0 +1,154 @@
+[
+  {
+    "id": "p001",
+    "name": "Traditional Krama Scarf",
+    "description": "The krama is a traditional Cambodian garment made from cotton. It is a versatile item used as a scarf, hat, hammock, or baby carrier. This handwoven piece features authentic checkered patterns in red and white.",
+    "price": 12.99,
+    "imageUrl": "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+    ],
+    "category": "Textiles",
+    "artisanId": "a001",
+    "artisanName": "Sokha Meas",
+    "rating": 4.8,
+    "reviewCount": 124,
+    "isAvailable": true,
+    "origin": "Siem Reap",
+    "tags": ["krama", "handwoven", "cotton", "traditional"]
+  },
+  {
+    "id": "p002",
+    "name": "Cambodian Silver Bracelet",
+    "description": "Handcrafted sterling silver bracelet featuring intricate Angkor Wat motifs. Each piece is made by skilled silversmiths using traditional techniques passed down through generations.",
+    "price": 45.00,
+    "imageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
+      "https://images.unsplash.com/photo-1573408301185-9519f94cabe3?w=400"
+    ],
+    "category": "Silverware",
+    "artisanId": "a002",
+    "artisanName": "Dara Chea",
+    "rating": 4.9,
+    "reviewCount": 89,
+    "isAvailable": true,
+    "origin": "Phnom Penh",
+    "tags": ["silver", "bracelet", "angkor", "handcrafted"]
+  },
+  {
+    "id": "p003",
+    "name": "Silk Painting — Apsara Dancer",
+    "description": "A stunning hand-painted silk artwork depicting the graceful Apsara dancer from Angkor Wat. Each painting is unique and signed by the artist. Comes in a protective frame ready to hang.",
+    "price": 38.50,
+    "imageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400",
+      "https://images.unsplash.com/photo-1562813733-b31f71025d54?w=400"
+    ],
+    "category": "Paintings",
+    "artisanId": "a003",
+    "artisanName": "Sreymom Heng",
+    "rating": 4.7,
+    "reviewCount": 56,
+    "isAvailable": true,
+    "origin": "Siem Reap",
+    "tags": ["silk", "painting", "apsara", "art"]
+  },
+  {
+    "id": "p004",
+    "name": "Kampot Pepper Gift Set",
+    "description": "Premium Kampot pepper set featuring red, black, and white peppercorns grown in the fertile soils of Kampot province. Comes in elegant wooden boxes with information cards about Cambodian pepper farming.",
+    "price": 22.00,
+    "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
+      "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400"
+    ],
+    "category": "Food & Spices",
+    "artisanId": "a004",
+    "artisanName": "Bunna Keo",
+    "rating": 4.9,
+    "reviewCount": 203,
+    "isAvailable": true,
+    "origin": "Kampot",
+    "tags": ["pepper", "kampot", "spice", "gift set"]
+  },
+  {
+    "id": "p005",
+    "name": "Wood Carved Elephant",
+    "description": "Hand-carved wooden elephant statue made from sustainable teak wood. The elephant is a symbol of strength and good luck in Cambodian culture. Each piece is uniquely carved and polished by hand.",
+    "price": 29.99,
+    "imageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
+      "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400"
+    ],
+    "category": "Wood Carvings",
+    "artisanId": "a005",
+    "artisanName": "Virak Pov",
+    "rating": 4.6,
+    "reviewCount": 78,
+    "isAvailable": true,
+    "origin": "Kampong Thom",
+    "tags": ["wood", "elephant", "carving", "teak"]
+  },
+  {
+    "id": "p006",
+    "name": "Ceramic Khmer Vase",
+    "description": "A beautiful hand-thrown ceramic vase inspired by ancient Khmer pottery traditions. Glazed with natural earth tones and decorated with traditional geometric patterns.",
+    "price": 34.00,
+    "imageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400",
+      "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=400"
+    ],
+    "category": "Ceramics",
+    "artisanId": "a003",
+    "artisanName": "Sreymom Heng",
+    "rating": 4.5,
+    "reviewCount": 42,
+    "isAvailable": true,
+    "origin": "Siem Reap",
+    "tags": ["ceramic", "vase", "khmer", "pottery"]
+  },
+  {
+    "id": "p007",
+    "name": "Handwoven Silk Scarf",
+    "description": "Luxurious silk scarf handwoven by master weavers in Takeo province. Features traditional ikat patterns in rich jewel tones. Made from 100% natural silk.",
+    "price": 55.00,
+    "imageUrl": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
+      "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400"
+    ],
+    "category": "Textiles",
+    "artisanId": "a001",
+    "artisanName": "Sokha Meas",
+    "rating": 4.8,
+    "reviewCount": 91,
+    "isAvailable": true,
+    "origin": "Takeo",
+    "tags": ["silk", "scarf", "ikat", "weaving"]
+  },
+  {
+    "id": "p008",
+    "name": "Angkor Wat Miniature",
+    "description": "A detailed miniature replica of Angkor Wat temple carved from sandstone. A perfect souvenir to remember Cambodia's most iconic landmark.",
+    "price": 18.50,
+    "imageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=400",
+    "images": [
+      "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=400",
+      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400"
+    ],
+    "category": "Souvenirs",
+    "artisanId": "a005",
+    "artisanName": "Virak Pov",
+    "rating": 4.4,
+    "reviewCount": 167,
+    "isAvailable": true,
+    "origin": "Siem Reap",
+    "tags": ["angkor", "miniature", "sandstone", "souvenir"]
+  }
+]

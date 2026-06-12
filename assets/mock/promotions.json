@@ -1,0 +1,67 @@
+[
+  {
+    "id": "promo001",
+    "title": "Khmer New Year Sale",
+    "description": "Celebrate Khmer New Year with 20% off all textile and silk products. Use code KHMER2025 at checkout. Valid on orders above $30.",
+    "imageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=600",
+    "couponCode": "KHMER2025",
+    "discountPercent": 20.0,
+    "minimumOrder": 30.0,
+    "occasion": "Khmer New Year",
+    "startDate": "2025-04-10T00:00:00Z",
+    "endDate": "2025-04-20T23:59:59Z",
+    "isActive": true
+  },
+  {
+    "id": "promo002",
+    "title": "Pchum Ben Special",
+    "description": "Honor the season with 15% off selected traditional items. Use code PCHUM15 at checkout. No minimum order required.",
+    "imageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600",
+    "couponCode": "PCHUM15",
+    "discountPercent": 15.0,
+    "minimumOrder": null,
+    "occasion": "Pchum Ben",
+    "startDate": "2025-10-01T00:00:00Z",
+    "endDate": "2025-10-15T23:59:59Z",
+    "isActive": true
+  },
+  {
+    "id": "promo003",
+    "title": "First Order Discount",
+    "description": "Welcome to Gift Anusav! Enjoy 10% off your very first order. Use code WELCOME10 at checkout. Valid on all products.",
+    "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=600",
+    "couponCode": "WELCOME10",
+    "discountPercent": 10.0,
+    "minimumOrder": null,
+    "occasion": "Welcome",
+    "startDate": "2025-01-01T00:00:00Z",
+    "endDate": "2025-12-31T23:59:59Z",
+    "isActive": true
+  },
+  {
+    "id": "promo004",
+    "title": "Free Gift Wrapping Weekend",
+    "description": "This weekend only — get free premium gift wrapping on all orders above $25. No coupon needed, discount applied automatically at checkout.",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
+    "couponCode": "FREEWRAP",
+    "discountPercent": 100.0,
+    "minimumOrder": 25.0,
+    "occasion": "Weekend Special",
+    "startDate": "2025-03-01T00:00:00Z",
+    "endDate": "2025-03-02T23:59:59Z",
+    "isActive": false
+  },
+  {
+    "id": "promo005",
+    "title": "Artisan Appreciation Month",
+    "description": "During November, 5% of every purchase goes directly to our artisan community fund. Use code ARTISAN5 to add an extra 5% discount on top.",
+    "imageUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600",
+    "couponCode": "ARTISAN5",
+    "discountPercent": 5.0,
+    "minimumOrder": 20.0,
+    "occasion": "Artisan Month",
+    "startDate": "2025-11-01T00:00:00Z",
+    "endDate": "2025-11-30T23:59:59Z",
+    "isActive": true
+  }
+]
