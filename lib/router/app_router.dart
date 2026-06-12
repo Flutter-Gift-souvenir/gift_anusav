@@ -56,6 +56,12 @@ class AppRouter {
             builder: (context, state) => const PromotionsScreen(),
           ),
 
+                    GoRoute(
+            path: quiz,
+            name: 'quiz',
+            builder: (context, state) => const QuizScreen(),
+          ),
+
       // ─── Shell (screens WITH bottom nav bar) ─────────────────────────────
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),
@@ -91,11 +97,7 @@ class AppRouter {
 
 
           // Quiz
-          GoRoute(
-            path: quiz,
-            name: 'quiz',
-            builder: (context, state) => const QuizScreen(),
-          ),
+
 
           // ← MOVED INSIDE ShellRoute: Artisan Profile (WITH header + footer)
           // GoRoute(
