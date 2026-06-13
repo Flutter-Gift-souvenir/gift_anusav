@@ -174,7 +174,7 @@ Text(
               _SettingsTile(
                 icon: Icons.location_on_outlined,
                 label: 'Saved Addresses',
-                onTap: () => AppHelpers.showComingSoon(context, 'Saved Addresses'),
+                onTap: () => context.push('/saved-addresses'),
               ),
               _SettingsTile(
                 icon: Icons.payment_outlined,
