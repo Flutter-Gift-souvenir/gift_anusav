@@ -40,9 +40,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
       _promotions.where((p) => p.isActive).toList();
 
   List<Promotion> get _expiringSoon => _activePromotions.where((p) {
-        final daysLeft = p.endDate.difference(DateTime.now()).inDays;
-        return daysLeft <= 30;
-      }).toList();
+    final daysLeft = p.endDate.difference(DateTime.now()).inDays;
+    return daysLeft <= 30;
+  }).toList();
 
   void _copyCode(BuildContext context, String code) {
     Clipboard.setData(ClipboardData(text: code));
@@ -51,9 +51,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
         content: Text('Code "$code" copied!'),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(AppConstants.defaultPadding),
         duration: const Duration(seconds: 2),
       ),
@@ -62,8 +60,18 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
@@ -73,8 +81,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -118,7 +127,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         const Gap(16),
 
                         // --- Promotion List ---
-                        ..._promotions.skip(1).map(
+                        ..._promotions
+                            .skip(1)
+                            .map(
                               (promo) => Padding(
                                 padding: const EdgeInsets.only(bottom: 16),
                                 child: _buildPromotionCard(
@@ -337,16 +348,11 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           GestureDetector(
             onTap: () => _copyCode(context, promo.couponCode),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: AppColors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppColors.white.withOpacity(0.4),
-                ),
+                border: Border.all(color: AppColors.white.withOpacity(0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -359,11 +365,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                     ),
                   ),
                   const Gap(8),
-                  const Icon(
-                    Icons.copy,
-                    size: 16,
-                    color: AppColors.white,
-                  ),
+                  const Icon(Icons.copy, size: 16, color: AppColors.white),
                 ],
               ),
             ),
@@ -404,17 +406,12 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                height: 150,
-                color: AppColors.grey200,
-              ),
+              placeholder: (context, url) =>
+                  Container(height: 150, color: AppColors.grey200),
               errorWidget: (context, url, error) => Container(
                 height: 150,
                 color: AppColors.grey200,
-                child: const Icon(
-                  Icons.image,
-                  color: AppColors.grey400,
-                ),
+                child: const Icon(Icons.image, color: AppColors.grey400),
               ),
             ),
           ),
@@ -497,10 +494,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                     onPressed: () => _copyCode(context, promo.couponCode),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.gold,
-                      side: const BorderSide(
-                        color: AppColors.gold,
-                        width: 1.5,
-                      ),
+                      side: const BorderSide(color: AppColors.gold, width: 1.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

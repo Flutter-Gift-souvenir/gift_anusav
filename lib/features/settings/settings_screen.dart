@@ -7,6 +7,7 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../utils/helpers.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -108,7 +109,7 @@ Text(
 
                   // Edit Profile
                   GestureDetector(
-                    onTap: () => AppHelpers.showComingSoon(context, 'Edit Profile'),
+                    onTap: () => context.push('/edit-profile'),
                     child: Text(
                       'Edit Profile',
                       style: AppTextStyles.labelMedium.copyWith(

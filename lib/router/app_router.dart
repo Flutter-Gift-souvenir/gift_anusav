@@ -17,6 +17,8 @@ import '../features/quiz/quiz_screen.dart';
 import '../features/shell/main_shell.dart';
 import '../features/gifts/gifts_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/settings/edit_profile_screen.dart';
+
 
 
 class AppRouter {
@@ -39,6 +41,7 @@ class AppRouter {
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
   static const String settings = '/settings';
+  static const String editProfile = '/edit-profile';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -97,6 +100,8 @@ class AppRouter {
           // ),
 
           // Settings
+          // Edit Profile (no bottom nav — opened from Settings)
+
 
 
 
@@ -115,6 +120,11 @@ class AppRouter {
           // ),
         ],
       ),
+      GoRoute(
+  path: editProfile,
+  name: 'editProfile',
+  builder: (context, state) => const EditProfileScreen(),
+),
       GoRoute(
   path: settings,
   name: 'settings',
