@@ -23,6 +23,7 @@ import '../features/settings/saved_addresses_screen.dart';
 import '../features/settings/add_address_screen.dart';
 import '../features/booking/booking_history_screen.dart';
 import '../features/settings/help_support_screen.dart';
+import '../features/settings/payment_methods_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -48,6 +49,7 @@ class AppRouter {
   static const String savedAddresses = '/saved-addresses';
   static const String addAddress = '/add-address';
   static const String helpSupport = '/help-support';
+  static const String paymentMethods = '/payment-methods';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -115,6 +117,12 @@ GoRoute(
   path: helpSupport,
   name: 'helpSupport',
   builder: (context, state) => const HelpSupportScreen(),
+),
+// Payment Methods (no bottom nav — opened from Settings)
+GoRoute(
+  path: paymentMethods,
+  name: 'paymentMethods',
+  builder: (context, state) => const PaymentMethodsScreen(),
 ),
 
       // ─── Stack Screens (NO bottom nav bar) ───────────────────────────────
