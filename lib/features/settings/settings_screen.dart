@@ -192,7 +192,7 @@ Text(
               _SettingsTile(
                 icon: Icons.help_outline,
                 label: 'Help & Support',
-                onTap: () => AppHelpers.showComingSoon(context, 'Help & Support'),
+                onTap: () => context.push('/help-support'),
               ),
               _SettingsTile(
                 icon: Icons.info_outline,
