@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:gift_anusav/features/gallery/gallery_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/home/home_screen.dart';
 // import '../features/detail/detail_screen.dart';
 import '../features/artisan/artisan_screen.dart';
-// import '../features/collection/collection_screen.dart';
+import '../features/collection/collection_screen.dart';
 // import '../features/booking/booking_screen.dart';
  import '../features/chat/chat_screen.dart';
-// import '../features/reviews/reviews_screen.dart';
-// import '../features/gallery/gallery_screen.dart';
+import '../features/reviews/reviews_screen.dart';
+import '../features/gallery/gallery_screen.dart';
 import '../features/map/map_screen.dart';
 import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
@@ -147,7 +148,22 @@ GoRoute(
   name: 'settings',
   builder: (context, state) => const SettingsScreen(),
 ),
-
+GoRoute(
+  path: '$reviews/:productId',
+  name: 'reviews',
+  builder: (context, state) {
+    final productId = state.pathParameters['productId']!;
+    return ReviewsScreen(productId: productId);
+  },
+),
+GoRoute(
+  path: '$gallery/:artisanId',
+  name: 'gallery',
+  builder: (context, state) {
+    final artisanId = state.pathParameters['artisanId']!;
+    return GalleryScreen(artisanId: artisanId);
+  },
+),
       // ─── Detail screens (NO bottom nav bar) ──────────────────────────────
 
       // Product Detail
@@ -230,6 +246,15 @@ GoRoute(
         builder: (context, state) {
           final artisanId = state.pathParameters['artisanId']!;
           return ArtisanScreen(artisanId: artisanId);
+        },
+      ),
+
+      GoRoute(
+        path: '$collection/:collectionId',
+        name: 'collection',
+        builder: (context, state) {
+          final collectionId = state.pathParameters['collectionId']!;
+          return CollectionScreen(collectionId: collectionId);
         },
       ),
 

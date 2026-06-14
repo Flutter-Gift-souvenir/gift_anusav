@@ -5,7 +5,12 @@
     "description": "Celebrate Khmer New Year with our curated selection of traditional gifts and souvenirs. Each item in this collection represents the joy, color, and cultural richness of Cambodia's most beloved festival.",
     "coverImageUrl": "https://www.laurewanders.com/wp-content/uploads/2023/12/Souvenirs-from-Cambodia-00002.jpg",
     "occasion": "Khmer New Year",
-    "productIds": ["p001", "p003", "p006", "p007"],
+    "productIds": [
+      "p001",
+      "p003",
+      "p006",
+      "p007"
+    ],
     "isFeatured": true,
     "validUntil": "2025-04-30T23:59:59Z"
   },
@@ -15,7 +20,11 @@
     "description": "Find the perfect handcrafted gift for a wedding or anniversary. Our selection of elegant Cambodian artisan pieces makes for truly memorable and meaningful presents that will last a lifetime.",
     "coverImageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=600",
     "occasion": "Wedding",
-    "productIds": ["p002", "p003", "p007"],
+    "productIds": [
+      "p002",
+      "p003",
+      "p007"
+    ],
     "isFeatured": true,
     "validUntil": null
   },
@@ -25,7 +34,11 @@
     "description": "Honor your ancestors during Pchum Ben with our collection of traditional Cambodian items. These carefully selected products reflect the spiritual and cultural significance of this important festival.",
     "coverImageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600",
     "occasion": "Pchum Ben",
-    "productIds": ["p001", "p005", "p008"],
+    "productIds": [
+      "p001",
+      "p005",
+      "p008"
+    ],
     "isFeatured": false,
     "validUntil": "2025-10-15T23:59:59Z"
   },
@@ -33,9 +46,11 @@
     "id": "c004",
     "title": "Foodie Gift Sets",
     "description": "Delight the food lovers in your life with authentic Cambodian flavors. From the world-renowned Kampot pepper to traditional condiments, these gifts bring the taste of Cambodia to any kitchen.",
-    "coverImageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=600",
+    "coverImageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400",
     "occasion": "Birthday",
-    "productIds": ["p004"],
+    "productIds": [
+      "p004"
+    ],
     "isFeatured": false,
     "validUntil": null
   },
@@ -45,7 +60,11 @@
     "description": "Transform your living space with authentic Cambodian artisan pieces. From hand-carved wood sculptures to hand-thrown ceramics, each item brings a touch of Khmer elegance to your home.",
     "coverImageUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600",
     "occasion": "Housewarming",
-    "productIds": ["p005", "p006", "p008"],
+    "productIds": [
+      "p005",
+      "p006",
+      "p008"
+    ],
     "isFeatured": true,
     "validUntil": null
   },
@@ -53,9 +72,81 @@
     "id": "c006",
     "title": "Traveler's Souvenir Pack",
     "description": "The perfect collection for travelers looking to bring back authentic Cambodian memories. Lightweight, meaningful, and beautifully crafted — these souvenirs tell the story of Cambodia.",
-    "coverImageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600",
+    "coverImageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Angkor_Wat.jpg/960px-Angkor_Wat.jpg",
     "occasion": "Travel",
-    "productIds": ["p001", "p004", "p008"],
+    "productIds": [
+      "p001",
+      "p004",
+      "p008"
+    ],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c101",
+    "artisanId": "a001",
+    "title": "Sokha Meas's Signature Collection",
+    "description": "A curated collection of handmade pieces by Sokha Meas. This collection highlights silk & textile weaving and shows the artisan's unique style, cultural story, and craftsmanship.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?w=400",
+    "occasion": "Silk & Textile Weaving",
+    "productIds": [
+      "p001",
+      "p007"
+    ],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c102",
+    "artisanId": "a002",
+    "title": "Dara Chea's Signature Collection",
+    "description": "A curated collection of handmade pieces by Dara Chea. This collection highlights traditional silversmithing and shows the artisan's unique style, cultural story, and craftsmanship.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
+    "occasion": "Traditional Silversmithing",
+    "productIds": [
+      "p002"
+    ],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c103",
+    "artisanId": "a003",
+    "title": "Sreymom Heng's Signature Collection",
+    "description": "A curated collection of handmade pieces by Sreymom Heng. This collection highlights silk painting & ceramics and shows the artisan's unique style, cultural story, and craftsmanship.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=600",
+    "occasion": "Silk Painting & Ceramics",
+    "productIds": [
+      "p003",
+      "p006"
+    ],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c104",
+    "artisanId": "a004",
+    "title": "Bunna Keo's Signature Collection",
+    "description": "A curated collection of handmade pieces by Bunna Keo. This collection highlights kampot pepper farming and shows the artisan's unique style, cultural story, and craftsmanship.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400",
+    "occasion": "Kampot Pepper Farming",
+    "productIds": [
+      "p004"
+    ],
+    "isFeatured": false,
+    "validUntil": null
+  },
+  {
+    "id": "c105",
+    "artisanId": "a005",
+    "title": "Virak Pov's Signature Collection",
+    "description": "A curated collection of handmade pieces by Virak Pov. This collection highlights wood carving & stone sculpting and shows the artisan's unique style, cultural story, and craftsmanship.",
+    "coverImageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
+    "occasion": "Wood Carving & Stone Sculpting",
+    "productIds": [
+      "p005",
+      "p008"
+    ],
     "isFeatured": false,
     "validUntil": null
   }
