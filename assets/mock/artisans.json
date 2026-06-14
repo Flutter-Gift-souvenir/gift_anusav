@@ -11,8 +11,16 @@
     "rating": 4.9,
     "productCount": 24,
     "yearsOfExperience": 18,
-    "productIds": ["p001", "p007"],
-    "skills": ["silk weaving", "ikat dyeing", "pattern design", "natural dyeing"],
+    "productIds": [
+      "p001",
+      "p007"
+    ],
+    "skills": [
+      "silk weaving",
+      "ikat dyeing",
+      "pattern design",
+      "natural dyeing"
+    ],
     "isVerified": true,
     "atelierGallery": [
       {
@@ -24,9 +32,12 @@
         "caption": "Hand Looming"
       },
       {
-        "imageUrl": "https://images.unsplash.com/photo-1590727263595-15104d5da470?w=400",
+        "imageUrl": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400",
         "caption": "Natural Dyeing"
       }
+    ],
+    "collectionIds": [
+      "c101"
     ]
   },
   {
@@ -41,8 +52,15 @@
     "rating": 4.8,
     "productCount": 18,
     "yearsOfExperience": 22,
-    "productIds": ["p002"],
-    "skills": ["silversmithing", "repoussé", "chasing", "engraving"],
+    "productIds": [
+      "p002"
+    ],
+    "skills": [
+      "silversmithing",
+      "repoussé",
+      "chasing",
+      "engraving"
+    ],
     "isVerified": true,
     "atelierGallery": [
       {
@@ -50,13 +68,16 @@
         "caption": "Silver Melting"
       },
       {
-        "imageUrl": "https://images.unsplash.com/photo-1573408301185-9519f94cabe3?w=400",
+        "imageUrl": "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400",
         "caption": "Detail Engraving"
       },
       {
         "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400",
         "caption": "Final Polishing"
       }
+    ],
+    "collectionIds": [
+      "c102"
     ]
   },
   {
@@ -71,8 +92,16 @@
     "rating": 4.7,
     "productCount": 31,
     "yearsOfExperience": 12,
-    "productIds": ["p003", "p006"],
-    "skills": ["silk painting", "ceramics", "pottery", "illustration"],
+    "productIds": [
+      "p003",
+      "p006"
+    ],
+    "skills": [
+      "silk painting",
+      "ceramics",
+      "pottery",
+      "illustration"
+    ],
     "isVerified": true,
     "atelierGallery": [
       {
@@ -87,6 +116,9 @@
         "imageUrl": "https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400",
         "caption": "Kiln Firing"
       }
+    ],
+    "collectionIds": [
+      "c103"
     ]
   },
   {
@@ -101,12 +133,19 @@
     "rating": 4.9,
     "productCount": 8,
     "yearsOfExperience": 15,
-    "productIds": ["p004"],
-    "skills": ["pepper farming", "natural cultivation", "packaging", "GI certification"],
+    "productIds": [
+      "p004"
+    ],
+    "skills": [
+      "pepper farming",
+      "natural cultivation",
+      "packaging",
+      "GI certification"
+    ],
     "isVerified": true,
     "atelierGallery": [
       {
-        "imageUrl": "https://images.unsplash.com/photo-1599909533815-cc6e3a03d3f5?w=400",
+        "imageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400",
         "caption": "Vine Harvesting"
       },
       {
@@ -114,9 +153,12 @@
         "caption": "Sun Drying"
       },
       {
-        "imageUrl": "https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e?w=400",
+        "imageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=400",
         "caption": "Hand Sorting"
       }
+    ],
+    "collectionIds": [
+      "c104"
     ]
   },
   {
@@ -131,12 +173,20 @@
     "rating": 4.6,
     "productCount": 42,
     "yearsOfExperience": 20,
-    "productIds": ["p005", "p008"],
-    "skills": ["wood carving", "stone sculpting", "sandstone work", "finishing"],
+    "productIds": [
+      "p005",
+      "p008"
+    ],
+    "skills": [
+      "wood carving",
+      "stone sculpting",
+      "sandstone work",
+      "finishing"
+    ],
     "isVerified": true,
     "atelierGallery": [
       {
-        "imageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
+        "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
         "caption": "Wood Selection"
       },
       {
@@ -147,6 +197,9 @@
         "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
         "caption": "Sanding & Oiling"
       }
+    ],
+    "collectionIds": [
+      "c105"
     ]
   }
 ]

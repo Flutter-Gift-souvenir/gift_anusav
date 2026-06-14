@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gift_anusav/features/gallery/gallery_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/home/home_screen.dart';
@@ -198,6 +199,15 @@ class AppRouter {
       ),
 
       // Chat Configuration with Customized Key transitions
+      GoRoute(
+        path: '$collection/:collectionId',
+        name: 'collection',
+        builder: (context, state) {
+          final collectionId = state.pathParameters['collectionId']!;
+          return CollectionScreen(collectionId: collectionId);
+        },
+      ),
+
       GoRoute(
         path: '$chat/:artisanId',
         name: 'chat',
