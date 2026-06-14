@@ -197,7 +197,7 @@ Text(
               _SettingsTile(
                 icon: Icons.info_outline,
                 label: 'About Anusav',
-                onTap: () => AppHelpers.showComingSoon(context, 'About Anusav'),
+                onTap: () => context.push('/about'),
               ),
             ]),
 
