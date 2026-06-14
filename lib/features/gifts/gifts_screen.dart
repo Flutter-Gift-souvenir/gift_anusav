@@ -337,111 +337,117 @@ class _GiftSetCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final khrPrice = (product.price * khrRate).toInt();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(12),
+return InkWell(
+      onTap: () {
+        context.push('/detail/${product.id}');
+      },
+      borderRadius: BorderRadius.circular(12), // Keeps the ripple effect matching the corners
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.surfaceDark : AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            child: CachedNetworkImage(
-              imageUrl: product.imageUrl,
-              height: 130,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                height: 130,
-                color: isDark ? AppColors.grey800 : AppColors.grey200,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
               ),
-              errorWidget: (context, url, error) => Container(
+              child: CachedNetworkImage(
+                imageUrl: product.imageUrl,
                 height: 130,
-                color: isDark ? AppColors.grey800 : AppColors.grey200,
-                child: const Icon(Icons.image, color: AppColors.grey400),
+                width: double.infinity,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  height: 130,
+                  color: isDark ? AppColors.grey800 : AppColors.grey200,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 130,
+                  color: isDark ? AppColors.grey800 : AppColors.grey200,
+                  child: const Icon(Icons.image, color: AppColors.grey400),
+                ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name
-                Text(
-                  product.name,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const Gap(4),
-
-                // USD Price
-                Text(
-                  '\$${product.price.toStringAsFixed(2)}',
-                  style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-
-                // KHR Price
-                Text(
-                  '$khrPrice KHR',
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
-                  ),
-                ),
-
-                const Gap(6),
-
-                // Quick Add button
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () => AppHelpers.showComingSoon(context, 'Add to cart'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                      side: const BorderSide(
-                        color: AppColors.primary,
-                        width: 1,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name
+                  Text(
+                    product.name,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                     ),
-                    child: Text(
-                      '+ Quick Add',
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const Gap(4),
+
+                  // USD Price
+                  Text(
+                    '\$${product.price.toStringAsFixed(2)}',
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-              ],
+
+                  // KHR Price
+                  Text(
+                    '$khrPrice KHR',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
+                    ),
+                  ),
+
+                  const Gap(6),
+
+                  // Quick Add button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => AppHelpers.showComingSoon(context, 'Add to cart'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(
+                          color: AppColors.primary,
+                          width: 1,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        '+ Quick Add',
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
