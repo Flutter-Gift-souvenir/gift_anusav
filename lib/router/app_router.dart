@@ -9,7 +9,7 @@ import '../features/collection/collection_screen.dart';
 import '../features/booking/booking_screen.dart'; 
 import '../features/chat/chat_screen.dart';
 import '../features/reviews/reviews_screen.dart'; 
-import '../features/gallery/gallery_screen.dart'; 
+// import '../features/gallery/gallery_screen.dart'; 
 import '../features/map/map_screen.dart';
 import '../features/nearby/nearby_screen.dart';
 import '../features/favorites/favorites_screen.dart';
@@ -22,6 +22,7 @@ import '../features/settings/edit_profile_screen.dart';
 import '../features/settings/saved_addresses_screen.dart';
 import '../features/settings/add_address_screen.dart';
 import '../features/booking/booking_history_screen.dart';
+import '../features/settings/help_support_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -46,6 +47,7 @@ class AppRouter {
   static const String editProfile = '/edit-profile';
   static const String savedAddresses = '/saved-addresses';
   static const String addAddress = '/add-address';
+  static const String helpSupport = '/help-support';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -108,6 +110,12 @@ class AppRouter {
           ),
         ],
       ),
+      // Help & Support (no bottom nav — opened from Settings)
+GoRoute(
+  path: helpSupport,
+  name: 'helpSupport',
+  builder: (context, state) => const HelpSupportScreen(),
+),
 
       // ─── Stack Screens (NO bottom nav bar) ───────────────────────────────
       GoRoute(
@@ -199,14 +207,7 @@ class AppRouter {
       ),
 
       // Chat Configuration with Customized Key transitions
-      GoRoute(
-        path: '$collection/:collectionId',
-        name: 'collection',
-        builder: (context, state) {
-          final collectionId = state.pathParameters['collectionId']!;
-          return CollectionScreen(collectionId: collectionId);
-        },
-      ),
+    
 
       GoRoute(
         path: '$chat/:artisanId',
