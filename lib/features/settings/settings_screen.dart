@@ -207,7 +207,7 @@ Text(
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => AppHelpers.showComingSoon(context, 'Logout'),
+                onPressed: () => _showLogoutDialog(context),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
                   side: const BorderSide(color: AppColors.error, width: 1.5),
@@ -252,6 +252,64 @@ Text(
       ),
     );
   }
+  // --- Logout Confirmation Dialog ---
+void _showLogoutDialog(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      backgroundColor: isDark ? AppColors.surfaceDark : AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      title: Text(
+        'Logout',
+        style: AppTextStyles.titleLarge.copyWith(
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      content: Text(
+        'Are you sure you want to logout?',
+        style: AppTextStyles.bodyMedium.copyWith(
+          color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Cancel',
+            style: AppTextStyles.labelLarge.copyWith(
+              color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
+            ),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context); // close dialog
+            context.go('/onboarding');
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.error,
+            foregroundColor: AppColors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: Text(
+            'Logout',
+            style: AppTextStyles.labelLarge.copyWith(
+              color: AppColors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   // --- Section Label ---
   Widget _buildSectionLabel(String label) {
