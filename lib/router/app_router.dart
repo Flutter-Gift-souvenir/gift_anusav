@@ -24,6 +24,7 @@ import '../features/settings/add_address_screen.dart';
 import '../features/booking/booking_history_screen.dart';
 import '../features/settings/help_support_screen.dart';
 import '../features/settings/payment_methods_screen.dart';
+import '../features/settings/about_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -50,6 +51,7 @@ class AppRouter {
   static const String addAddress = '/add-address';
   static const String helpSupport = '/help-support';
   static const String paymentMethods = '/payment-methods';
+  static const String aboutAnusav = '/about';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -123,6 +125,12 @@ GoRoute(
   path: paymentMethods,
   name: 'paymentMethods',
   builder: (context, state) => const PaymentMethodsScreen(),
+),
+// About Anusav (no bottom nav — opened from Settings)
+GoRoute(
+  path: aboutAnusav,
+  name: 'aboutAnusav',
+  builder: (context, state) => const AboutScreen(),
 ),
 
       // ─── Stack Screens (NO bottom nav bar) ───────────────────────────────
