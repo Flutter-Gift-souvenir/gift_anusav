@@ -169,7 +169,7 @@ Text(
               _SettingsTile(
                 icon: Icons.shopping_bag_outlined,
                 label: 'My Orders',
-                onTap: () => AppHelpers.showComingSoon(context, 'My Orders'),
+                onTap: () => context.go('/booking'),
               ),
               _SettingsTile(
                 icon: Icons.location_on_outlined,
@@ -179,7 +179,7 @@ Text(
               _SettingsTile(
                 icon: Icons.payment_outlined,
                 label: 'Payment Methods',
-                onTap: () => AppHelpers.showComingSoon(context, 'Payment Methods'),
+                onTap: () => context.push('/payment-methods'),
               ),
             ]),
 
