@@ -27,6 +27,8 @@ import '../features/settings/payment_methods_screen.dart';
 import '../features/settings/about_screen.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/signup_screen.dart';
+import '../features/auth/forgot_password_screen.dart';
+import '../features/auth/verify_code_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -56,6 +58,8 @@ class AppRouter {
   static const String aboutAnusav = '/about';
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String forgotPassword = '/forgot-password';
+  static const String verifyCode = '/verify-code';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -241,6 +245,21 @@ GoRoute(
           );
         },
       ),
+      // Verify Code (no bottom nav)
+GoRoute(
+  path: '$verifyCode/:email',
+  name: 'verifyCode',
+  builder: (context, state) {
+    final email = state.pathParameters['email']!;
+    return VerifyCodeScreen(email: email);
+  },
+),
+      // Forgot Password (no bottom nav)
+GoRoute(
+  path: forgotPassword,
+  name: 'forgotPassword',
+  builder: (context, state) => const ForgotPasswordScreen(),
+),
       // Sign Up (no bottom nav)
 GoRoute(
   path: signup,

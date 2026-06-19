@@ -236,8 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
-                  onTap: () =>
-                      AppHelpers.showComingSoon(context, 'Forgot Password'),
+                  onTap: () => context.push('/forgot-password'),
                   child: Text(
                     'Forgot Password?',
                     style: AppTextStyles.labelMedium.copyWith(
