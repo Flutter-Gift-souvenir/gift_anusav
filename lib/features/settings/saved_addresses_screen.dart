@@ -114,7 +114,7 @@ class SavedAddressesScreen extends StatelessWidget {
                           AppConstants.cardBorderRadius,
                         ),
                         border: Border.all(
-                          color: AppColors.primary.withOpacity(0.3),
+                          color: AppColors.primary.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                       ),
@@ -225,7 +225,7 @@ class _AddressCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

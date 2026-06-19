@@ -10,7 +10,7 @@ import '../../theme/app_colors.dart';
 class ArtisanScreen extends StatelessWidget {
   final String artisanId;
 
-  const ArtisanScreen({Key? key, required this.artisanId}) : super(key: key);
+  const ArtisanScreen({super.key, required this.artisanId});
 
   Future<Map<String, dynamic>> _loadScreenData() async {
     final String artisanString =
@@ -352,7 +352,7 @@ class ArtisanScreen extends StatelessWidget {
           icon: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.35),
+              color: Colors.black.withValues(alpha: 0.35),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -411,9 +411,9 @@ class ArtisanScreen extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.15),
-                    Colors.black.withOpacity(0.35),
-                    Colors.black.withOpacity(0.88),
+                    Colors.black.withValues(alpha: 0.15),
+                    Colors.black.withValues(alpha: 0.35),
+                    Colors.black.withValues(alpha: 0.88),
                   ],
                   stops: const [0.0, 0.45, 1.0],
                 ),
@@ -507,12 +507,12 @@ class ArtisanScreen extends StatelessWidget {
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            side: BorderSide(color: Colors.white.withOpacity(0.55)),
+                            side: BorderSide(color: Colors.white.withValues(alpha: 0.55)),
                             padding: const EdgeInsets.symmetric(vertical: 13),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            backgroundColor: Colors.white.withOpacity(0.12),
+                            backgroundColor: Colors.white.withValues(alpha: 0.12),
                           ),
                           icon: const Icon(Icons.chat_bubble_outline, size: 18),
                           label: const Text(
@@ -557,7 +557,7 @@ class ArtisanScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.05),
+                color: AppColors.black.withValues(alpha: 0.05),
                 blurRadius: 14,
                 offset: const Offset(0, 6),
               ),
@@ -630,7 +630,7 @@ class ArtisanScreen extends StatelessWidget {
         border: Border.all(color: Colors.white, width: 3),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.25),
+            color: AppColors.black.withValues(alpha: 0.25),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -664,7 +664,7 @@ class ArtisanScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(isDark ? 0.18 : 0.04),
+            color: AppColors.black.withValues(alpha: isDark ? 0.18 : 0.04),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -950,8 +950,8 @@ class ArtisanScreen extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? AppColors.black.withOpacity(0.2)
-                : AppColors.black.withOpacity(0.04),
+                ? AppColors.black.withValues(alpha: 0.2)
+                : AppColors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -1186,7 +1186,7 @@ class ArtisanScreen extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(overlayText.isNotEmpty ? 0.72 : 0.25),
+                      Colors.black.withValues(alpha: overlayText.isNotEmpty ? 0.72 : 0.25),
                     ],
                     stops: const [0.55, 1.0],
                   ),
@@ -1199,7 +1199,7 @@ class ArtisanScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.35),
+                  color: Colors.black.withValues(alpha: 0.35),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

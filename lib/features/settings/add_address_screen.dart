@@ -106,7 +106,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -317,7 +317,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                               ),
                               Switch(
                                 value: _setAsDefault,
-                                activeColor: AppColors.primary,
+                                activeThumbColor: AppColors.primary,
                                 onChanged: (value) {
                                   setState(() => _setAsDefault = value);
                                 },
@@ -397,7 +397,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                                     boxShadow: [
                                       BoxShadow(
                                         color: AppColors.black
-                                            .withOpacity(0.12),
+                                            .withValues(alpha: 0.12),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -537,7 +537,7 @@ class _LabelChip extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.1)
+                ? AppColors.primary.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(

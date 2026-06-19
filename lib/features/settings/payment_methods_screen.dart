@@ -106,7 +106,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -167,7 +167,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -202,7 +202,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                           ),
                           Switch(
                             value: _enableCOD,
-                            activeColor: AppColors.primary,
+                            activeThumbColor: AppColors.primary,
                             onChanged: (value) {
                               setState(() => _enableCOD = value);
                             },
@@ -304,7 +304,7 @@ class _CardItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

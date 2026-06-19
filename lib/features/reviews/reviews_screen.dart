@@ -294,7 +294,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList.separated(
                     itemCount: reviews.length,
-                    separatorBuilder: (_, __) => const Gap(12),
+                    separatorBuilder: (_, _) => const Gap(12),
                     itemBuilder: (context, index) {
                       return _buildReviewCard(context, reviews[index]);
                     },
@@ -397,7 +397,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(isDark ? 0.16 : 0.04),
+            color: AppColors.black.withValues(alpha: isDark ? 0.16 : 0.04),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -410,7 +410,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             width: 94,
             height: 94,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.10),
+              color: AppColors.primary.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(24),
             ),
             child: Column(
@@ -523,7 +523,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: _filters.length,
-        separatorBuilder: (_, __) => const Gap(8),
+        separatorBuilder: (_, _) => const Gap(8),
         itemBuilder: (context, index) {
           final selected = _selectedFilterIndex == index;
 
@@ -569,7 +569,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(isDark ? 0.14 : 0.035),
+            color: AppColors.black.withValues(alpha: isDark ? 0.14 : 0.035),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -618,7 +618,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2C94C).withOpacity(0.18),
+                  color: const Color(0xFFF2C94C).withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -721,7 +721,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.12),
+              color: AppColors.primary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: const Icon(

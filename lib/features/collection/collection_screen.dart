@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../widgets/app_scaffold.dart';
 
 import '../../theme/app_colors.dart';
 
 class CollectionScreen extends StatelessWidget {
   final String collectionId;
 
-  const CollectionScreen({Key? key, required this.collectionId}) : super(key: key);
+  const CollectionScreen({super.key, required this.collectionId});
 
   Future<Map<String, dynamic>> _loadScreenData() async {
     final String collectionString =
@@ -138,8 +137,8 @@ class CollectionScreen extends StatelessWidget {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withOpacity(0.08),
-                                Colors.black.withOpacity(0.82),
+                                Colors.black.withValues(alpha: 0.08),
+                                Colors.black.withValues(alpha: 0.82),
                               ],
                               stops: const [0.25, 1],
                             ),
@@ -170,7 +169,7 @@ class CollectionScreen extends StatelessWidget {
                               Text(
                                 '${products.length} curated items',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.85),
+                                  color: Colors.white.withValues(alpha: 0.85),
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -215,7 +214,7 @@ class CollectionScreen extends StatelessWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF8B4513).withOpacity(0.1),
+                                color: const Color(0xFF8B4513).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -304,7 +303,7 @@ class CollectionScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.06),
+                color: AppColors.black.withValues(alpha: 0.06),
                 blurRadius: 14,
                 offset: const Offset(0, 6),
               ),
@@ -382,7 +381,7 @@ class CollectionScreen extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(isDark ? 0.18 : 0.04),
+            color: AppColors.black.withValues(alpha: isDark ? 0.18 : 0.04),
             blurRadius: 14,
             offset: const Offset(0, 6),
           ),
@@ -438,7 +437,7 @@ class CollectionScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.grey800.withOpacity(0.6)
+            ? AppColors.grey800.withValues(alpha: 0.6)
             : const Color(0xFFF7F2EA),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -519,7 +518,7 @@ class CollectionScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(isDark ? 0.18 : 0.05),
+            color: AppColors.black.withValues(alpha: isDark ? 0.18 : 0.05),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -569,7 +568,7 @@ class CollectionScreen extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.45),
+                            color: Colors.black.withValues(alpha: 0.45),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Text(

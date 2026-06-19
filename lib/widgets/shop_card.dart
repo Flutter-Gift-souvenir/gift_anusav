@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
@@ -23,7 +22,7 @@ class ShopCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.surfaceDark : AppColors.white,
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
-        border: Border.all(color: isDark ? AppColors.grey800 : AppColors.grey100),
+        border: Border.all(color: isDark ? const Color.fromARGB(255, 255, 255, 255) : AppColors.grey100),
       ),
       child: Row(children: [
         ClipRRect(
@@ -50,7 +49,9 @@ class ShopCard extends StatelessWidget {
             children: [
               Text(
                 shop.name,
-                style: AppTextStyles.titleMedium,
+                style: AppTextStyles.titleMedium.copyWith(
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                ),
               ),
               const Gap(4),
 
@@ -64,7 +65,9 @@ class ShopCard extends StatelessWidget {
                   const Gap(2),
                   Text(
                     '${shop.area} - ${shop.distance} km',
-                    style: AppTextStyles.bodySmall,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                    ),
                   ),
                 ],
               ),

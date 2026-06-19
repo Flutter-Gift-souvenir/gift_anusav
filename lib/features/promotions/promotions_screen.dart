@@ -220,7 +220,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
+              color: AppColors.gold.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -293,7 +293,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           image: NetworkImage(promo.imageUrl),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            AppColors.primary.withOpacity(0.7),
+            AppColors.primary.withValues(alpha: 0.7),
             BlendMode.srcOver,
           ),
         ),
@@ -336,7 +336,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           Text(
             promo.description,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.white.withOpacity(0.85),
+              color: AppColors.white.withValues(alpha: 0.85),
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -350,9 +350,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.15),
+                color: AppColors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.white.withOpacity(0.4)),
+                border: Border.all(color: AppColors.white.withValues(alpha: 0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -387,7 +387,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
+            color: AppColors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

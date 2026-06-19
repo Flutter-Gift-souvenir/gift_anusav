@@ -226,7 +226,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
           horizontal: AppConstants.defaultPadding,
         ),
         itemCount: _recipients.length,
-        separatorBuilder: (_, __) => const Gap(16),
+        separatorBuilder: (_, _) => const Gap(16),
         itemBuilder: (context, index) {
           final recipient = _recipients[index];
           return Column(
@@ -348,7 +348,7 @@ return InkWell(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: isDark ? AppColors.black.withOpacity(0.2) : AppColors.black.withOpacity(0.05),
+              color: isDark ? AppColors.black.withValues(alpha: 0.2) : AppColors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -486,7 +486,7 @@ class _OccasionCard extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  AppColors.black.withOpacity(0.65),
+                  AppColors.black.withValues(alpha: 0.65),
                 ],
               ),
             ),
@@ -510,7 +510,7 @@ class _OccasionCard extends StatelessWidget {
                 Text(
                   collection.title,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.white.withOpacity(0.85),
+                    color: AppColors.white.withValues(alpha: 0.85),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

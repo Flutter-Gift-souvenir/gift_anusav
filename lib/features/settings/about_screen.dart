@@ -68,7 +68,7 @@ class AboutScreen extends StatelessWidget {
                       width: 160,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: AppColors.gold.withOpacity(0.15),
+                        color: AppColors.gold.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(
                           AppConstants.cardBorderRadius,
                         ),
@@ -139,7 +139,7 @@ class AboutScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -190,7 +190,7 @@ class AboutScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -239,7 +239,7 @@ class AboutScreen extends StatelessWidget {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.04),
+                            color: AppColors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -264,7 +264,7 @@ class AboutScreen extends StatelessWidget {
                                       width: 36,
                                       height: 36,
                                       decoration: BoxDecoration(
-                                        color: AppColors.gold.withOpacity(0.15),
+                                        color: AppColors.gold.withValues(alpha: 0.15),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Icon(
@@ -354,7 +354,7 @@ class AboutScreen extends StatelessWidget {
                     Text(
                       '© 2026 Anusav. All rights reserved.',
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: secondaryColor.withOpacity(0.7),
+                        color: secondaryColor.withValues(alpha: 0.7),
                       ),
                     ),
 

@@ -294,8 +294,8 @@ class _HomeScreenState extends State<HomeScreen>
               end: Alignment.bottomCenter,
               colors: [
                 Colors.transparent,
-                Colors.black.withOpacity(0.3),
-                Colors.black.withOpacity(0.80),
+                Colors.black.withValues(alpha: 0.3),
+                Colors.black.withValues(alpha: 0.80),
               ],
               stops: const [0.3, 0.6, 1.0],
             ),
@@ -341,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen>
                 item.subtitle,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withValues(alpha: 0.85),
                   height: 1.5,
                 ),
               ),
@@ -375,9 +375,9 @@ class _HomeScreenState extends State<HomeScreen>
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withOpacity(0.4)),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
                     ),
                     child: const Icon(
                       Icons.play_arrow_rounded,
@@ -436,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen>
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              separatorBuilder: (_, _) => const SizedBox(width: 16),
               itemBuilder: (context, index) =>
                   _buildCategoryItem(categories[index]),
             ),
@@ -460,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen>
               border: Border.all(color: _themedBorder, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -540,7 +540,7 @@ class _HomeScreenState extends State<HomeScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -555,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen>
                 item.imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   child: const Icon(Icons.image_not_supported,
                       color: Colors.white, size: 24),
                 ),
@@ -567,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen>
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.7),
+                      Colors.black.withValues(alpha: 0.7),
                     ],
                     stops: const [0.4, 1.0],
                   ),
@@ -593,7 +593,7 @@ class _HomeScreenState extends State<HomeScreen>
                       item.subtitle,
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -651,7 +651,7 @@ class _HomeScreenState extends State<HomeScreen>
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: 20),
               itemCount: artisans.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 14),
+              separatorBuilder: (_, _) => const SizedBox(width: 14),
               itemBuilder: (context, index) =>
                   _buildArtisanCard(artisans[index]),
             ),
@@ -673,7 +673,7 @@ class _HomeScreenState extends State<HomeScreen>
           border: Border.all(color: _themedBorder, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -694,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen>
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       height: 120,
-                      color: AppColors.primary.withOpacity(0.2),
+                      color: AppColors.primary.withValues(alpha: 0.2),
                       child: const Icon(Icons.person,
                           color: Colors.white, size: 40),
                     ),
@@ -823,7 +823,7 @@ class _HomeScreenState extends State<HomeScreen>
               'Get early access to limited seasonal gift\ndrops and artisan stories.',
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 height: 1.5,
               ),
             ),
@@ -842,7 +842,7 @@ class _HomeScreenState extends State<HomeScreen>
                       hintText: 'Your email',
                       hintStyle: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textGrey.withOpacity(0.7),
+                        color: AppColors.textGrey.withValues(alpha: 0.7),
                       ),
                       filled: true,
                       fillColor: Colors.white,

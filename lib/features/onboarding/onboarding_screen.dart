@@ -57,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () => context.go('/home'), // Skip straight to home page
+                  onPressed: () => context.go('/login'),// Skip straight to login page
                   child: Text(
                     'Skip',
                     style: TextStyle(
@@ -93,7 +93,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             borderRadius: BorderRadius.circular(28),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+                                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
                                 blurRadius: 24,
                                 offset: const Offset(0, 12),
                               )
@@ -150,7 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         height: 8,
                         width: _currentPage == index ? 24 : 8,
                         decoration: BoxDecoration(
-                          color: _currentPage == index ? AppColors.primary : AppColors.grey400.withOpacity(0.4),
+                          color: _currentPage == index ? AppColors.primary : AppColors.grey400.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -161,7 +161,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   FloatingActionButton.extended(
                     onPressed: () {
                       if (_currentPage == _onboardingData.length - 1) {
-                        context.go('/home'); // Onboarding finishes, route to home
+                        context.go('/login'); // Onboarding finishes, route to login
                       } else {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),

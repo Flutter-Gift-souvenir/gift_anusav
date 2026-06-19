@@ -54,7 +54,7 @@ class ShimmerGrid extends StatelessWidget {
         childAspectRatio: 0.75,
       ),
       itemCount: itemCount,
-      itemBuilder: (_, __) => const ShimmerCard(),
+      itemBuilder: (_, _) => const ShimmerCard(),
     );
   }
 }
@@ -77,8 +77,8 @@ class ShimmerList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: itemCount,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (_, __) => ShimmerCard(height: itemHeight),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      itemBuilder: (_, _) => ShimmerCard(height: itemHeight),
     );
   }
 }

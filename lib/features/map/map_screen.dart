@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gift_anusav/router/app_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gap/gap.dart';
@@ -257,7 +256,7 @@ decoration: BoxDecoration(
                       TextButton(
                         onPressed: () => context.go('/promotions'),
                         child: Text(
-                          'View All',
+                          '         All',
                           style: AppTextStyles.labelMedium.copyWith(
                             color: AppColors.primary,
                           ),
