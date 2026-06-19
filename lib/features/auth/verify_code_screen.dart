@@ -69,7 +69,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
     setState(() => _isLoading = false);
 
     AppHelpers.showSnackBar(context, 'Email verified! You can now log in.');
-    context.go('/login');
+    context.push('/reset-password');
   }
 
   void _handleResend() {

@@ -29,6 +29,8 @@ import '../features/auth/login_screen.dart';
 import '../features/auth/signup_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
 import '../features/auth/verify_code_screen.dart';
+import '../features/auth/reset_password_screen.dart';
+import '../features/auth/reset_success_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -60,6 +62,8 @@ class AppRouter {
   static const String signup = '/signup';
   static const String forgotPassword = '/forgot-password';
   static const String verifyCode = '/verify-code';
+  static const String resetPassword = '/reset-password';
+  static const String resetSuccess = '/reset-success';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -253,6 +257,18 @@ GoRoute(
     final email = state.pathParameters['email']!;
     return VerifyCodeScreen(email: email);
   },
+),
+// Reset Password (no bottom nav)
+GoRoute(
+  path: resetPassword,
+  name: 'resetPassword',
+  builder: (context, state) => const ResetPasswordScreen(),
+),
+// Reset Success (no bottom nav)
+GoRoute(
+  path: resetSuccess,
+  name: 'resetSuccess',
+  builder: (context, state) => const ResetSuccessScreen(),
 ),
       // Forgot Password (no bottom nav)
 GoRoute(
