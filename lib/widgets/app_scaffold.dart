@@ -40,7 +40,7 @@ class AppScaffold extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final headerTextColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final navBgColor = isDark ? AppColors.surfaceDark : AppColors.white;
-    final shadowColor = isDark ? AppColors.black.withOpacity(0.25) : AppColors.black.withOpacity(0.06);
+    final shadowColor = isDark ? AppColors.black.withValues(alpha: 0.25) : AppColors.black.withValues(alpha: 0.06);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

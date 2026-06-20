@@ -114,7 +114,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
                             AppConstants.defaultPadding,
                           ),
                           itemCount: _filteredShops.length,
-                          separatorBuilder: (_, __) => const Gap(16),
+                          separatorBuilder: (_, _) => const Gap(16),
                           itemBuilder: (context, index) {
                             return _NearbyShopCard(
                               shop: _filteredShops[index],
@@ -257,7 +257,7 @@ class _NearbyShopCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.06),
+            color: AppColors.black.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -306,7 +306,7 @@ class _NearbyShopCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withOpacity(0.1),
+                        color: AppColors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                       ),
                     ],

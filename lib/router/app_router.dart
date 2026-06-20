@@ -25,6 +25,7 @@ import '../features/booking/booking_history_screen.dart';
 import '../features/settings/help_support_screen.dart';
 import '../features/settings/payment_methods_screen.dart';
 import '../features/settings/about_screen.dart';
+import '../features/auth/login_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -52,6 +53,7 @@ class AppRouter {
   static const String helpSupport = '/help-support';
   static const String paymentMethods = '/payment-methods';
   static const String aboutAnusav = '/about';
+  static const String login = '/login';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -114,6 +116,7 @@ class AppRouter {
           ),
         ],
       ),
+      // Login (no bottom nav)
       // Help & Support (no bottom nav — opened from Settings)
 GoRoute(
   path: helpSupport,
@@ -236,6 +239,11 @@ GoRoute(
           );
         },
       ),
+      GoRoute(
+  path: login,
+  name: 'login',
+  builder: (context, state) => const LoginScreen(),
+),
     ],
 
     // --- Error Page ---

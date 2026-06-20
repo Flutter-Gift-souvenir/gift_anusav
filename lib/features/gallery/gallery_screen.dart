@@ -132,7 +132,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       width: 58,
                       height: 58,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.45),
+                        color: Colors.black.withValues(alpha: 0.45),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -376,7 +376,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.22 : 0.08),
+            color: Colors.black.withValues(alpha: isDark ? 0.22 : 0.08),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -405,7 +405,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.78),
+                    Colors.black.withValues(alpha: 0.78),
                   ],
                 ),
               ),
@@ -447,7 +447,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   Text(
                     '${photos.length} photos • ${videos.length} videos',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.82),
+                      color: Colors.white.withValues(alpha: 0.82),
                       fontSize: 13,
                     ),
                   ),
@@ -537,7 +537,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.16 : 0.035),
+              color: Colors.black.withValues(alpha: isDark ? 0.16 : 0.035),
               blurRadius: 12,
               offset: const Offset(0, 5),
             ),
@@ -566,7 +566,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.72),
+                      Colors.black.withValues(alpha: 0.72),
                     ],
                     stops: const [0.45, 1.0],
                   ),
@@ -578,7 +578,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.38),
+                    color: Colors.black.withValues(alpha: 0.38),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -611,7 +611,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.78),
+                        color: Colors.white.withValues(alpha: 0.78),
                         fontSize: 11,
                         height: 1.25,
                       ),
@@ -641,7 +641,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.16 : 0.035),
+              color: Colors.black.withValues(alpha: isDark ? 0.16 : 0.035),
               blurRadius: 12,
               offset: const Offset(0, 5),
             ),
@@ -675,7 +675,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     width: 38,
                     height: 38,
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.45),
+                      color: Colors.black.withValues(alpha: 0.45),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -773,9 +773,9 @@ class _PhotoViewer extends StatelessWidget {
                       width: 42,
                       height: 42,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.45),
+                        color: Colors.black.withValues(alpha: 0.45),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.white.withOpacity(0.12)),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
                       ),
                       child: const Icon(
                         Icons.close,
@@ -804,7 +804,7 @@ class _PhotoViewer extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.72),
+                            color: Colors.white.withValues(alpha: 0.72),
                             fontSize: 12,
                           ),
                         ),

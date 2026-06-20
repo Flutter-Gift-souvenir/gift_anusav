@@ -211,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 72,
               width: 72,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.12),
+                color: AppColors.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -281,7 +281,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               CircleAvatar(
                 radius: 22,
-                backgroundColor: AppColors.primary.withOpacity(0.12),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                 backgroundImage: CachedNetworkImageProvider(_artisan!.photoUrl),
               ),
               Positioned(
@@ -382,7 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
             height: 38,
             width: 38,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.12),
+              color: AppColors.primary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -472,7 +472,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 if (!isMe) ...[
                   CircleAvatar(
                     radius: 13,
-                    backgroundColor: AppColors.primary.withOpacity(0.12),
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                     backgroundImage: CachedNetworkImageProvider(_artisan!.photoUrl),
                   ),
                   const Gap(8),
@@ -490,7 +490,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.black.withOpacity(isDark ? 0.16 : 0.04),
+                          color: AppColors.black.withValues(alpha: isDark ? 0.16 : 0.04),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -540,7 +540,7 @@ class _ChatScreenState extends State<ChatScreen> {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: suggestions.length,
-        separatorBuilder: (_, __) => const Gap(8),
+        separatorBuilder: (_, _) => const Gap(8),
         itemBuilder: (context, index) {
           final suggestion = suggestions[index];
 
@@ -576,7 +576,7 @@ class _ChatScreenState extends State<ChatScreen> {
         color: isDark ? AppColors.surfaceDark : AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.06),
+            color: AppColors.black.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),
@@ -637,7 +637,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.25),
+                    color: AppColors.primary.withValues(alpha: 0.25),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

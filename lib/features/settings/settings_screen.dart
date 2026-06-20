@@ -41,7 +41,7 @@ class SettingsScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: AppColors.primary.withValues(alpha: 0.3),
                             width: 3,
                           ),
                         ),
@@ -137,7 +137,7 @@ Text(
                 label: 'Dark Mode',
                 trailing: Switch(
                   value: themeProvider.isDarkMode,
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                   onChanged: (_) => themeProvider.toggleTheme(),
                 ),
               ),
@@ -154,7 +154,7 @@ Text(
                 label: 'Notifications',
                 trailing: Switch(
                   value: true,
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                   onChanged: (_) => AppHelpers.showComingSoon(context, 'Notifications'),
                 ),
               ),
@@ -331,7 +331,7 @@ void _showLogoutDialog(BuildContext context) {
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.04),
+            color: AppColors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

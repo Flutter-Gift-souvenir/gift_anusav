@@ -176,7 +176,7 @@ class BookingHistoryScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04), 
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04), 
             blurRadius: 14,
             offset: const Offset(0, 6)
           )
@@ -267,7 +267,7 @@ class BookingHistoryScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.06),
+                  color: AppColors.primary.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(

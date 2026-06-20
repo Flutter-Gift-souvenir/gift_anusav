@@ -166,7 +166,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           borderRadius: BorderRadius.circular(28),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -188,7 +188,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               return Image.network(
                                 currentImg,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
+                                errorBuilder: (_, _, _) => Container(
                                   color: AppColors.grey200,
                                   child: const Icon(Icons.image_not_supported, size: 48),
                                 ),
@@ -210,7 +210,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             decoration: BoxDecoration(
                               color: _currentImageIndex == index 
                                   ? AppColors.primary 
-                                  : AppColors.grey400.withOpacity(0.4),
+                                  : AppColors.grey400.withValues(alpha: 0.4),
                               borderRadius: BorderRadius.circular(3),
                             ),
                           ),
@@ -361,7 +361,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: Text(
                           product.description,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: textPrimary.withOpacity(0.8),
+                            color: textPrimary.withValues(alpha: 0.8),
                             height: 1.5,
                           ),
                         ),
@@ -375,7 +375,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         onToggle: () => setState(() => _isMaterialsExpanded = !_isMaterialsExpanded),
                         child: Text(
                           'Handcrafted authentically in ${product.origin}. Utilizing sustainable regional resources and signature techniques unique to local artisan guilds.',
-                          style: theme.textTheme.bodyMedium?.copyWith(color: textPrimary.withOpacity(0.8), height: 1.4),
+                          style: theme.textTheme.bodyMedium?.copyWith(color: textPrimary.withValues(alpha: 0.8), height: 1.4),
                         ),
                         context: context,
                       ),
@@ -389,7 +389,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           spacing: 8,
                           children: product.tags.map((tag) => Chip(
                             label: Text(tag),
-                            backgroundColor: AppColors.primary.withOpacity(0.1),
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                           )).toList(),
                         ),
                         context: context,
@@ -406,7 +406,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryDark.withOpacity(isDark ? 0.4 : 0.85),
+                      color: AppColors.primaryDark.withValues(alpha: isDark ? 0.4 : 0.85),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
@@ -429,7 +429,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         Text(
                           '20% of the proceeds from this purchase go directly to support our local artisan networks across Cambodia.',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             height: 1.4,
                           ),
                         ),
@@ -451,7 +451,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(isDark ? 0.5 : 0.08),
+                    color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.08),
                     blurRadius: 20,
                     offset: const Offset(0, -5),
                   ),
