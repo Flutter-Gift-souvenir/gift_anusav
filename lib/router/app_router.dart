@@ -26,6 +26,7 @@ import '../features/settings/help_support_screen.dart';
 import '../features/settings/payment_methods_screen.dart';
 import '../features/settings/about_screen.dart';
 import '../features/auth/login_screen.dart';
+import '../features/auth/signup_screen.dart';
 
 class AppRouter {
   AppRouter._(); 
@@ -54,6 +55,7 @@ class AppRouter {
   static const String paymentMethods = '/payment-methods';
   static const String aboutAnusav = '/about';
   static const String login = '/login';
+  static const String signup = '/signup';
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
@@ -239,6 +241,12 @@ GoRoute(
           );
         },
       ),
+      // Sign Up (no bottom nav)
+GoRoute(
+  path: signup,
+  name: 'signup',
+  builder: (context, state) => const SignUpScreen(),
+),
       GoRoute(
   path: login,
   name: 'login',
