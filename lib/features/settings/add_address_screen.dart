@@ -48,6 +48,27 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   void _saveAddress() {
+    if (_nameController.text.trim().isEmpty) {
+      AppHelpers.showSnackBar(context, 'Please enter recipient name');
+      return;
+    }
+    if (_phoneController.text.trim().isEmpty) {
+      AppHelpers.showSnackBar(context, 'Please enter phone number');
+      return;
+    }
+    if (_selectedProvince == null) {
+      AppHelpers.showSnackBar(context, 'Please select a province');
+      return;
+    }
+    if (_districtController.text.trim().isEmpty) {
+      AppHelpers.showSnackBar(context, 'Please enter Sangkat/District');
+      return;
+    }
+    if (_streetController.text.trim().isEmpty) {
+      AppHelpers.showSnackBar(context, 'Please enter street address');
+      return;
+    }
+
     AppHelpers.showSnackBar(context, 'Address saved successfully!');
     context.pop();
   }

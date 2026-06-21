@@ -70,6 +70,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // --- Save Changes ---
   void _saveChanges() {
+    final email = _emailController.text.trim();
+
+    // Only validate email if user typed something (since fields are optional placeholders)
+    if (email.isNotEmpty) {
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      if (!emailRegex.hasMatch(email)) {
+        AppHelpers.showSnackBar(context, 'Please enter a valid email address');
+        return;
+      }
+    }
+
     AppHelpers.showSnackBar(context, 'Profile updated successfully!');
     context.pop();
   }
