@@ -6,8 +6,22 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 
-class HelpSupportScreen extends StatelessWidget {
+class HelpSupportScreen extends StatefulWidget {
   const HelpSupportScreen({super.key});
+
+  @override
+  State<HelpSupportScreen> createState() => _HelpSupportScreenState();
+}
+
+class _HelpSupportScreenState extends State<HelpSupportScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +73,18 @@ class HelpSupportScreen extends StatelessWidget {
       },
     ];
 
+    final filteredFaqs = _searchQuery.isEmpty
+        ? faqs
+        : faqs
+            .where((faq) =>
+                faq['question']!
+                    .toLowerCase()
+                    .contains(_searchQuery.toLowerCase()) ||
+                faq['answer']!
+                    .toLowerCase()
+                    .contains(_searchQuery.toLowerCase()))
+            .toList();
+
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
@@ -101,25 +127,36 @@ class HelpSupportScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withValues(alpha: 0.04),
+                            color: AppColors.black.withOpacity(0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: TextField(
-                        readOnly: true,
-                        onTap: () =>
-                            AppHelpers.showComingSoon(context, 'Search'),
+                        controller: _searchController,
                         style: AppTextStyles.bodyLarge.copyWith(
                           color: textColor,
                         ),
+                        onChanged: (value) {
+                          setState(() => _searchQuery = value);
+                        },
                         decoration: InputDecoration(
                           hintText: 'Search for help...',
                           hintStyle: AppTextStyles.bodyLarge.copyWith(
                             color: secondaryColor,
                           ),
                           prefixIcon: Icon(Icons.search, color: secondaryColor),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.close,
+                                      color: secondaryColor, size: 18),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                  },
+                                )
+                              : null,
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 14,
@@ -166,7 +203,7 @@ class HelpSupportScreen extends StatelessWidget {
 
                     const Gap(12),
 
-                    ...faqs.map(
+                    ...filteredFaqs.map(
                       (faq) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _FaqTile(
@@ -178,6 +215,24 @@ class HelpSupportScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    if (filteredFaqs.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Column(
+                          children: [
+                            Icon(Icons.search_off,
+                                size: 40, color: secondaryColor),
+                            const Gap(8),
+                            Text(
+                              'No results for "$_searchQuery"',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: secondaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                     const Gap(8),
 
@@ -205,7 +260,7 @@ class HelpSupportScreen extends StatelessWidget {
                           Text(
                             'Our support team is ready to assist you with any questions.',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.white.withValues(alpha: 0.9),
+                              color: AppColors.white.withOpacity(0.9),
                             ),
                           ),
                           const Gap(20),
@@ -337,7 +392,7 @@ class _QuickActionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.04),
+              color: AppColors.black.withOpacity(0.04),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -350,7 +405,7 @@ class _QuickActionCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: AppColors.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: AppColors.primary, size: 22),
@@ -398,45 +453,50 @@ class _FaqTileState extends State<_FaqTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.isDark ? AppColors.surfaceDark : AppColors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.04),
+            color: AppColors.black.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
-        ),
-        child: ExpansionTile(
-          onExpansionChanged: (expanded) {
-            setState(() => _isExpanded = expanded);
-          },
-          title: Text(
-            widget.question,
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: widget.textColor,
-              fontWeight: FontWeight.w600,
-            ),
+      child: Material(
+        color: widget.isDark ? AppColors.surfaceDark : AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            dividerColor: Colors.transparent,
           ),
-          trailing: Icon(
-            _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-            color: widget.secondaryColor,
-          ),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          expandedAlignment: Alignment.topLeft,
-          children: [
-            Text(
-              widget.answer,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: widget.secondaryColor,
+          child: ExpansionTile(
+            onExpansionChanged: (expanded) {
+              setState(() => _isExpanded = expanded);
+            },
+            title: Text(
+              widget.question,
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: widget.textColor,
+                fontWeight: FontWeight.w600,
               ),
             ),
-          ],
+            trailing: Icon(
+              _isExpanded
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              color: widget.secondaryColor,
+            ),
+            childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            expandedAlignment: Alignment.topLeft,
+            children: [
+              Text(
+                widget.answer,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: widget.secondaryColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

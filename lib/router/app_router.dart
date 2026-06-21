@@ -12,7 +12,6 @@ import '../features/reviews/reviews_screen.dart';
 // import '../features/gallery/gallery_screen.dart'; 
 import '../features/map/map_screen.dart';
 import '../features/nearby/nearby_screen.dart';
-import '../features/favorites/favorites_screen.dart';
 import '../features/promotions/promotions_screen.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/shell/main_shell.dart';
@@ -48,7 +47,6 @@ class AppRouter {
   static const String gallery = '/gallery';
   static const String map = '/map';
   static const String nearby = '/nearby';
-  static const String favorites = '/favorites';
   static const String promotions = '/promotions';
   static const String quiz = '/quiz';
   static const String settings = '/settings';
@@ -111,14 +109,6 @@ class AppRouter {
             name: 'map',
             builder: (context, state) => const MapScreen(),
           ),
-          // Favorites (Uncommented for Vatanak's task integration)
-          GoRoute(
-            path: favorites,
-            name: 'favorites',
-            builder: (context, state) => const FavoritesScreen(),
-          ),
-          
-          
           GoRoute(
             path: booking,
             name: 'booking_history',
