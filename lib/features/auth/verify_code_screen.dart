@@ -6,6 +6,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../services/auth_service.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
   final String email;
@@ -56,24 +57,32 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   String get _code => _controllers.map((c) => c.text).join();
 
-  Future<void> _handleVerify() async {
+Future<void> _handleVerify() async {
     if (_code.length != 6) {
       AppHelpers.showSnackBar(context, 'Please enter the full 6-digit code');
       return;
     }
 
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 800));
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+    try {
+      await AuthService.verifyOtp(
+        email: widget.email,
+        token: _code,
+      );
 
-    AppHelpers.showSnackBar(context, 'Email verified! You can now log in.');
-    context.push('/reset-password');
+      if (!mounted) return;
+      context.push('/reset-password');
+    } on Exception {
+      if (!mounted) return;
+      AppHelpers.showSnackBar(context, 'Invalid code. Please try again.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
-
   void _handleResend() {
     if (_secondsLeft > 0) return;
+    AuthService.resetPassword(widget.email);
     AppHelpers.showSnackBar(context, 'New code sent to ${widget.email}');
     _startTimer();
   }
@@ -132,7 +141,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 Text(
                   'HERITAGE HEARTH',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.white.withOpacity(0.8),
+                    color: AppColors.white.withValues(alpha: 0.8),
                     letterSpacing: 2,
                   ),
                 ),
@@ -254,7 +263,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
                         disabledBackgroundColor:
-                            AppColors.primary.withOpacity(0.6),
+                            AppColors.primary.withValues(alpha: 0.6),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

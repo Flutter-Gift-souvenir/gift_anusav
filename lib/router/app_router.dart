@@ -30,9 +30,10 @@ import '../features/auth/forgot_password_screen.dart';
 import '../features/auth/verify_code_screen.dart';
 import '../features/auth/reset_password_screen.dart';
 import '../features/auth/reset_success_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppRouter {
-  AppRouter._(); 
+  AppRouter._();
 
 
   static const String onboarding = '/onboarding';
@@ -65,7 +66,9 @@ class AppRouter {
 
   // --- Router Config ---
   static final GoRouter router = GoRouter(
-    initialLocation: home,
+    initialLocation: Supabase.instance.client.auth.currentSession != null
+    ? home
+    : onboarding,
     debugLogDiagnostics: true,
     routes: [
       // ─── Onboarding (no bottom nav) ──────────────────────────────────────

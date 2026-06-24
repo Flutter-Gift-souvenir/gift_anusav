@@ -16,19 +16,28 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  @override
-void initState() {
-  super.initState();
-  _loadProducts();
-}
+  final ScrollController _scrollController = ScrollController();
 
-Future<void> _loadProducts() async {
-  final products = await MockRepository.getProducts();
-  setState(() {
-    _allProducts = products;
-    _productsLoaded = true;
-  });
-}
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProducts() async {
+    final products = await MockRepository.getProducts();
+    setState(() {
+      _allProducts = products;
+      _productsLoaded = true;
+    });
+  }
+
   // --- State ---
   int _currentStep = 0;
   String? _selectedRecipient;
@@ -156,6 +165,7 @@ final List<Map<String, String>> _preferences = [
             // --- Content ---
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(AppConstants.defaultPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -533,6 +543,11 @@ final List<Map<String, String>> _preferences = [
                 _selectedPreference = null;
                 _selectedVibe = null;
               });
+              _scrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
             },
             icon: const Icon(Icons.refresh, size: 18, color: AppColors.gold),
             label: Text(

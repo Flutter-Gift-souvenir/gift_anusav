@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../widgets/shimmer_card.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -14,6 +15,19 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulateLoad();
+  }
+
+  Future<void> _simulateLoad() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (mounted) setState(() => _isLoading = false);
+  }
+
   // --- Controllers ---
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -125,188 +139,199 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             // --- Content ---
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.defaultPadding,
-                ),
-                child: Column(
-                  children: [
-                    const Gap(8),
-
-                    // --- Avatar ---
-                    Stack(
-                      children: [
-                        Container(
-                          width: 110,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.primary.withValues(alpha: 0.3),
-                              width: 3,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
-                                color: AppColors.grey200,
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 56,
-                                  color: AppColors.grey400,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => AppHelpers.showComingSoon(
-                              context,
-                              'Photo upload',
-                            ),
-                            child: Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isDark
-                                      ? AppColors.backgroundDark
-                                      : AppColors.backgroundLight,
-                                  width: 2,
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.camera_alt,
-                                size: 18,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const Gap(12),
-
-                    // --- Member Badge ---
-                    Text(
-                      'ANUSAV GOLD MEMBER',
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: AppColors.goldDark,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-
-                    const Gap(24),
-
-                    // --- Form Card ---
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.surfaceDark : AppColors.white,
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.cardBorderRadius,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.black.withValues(alpha: 0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+              child: _isLoading
+                  ? const _EditProfileShimmer()
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.defaultPadding,
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Full Name
-                          _buildLabel('Full Name', secondaryColor),
-                          _buildTextField(
-                            controller: _nameController,
-                            hint: 'Sopheak Vuthy',
-                            isDark: isDark,
-                          ),
+                          const Gap(8),
 
-                          const Gap(16),
-
-                          // Email
-                          _buildLabel('Email Address', secondaryColor),
-                          _buildTextField(
-                            controller: _emailController,
-                            hint: 'sopheak.v@anusav.com',
-                            isDark: isDark,
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-
-                          const Gap(16),
-
-                          // Phone
-                          _buildLabel('Phone Number', secondaryColor),
-                          _buildTextField(
-                            controller: _phoneController,
-                            hint: '+855 12 345 678',
-                            isDark: isDark,
-                            keyboardType: TextInputType.phone,
-                          ),
-
-                          const Gap(16),
-
-                          // Birthday + Gender row
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          // --- Avatar ---
+                          Stack(
                             children: [
-                              // Birthday
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel('Birthday', secondaryColor),
-                                    _buildTextField(
-                                      controller: _birthdayController,
-                                      hint: '10/14/1995',
-                                      isDark: isDark,
-                                      readOnly: true,
-                                      onTap: _pickDate,
-                                      suffixIcon: Icons
-                                          .calendar_today_outlined,
+                              Container(
+                                width: 110,
+                                height: 110,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.primary
+                                        .withValues(alpha: 0.3),
+                                    width: 3,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200',
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
+                                      color: AppColors.grey200,
+                                      child: const Icon(
+                                        Icons.person,
+                                        size: 56,
+                                        color: AppColors.grey400,
+                                      ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-
-                              const Gap(12),
-
-                              // Gender
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    _buildLabel('Gender', secondaryColor),
-                                    _buildGenderDropdown(isDark, textColor),
-                                  ],
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () => AppHelpers.showComingSoon(
+                                    context,
+                                    'Photo upload',
+                                  ),
+                                  child: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: isDark
+                                            ? AppColors.backgroundDark
+                                            : AppColors.backgroundLight,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      size: 18,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
+
+                          const Gap(12),
+
+                          // --- Member Badge ---
+                          Text(
+                            'ANUSAV GOLD MEMBER',
+                            style: AppTextStyles.labelMedium.copyWith(
+                              color: AppColors.goldDark,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+
+                          const Gap(24),
+
+                          // --- Form Card ---
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.surfaceDark
+                                  : AppColors.white,
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.cardBorderRadius,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.black
+                                      .withValues(alpha: 0.04),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Full Name
+                                _buildLabel('Full Name', secondaryColor),
+                                _buildTextField(
+                                  controller: _nameController,
+                                  hint: 'Sopheak Vuthy',
+                                  isDark: isDark,
+                                ),
+
+                                const Gap(16),
+
+                                // Email
+                                _buildLabel('Email Address', secondaryColor),
+                                _buildTextField(
+                                  controller: _emailController,
+                                  hint: 'sopheak.v@anusav.com',
+                                  isDark: isDark,
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+
+                                const Gap(16),
+
+                                // Phone
+                                _buildLabel('Phone Number', secondaryColor),
+                                _buildTextField(
+                                  controller: _phoneController,
+                                  hint: '+855 12 345 678',
+                                  isDark: isDark,
+                                  keyboardType: TextInputType.phone,
+                                ),
+
+                                const Gap(16),
+
+                                // Birthday + Gender row
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    // Birthday
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel(
+                                              'Birthday', secondaryColor),
+                                          _buildTextField(
+                                            controller: _birthdayController,
+                                            hint: '10/14/1995',
+                                            isDark: isDark,
+                                            readOnly: true,
+                                            onTap: _pickDate,
+                                            suffixIcon:
+                                                Icons.calendar_today_outlined,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const Gap(12),
+
+                                    // Gender
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildLabel(
+                                              'Gender', secondaryColor),
+                                          _buildGenderDropdown(
+                                              isDark, textColor),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Gap(24),
                         ],
                       ),
                     ),
-
-                    const Gap(24),
-                  ],
-                ),
-              ),
             ),
 
             // --- Save Button ---
@@ -432,6 +457,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
           },
         ),
+      ),
+    );
+  }
+}
+
+// --- Shimmer Loading Placeholder ---
+class _EditProfileShimmer extends StatelessWidget {
+  const _EditProfileShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.defaultPadding,
+      ),
+      child: Column(
+        children: [
+          const Gap(8),
+          const Center(child: ShimmerCard(height: 110, width: 110)),
+          const Gap(12),
+          const Center(child: ShimmerCard(height: 16, width: 160)),
+          const Gap(24),
+          const ShimmerCard(height: 320),
+          const Gap(24),
+        ],
       ),
     );
   }

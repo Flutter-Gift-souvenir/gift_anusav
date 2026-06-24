@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,17 +15,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // --- Controllers ---
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   String? _errorMessage;
-
-  // --- Mock Credentials ---
-  static const String _mockEmail = 'sopheak.v@anusav.com';
-  static const String _mockPassword = 'password123';
 
   @override
   void dispose() {
@@ -33,12 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // --- Login Logic ---
+  // --- Email/Password Login ---
   Future<void> _handleLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Basic validation
     if (email.isEmpty || password.isEmpty) {
       setState(() => _errorMessage = 'Please fill in all fields');
       return;
@@ -49,19 +45,62 @@ class _LoginScreenState extends State<LoginScreen> {
       _errorMessage = null;
     });
 
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final response = await AuthService.signInWithEmail(
+        email: email,
+        password: password,
+      );
 
-    if (email == _mockEmail && password == _mockPassword) {
       if (!mounted) return;
-      AppHelpers.showSnackBar(context, 'Welcome back!');
-      context.go('/');
-    } else {
+
+      if (response.user != null) {
+        AppHelpers.showSnackBar(context, 'Welcome back!');
+        context.go('/');
+      }
+    } on Exception catch (e) {
       setState(() {
-        _isLoading = false;
-        _errorMessage = 'Invalid email or password';
+        _errorMessage = _parseError(e.toString());
       });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  // --- Google Login ---
+  Future<void> _handleGoogleLogin() async {
+    setState(() {
+      _isGoogleLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await AuthService.signInWithGoogle();
+
+      if (!mounted) return;
+
+      if (response?.user != null) {
+        AppHelpers.showSnackBar(context, 'Welcome back!');
+        context.go('/');
+      }
+    } on Exception catch (e) {
+      setState(() {
+        _errorMessage = _parseError(e.toString());
+      });
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
+    }
+  }
+
+  // --- Parse Supabase error messages ---
+  String _parseError(String error) {
+    if (error.contains('Invalid login credentials')) {
+      return 'Invalid email or password';
+    } else if (error.contains('Email not confirmed')) {
+      return 'Please confirm your email first';
+    } else if (error.contains('network')) {
+      return 'Network error. Check your connection';
+    }
+    return 'Something went wrong. Please try again';
   }
 
   @override
@@ -257,7 +296,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.white,
-                    disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
+                    disabledBackgroundColor:
+                        AppColors.primary.withValues(alpha: 0.6),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -315,52 +355,62 @@ class _LoginScreenState extends State<LoginScreen> {
               // --- Social Buttons ---
               Row(
                 children: [
+                  // Google
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () =>
-                          AppHelpers.showComingSoon(context, 'Google login'),
+                      onPressed: _isGoogleLoading ? null : _handleGoogleLogin,
                       style: OutlinedButton.styleFrom(
                         foregroundColor: textColor,
                         side: BorderSide(
-                          color: isDark ? AppColors.grey800 : AppColors.grey200,
+                          color:
+                              isDark ? AppColors.grey800 : AppColors.grey200,
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('G', style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                            color: Color(0xFF4285F4),
-                          )),
-                          const Gap(8),
-                          Text(
-                            'Google',
-                            style: AppTextStyles.labelMedium.copyWith(
-                              color: textColor,
-                              fontWeight: FontWeight.w600,
+                      child: _isGoogleLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text('G',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 16,
+                                      color: Color(0xFF4285F4),
+                                    )),
+                                const Gap(8),
+                                Text(
+                                  'Google',
+                                  style: AppTextStyles.labelMedium.copyWith(
+                                    color: textColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
 
                   const Gap(12),
 
+                  // Facebook
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () =>
-                          AppHelpers.showComingSoon(context, 'Facebook login'),
+                      onPressed: () => AppHelpers.showComingSoon(
+                          context, 'Facebook login'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: textColor,
                         side: BorderSide(
-                          color: isDark ? AppColors.grey800 : AppColors.grey200,
+                          color:
+                              isDark ? AppColors.grey800 : AppColors.grey200,
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
@@ -414,24 +464,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ],
-              ),
-
-              const Gap(24),
-
-              // --- Hint for mock credentials ---
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.gold.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Demo: $_mockEmail / $_mockPassword',
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.goldDark,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
               ),
 
               const Gap(24),

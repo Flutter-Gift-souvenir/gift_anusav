@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../services/auth_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -39,7 +40,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _handleReset() async {
+Future<void> _handleReset() async {
     if (!_hasMinLength || !_hasNumber || !_hasSpecialChar) {
       AppHelpers.showSnackBar(context, 'Password does not meet all requirements');
       return;
@@ -50,12 +51,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
 
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 800));
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
+    try {
+      await AuthService.updatePassword(_passwordController.text);
 
-    context.push('/reset-success');
+      if (!mounted) return;
+      context.push('/reset-success');
+    } on Exception {
+      if (!mounted) return;
+      AppHelpers.showSnackBar(context, 'Something went wrong. Please try again.');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -112,7 +119,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 Text(
                   'HERITAGE HEARTH',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.white.withOpacity(0.7),
+                    color: AppColors.white.withValues(alpha: 0.7),
                     letterSpacing: 2,
                   ),
                 ),
@@ -281,7 +288,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
                         disabledBackgroundColor:
-                            AppColors.primary.withOpacity(0.6),
+                            AppColors.primary.withValues(alpha: 0.6),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

@@ -109,7 +109,7 @@ _MapButton(
         // --- Map Tiles ---
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.giftanusav.app',
+          userAgentPackageName: 'com.anusav.app',
         ),
 
         // --- Markers ---
