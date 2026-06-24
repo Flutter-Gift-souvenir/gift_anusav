@@ -7,6 +7,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../widgets/shimmer_card.dart';
 
 class AddAddressScreen extends StatefulWidget {
   const AddAddressScreen({super.key});
@@ -16,6 +17,19 @@ class AddAddressScreen extends StatefulWidget {
 }
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _simulateLoad();
+  }
+
+  Future<void> _simulateLoad() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (mounted) setState(() => _isLoading = false);
+  }
+
   // --- Controllers ---
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -109,338 +123,355 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
             // --- Content ---
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.defaultPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // --- Form Card ---
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.surfaceDark : AppColors.white,
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.cardBorderRadius,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.black.withValues(alpha: 0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+              child: _isLoading
+                  ? const _AddAddressShimmer()
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.defaultPadding,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // --- Address Label Chips ---
-                          _buildLabel('Address Label', textColor),
-                          const Gap(8),
-                          Row(
-                            children: [
-                              _LabelChip(
-                                label: 'Home',
-                                icon: Icons.home_outlined,
-                                isSelected: _selectedLabel == 'Home',
-                                isDark: isDark,
-                                onTap: () =>
-                                    setState(() => _selectedLabel = 'Home'),
-                              ),
-                              const Gap(8),
-                              _LabelChip(
-                                label: 'Work',
-                                icon: Icons.work_outline,
-                                isSelected: _selectedLabel == 'Work',
-                                isDark: isDark,
-                                onTap: () =>
-                                    setState(() => _selectedLabel = 'Work'),
-                              ),
-                              const Gap(8),
-                              _LabelChip(
-                                label: 'Other',
-                                icon: Icons.add,
-                                isSelected: _selectedLabel == 'Other',
-                                isDark: isDark,
-                                onTap: () =>
-                                    setState(() => _selectedLabel = 'Other'),
-                              ),
-                            ],
-                          ),
-
-                          const Gap(16),
-
-                          // --- Recipient Name ---
-                          _buildLabel('Recipient Name', textColor),
-                          _buildTextField(
-                            controller: _nameController,
-                            hint: 'e.g., Serey Rath',
-                            isDark: isDark,
-                          ),
-
-                          const Gap(16),
-
-                          // --- Phone Number ---
-                          _buildLabel('Phone Number', textColor),
+                          // --- Form Card ---
                           Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.grey800
-                                  : AppColors.grey100,
-                              borderRadius: BorderRadius.circular(8),
+                                  ? AppColors.surfaceDark
+                                  : AppColors.white,
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.cardBorderRadius,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.black
+                                      .withValues(alpha: 0.04),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                  ),
-                                  child: Text(
-                                    '+855',
-                                    style: AppTextStyles.bodyLarge.copyWith(
-                                      color: textColor,
-                                      fontWeight: FontWeight.w600,
+                                // --- Address Label Chips ---
+                                _buildLabel('Address Label', textColor),
+                                const Gap(8),
+                                Row(
+                                  children: [
+                                    _LabelChip(
+                                      label: 'Home',
+                                      icon: Icons.home_outlined,
+                                      isSelected: _selectedLabel == 'Home',
+                                      isDark: isDark,
+                                      onTap: () => setState(
+                                          () => _selectedLabel = 'Home'),
                                     ),
-                                  ),
+                                    const Gap(8),
+                                    _LabelChip(
+                                      label: 'Work',
+                                      icon: Icons.work_outline,
+                                      isSelected: _selectedLabel == 'Work',
+                                      isDark: isDark,
+                                      onTap: () => setState(
+                                          () => _selectedLabel = 'Work'),
+                                    ),
+                                    const Gap(8),
+                                    _LabelChip(
+                                      label: 'Other',
+                                      icon: Icons.add,
+                                      isSelected: _selectedLabel == 'Other',
+                                      isDark: isDark,
+                                      onTap: () => setState(
+                                          () => _selectedLabel = 'Other'),
+                                    ),
+                                  ],
                                 ),
+
+                                const Gap(16),
+
+                                // --- Recipient Name ---
+                                _buildLabel('Recipient Name', textColor),
+                                _buildTextField(
+                                  controller: _nameController,
+                                  hint: 'e.g., Serey Rath',
+                                  isDark: isDark,
+                                ),
+
+                                const Gap(16),
+
+                                // --- Phone Number ---
+                                _buildLabel('Phone Number', textColor),
                                 Container(
-                                  width: 1,
-                                  height: 24,
-                                  color: isDark
-                                      ? AppColors.grey600
-                                      : AppColors.grey400,
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    controller: _phoneController,
-                                    keyboardType: TextInputType.phone,
-                                    style: AppTextStyles.bodyLarge.copyWith(
-                                      color: textColor,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText: '12 345 678',
-                                      hintStyle: AppTextStyles.bodyLarge
-                                          .copyWith(
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppColors.grey800
+                                        : AppColors.grey100,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                        ),
+                                        child: Text(
+                                          '+855',
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                            color: textColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 1,
+                                        height: 24,
                                         color: isDark
                                             ? AppColors.grey600
                                             : AppColors.grey400,
                                       ),
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 14,
-                                        vertical: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const Gap(16),
-
-                          // --- City/Province ---
-                          _buildLabel('City / Province', textColor),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? AppColors.grey800
-                                  : AppColors.grey100,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedProvince,
-                                isExpanded: true,
-                                hint: Text(
-                                  'Select Province',
-                                  style: AppTextStyles.bodyLarge.copyWith(
-                                    color: isDark
-                                        ? AppColors.grey600
-                                        : AppColors.grey400,
-                                  ),
-                                ),
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.grey400,
-                                ),
-                                style: AppTextStyles.bodyLarge.copyWith(
-                                  color: textColor,
-                                ),
-                                dropdownColor: isDark
-                                    ? AppColors.surfaceDark
-                                    : AppColors.white,
-                                items: _provinces
-                                    .map(
-                                      (province) => DropdownMenuItem(
-                                        value: province,
-                                        child: Text(province),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() => _selectedProvince = value);
-                                },
-                              ),
-                            ),
-                          ),
-
-                          const Gap(16),
-
-                          // --- Sangkat/District ---
-                          _buildLabel('Sangkat / District', textColor),
-                          _buildTextField(
-                            controller: _districtController,
-                            hint: 'Enter District',
-                            isDark: isDark,
-                          ),
-
-                          const Gap(16),
-
-                          // --- Street Address ---
-                          _buildLabel('Street Address / House Number', textColor),
-                          _buildTextField(
-                            controller: _streetController,
-                            hint: 'e.g., St. 123, House #45A',
-                            isDark: isDark,
-                            maxLines: 2,
-                          ),
-
-                          const Gap(16),
-
-                          // --- Set as Default ---
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Set as Default Address',
-                                      style: AppTextStyles.titleSmall.copyWith(
-                                        color: textColor,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Use this as your primary shipping address',
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: secondaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Switch(
-                                value: _setAsDefault,
-                                activeThumbColor: AppColors.primary,
-                                onChanged: (value) {
-                                  setState(() => _setAsDefault = value);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const Gap(16),
-
-                    // --- Map Preview ---
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(AppConstants.cardBorderRadius),
-                      child: SizedBox(
-                        height: 180,
-                        child: Stack(
-                          children: [
-                            FlutterMap(
-                              mapController: _mapController,
-                              options: MapOptions(
-                                initialCenter: LatLng(
-                                  AppConstants.defaultLatitude,
-                                  AppConstants.defaultLongitude,
-                                ),
-                                initialZoom: AppConstants.defaultZoom,
-                                interactionOptions: const InteractionOptions(
-                                  flags: InteractiveFlag.all,
-                                ),
-                              ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName: 'com.giftanusav.app',
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    Marker(
-                                      point: LatLng(
-                                        AppConstants.defaultLatitude,
-                                        AppConstants.defaultLongitude,
-                                      ),
-                                      width: 40,
-                                      height: 40,
-                                      child: const Icon(
-                                        Icons.location_on,
-                                        color: AppColors.primary,
-                                        size: 36,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            // Location button
-                            Positioned(
-                              top: 12,
-                              right: 12,
-                              child: GestureDetector(
-                                onTap: () => _mapController.move(
-                                  LatLng(
-                                    AppConstants.defaultLatitude,
-                                    AppConstants.defaultLongitude,
-                                  ),
-                                  AppConstants.defaultZoom,
-                                ),
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.black
-                                            .withValues(alpha: 0.12),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: _phoneController,
+                                          keyboardType: TextInputType.phone,
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                            color: textColor,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: '12 345 678',
+                                            hintStyle: AppTextStyles.bodyLarge
+                                                .copyWith(
+                                              color: isDark
+                                                  ? AppColors.grey600
+                                                  : AppColors.grey400,
+                                            ),
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 14,
+                                              vertical: 12,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  child: const Icon(
-                                    Icons.my_location,
-                                    size: 18,
-                                    color: AppColors.textPrimaryLight,
+                                ),
+
+                                const Gap(16),
+
+                                // --- City/Province ---
+                                _buildLabel('City / Province', textColor),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppColors.grey800
+                                        : AppColors.grey100,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: _selectedProvince,
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Select Province',
+                                        style: AppTextStyles.bodyLarge
+                                            .copyWith(
+                                          color: isDark
+                                              ? AppColors.grey600
+                                              : AppColors.grey400,
+                                        ),
+                                      ),
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.grey400,
+                                      ),
+                                      style: AppTextStyles.bodyLarge.copyWith(
+                                        color: textColor,
+                                      ),
+                                      dropdownColor: isDark
+                                          ? AppColors.surfaceDark
+                                          : AppColors.white,
+                                      items: _provinces
+                                          .map(
+                                            (province) => DropdownMenuItem(
+                                              value: province,
+                                              child: Text(province),
+                                            ),
+                                          )
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(
+                                            () => _selectedProvince = value);
+                                      },
+                                    ),
                                   ),
                                 ),
+
+                                const Gap(16),
+
+                                // --- Sangkat/District ---
+                                _buildLabel('Sangkat / District', textColor),
+                                _buildTextField(
+                                  controller: _districtController,
+                                  hint: 'Enter District',
+                                  isDark: isDark,
+                                ),
+
+                                const Gap(16),
+
+                                // --- Street Address ---
+                                _buildLabel(
+                                    'Street Address / House Number',
+                                    textColor),
+                                _buildTextField(
+                                  controller: _streetController,
+                                  hint: 'e.g., St. 123, House #45A',
+                                  isDark: isDark,
+                                  maxLines: 2,
+                                ),
+
+                                const Gap(16),
+
+                                // --- Set as Default ---
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Set as Default Address',
+                                            style: AppTextStyles.titleSmall
+                                                .copyWith(
+                                              color: textColor,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Use this as your primary shipping address',
+                                            style: AppTextStyles.bodySmall
+                                                .copyWith(
+                                              color: secondaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: _setAsDefault,
+                                      activeThumbColor: AppColors.primary,
+                                      onChanged: (value) {
+                                        setState(
+                                            () => _setAsDefault = value);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Gap(16),
+
+                          // --- Map Preview ---
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                AppConstants.cardBorderRadius),
+                            child: SizedBox(
+                              height: 180,
+                              child: Stack(
+                                children: [
+                                  FlutterMap(
+                                    mapController: _mapController,
+                                    options: MapOptions(
+                                      initialCenter: LatLng(
+                                        AppConstants.defaultLatitude,
+                                        AppConstants.defaultLongitude,
+                                      ),
+                                      initialZoom: AppConstants.defaultZoom,
+                                      interactionOptions:
+                                          const InteractionOptions(
+                                        flags: InteractiveFlag.all,
+                                      ),
+                                    ),
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate:
+                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        userAgentPackageName:
+                                            'com.anusav.app',
+                                      ),
+                                      MarkerLayer(
+                                        markers: [
+                                          Marker(
+                                            point: LatLng(
+                                              AppConstants.defaultLatitude,
+                                              AppConstants.defaultLongitude,
+                                            ),
+                                            width: 40,
+                                            height: 40,
+                                            child: const Icon(
+                                              Icons.location_on,
+                                              color: AppColors.primary,
+                                              size: 36,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                                  // Location button
+                                  Positioned(
+                                    top: 12,
+                                    right: 12,
+                                    child: GestureDetector(
+                                      onTap: () => _mapController.move(
+                                        LatLng(
+                                          AppConstants.defaultLatitude,
+                                          AppConstants.defaultLongitude,
+                                        ),
+                                        AppConstants.defaultZoom,
+                                      ),
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.black
+                                                  .withValues(alpha: 0.12),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Icon(
+                                          Icons.my_location,
+                                          size: 18,
+                                          color: AppColors.textPrimaryLight,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+
+                          const Gap(24),
+                        ],
                       ),
                     ),
-
-                    const Gap(24),
-                  ],
-                ),
-              ),
             ),
 
             // --- Save Button ---
@@ -587,6 +618,28 @@ class _LabelChip extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// --- Shimmer Loading Placeholder ---
+class _AddAddressShimmer extends StatelessWidget {
+  const _AddAddressShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.defaultPadding,
+      ),
+      child: Column(
+        children: [
+          const ShimmerCard(height: 480),
+          const Gap(16),
+          const ShimmerCard(height: 180),
+          const Gap(24),
+        ],
       ),
     );
   }

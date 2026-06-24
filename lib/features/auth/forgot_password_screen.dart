@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../services/auth_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -24,7 +25,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _handleSendCode() async {
+Future<void> _handleSendCode() async {
     final email = _emailController.text.trim();
 
     if (email.isEmpty || !email.contains('@')) {
@@ -37,13 +38,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       _errorMessage = null;
     });
 
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      await AuthService.resetPassword(email);
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    AppHelpers.showSnackBar(context, 'Reset code sent to $email');
-    context.push('/verify-code/$email');
+      if (!mounted) return;
+      AppHelpers.showSnackBar(context, 'Reset email sent to $email. Check your inbox!');
+      context.push('/verify-code/$email');
+    } on Exception {
+      setState(() {
+        _errorMessage = 'Something went wrong. Please try again.';
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -198,7 +205,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
                         disabledBackgroundColor:
-                            AppColors.primary.withOpacity(0.6),
+                            AppColors.primary.withValues(alpha: 0.6),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
