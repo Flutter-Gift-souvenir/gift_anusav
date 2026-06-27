@@ -13,7 +13,7 @@
 
     await Supabase.initialize(
       url: 'https://jvsitefmvdkpclzjlpqr.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2c2l0ZWZtdmRrcGNsempscHFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMDc3MDUsImV4cCI6MjA5NzY4MzcwNX0.REuVROcEUkQ_PqUpEY-X6wVVerCZMe8rRZiMGXMYTGA'
+       publishableKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2c2l0ZWZtdmRrcGNsempscHFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMDc3MDUsImV4cCI6MjA5NzY4MzcwNX0.REuVROcEUkQ_PqUpEY-X6wVVerCZMe8rRZiMGXMYTGA'
     );
 
     // Load saved preferences before app starts

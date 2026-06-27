@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../theme/app_colors.dart';
 import '../../data/supabase_repository.dart';
@@ -88,7 +89,11 @@ class CollectionScreen extends StatelessWidget {
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.share_outlined, color: Colors.white),
-                      onPressed: () {},
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Share collection coming soon')),
+                        );
+                      },
                     ),
                     const Gap(8),
                   ],
@@ -496,6 +501,7 @@ class CollectionScreen extends StatelessWidget {
     final imageUrl = _safeImage(product, ['imageUrl', 'photoUrl', 'image']);
     final price = _safePrice(product['price']);
     final category = _safeText(product, ['category', 'type'], 'Souvenir');
+    final productId = product['id']?.toString() ?? '';
 
     return Container(
       decoration: BoxDecoration(
@@ -514,7 +520,7 @@ class CollectionScreen extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: productId.isEmpty ? null : () => context.push('/detail/$productId'),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import '../../theme/app_colors.dart';
+
 import '../../data/supabase_repository.dart';
+import '../../theme/app_colors.dart';
 
 class BookingHistoryScreen extends StatefulWidget {
   const BookingHistoryScreen({super.key});
@@ -14,6 +15,8 @@ class BookingHistoryScreen extends StatefulWidget {
 class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   List<Map<String, dynamic>> _orders = [];
   bool _isLoading = true;
+  bool _showPast = false;
+  String? _error;
 
   @override
   void initState() {
@@ -22,13 +25,34 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   }
 
   Future<void> _loadOrders() async {
-    final orders = await SupabaseRepository.getMyBookings();
-    if (!mounted) return;
     setState(() {
-      _orders = orders;
-      _isLoading = false;
+      _isLoading = true;
+      _error = null;
     });
+
+    try {
+      final orders = await SupabaseRepository.getMyBookings();
+      if (!mounted) return;
+      setState(() {
+        _orders = orders;
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _error = 'Could not load your orders. Please try again.';
+        _isLoading = false;
+      });
+    }
   }
+
+  bool _isPastOrder(Map<String, dynamic> order) {
+    final status = (order['status'] ?? '').toString().toLowerCase();
+    return status.contains('delivered') || status.contains('cancel');
+  }
+
+  List<Map<String, dynamic>> get _visibleOrders =>
+      _orders.where((order) => _isPastOrder(order) == _showPast).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -41,275 +65,30 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0, bottom: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'My Orders', 
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold, 
-                color: textPrimary
-              )
-            ),
-            const Gap(16),
-            
-            // 🎛️ Tab Toggle Bar (Active / Past Orders)
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.grey900 : AppColors.grey200, 
-                borderRadius: BorderRadius.circular(12)
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.grey800 : Colors.white, 
-                        borderRadius: BorderRadius.circular(8)
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Active', 
-                          style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)
-                        )
-                      ),
-                    ),
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        'Past Orders', 
-                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)
-                      )
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Gap(24),
-
-            // 🎯 Active Bookings — loaded from Supabase (this user's orders)
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.only(top: 60),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else
-              Builder(
-                builder: (context) {
-                  final activeOrders = _orders;
-                  // FALLBACK SAMPLE CARD: Shows up if the user has no orders
-                  if (activeOrders.isEmpty) {
-                  return Column(
-                    children: [
-                      _buildOrderCard(
-                        context: context,
-                        isDark: isDark,
-                        textPrimary: textPrimary,
-                        textSecondary: textSecondary,
-                        cardColor: cardColor,
-                        id: '1', 
-                        imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600',
-                        title: 'Handwoven Golden Silk Lotus Scarf',
-                        status: 'Order Processing',
-                        date: '2026-06-16',
-                        price: 120.00,
-                        progress: 0.35,
-                        isSample: true,
-                      ),
-                      const Gap(24),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'PREVIOUS ORDERS',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: textSecondary,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-                      const Gap(12),
-                      _buildPastOrderRow(
-                        textPrimary: textPrimary,
-                        textSecondary: textSecondary,
-                        cardColor: cardColor,
-                        imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600',
-                        title: 'Silver Plated Bracelet',
-                        date: 'May 12, 2026',
-                        price: '\$45.00',
-                        subPrice: '185,000 KHR',
-                        actionLabel: 'Reorder',
-                      ),
-                    ],
-                  );
-                }
-
-                // DYNAMIC: Renders your custom items when added to the cache
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: activeOrders.length,
-                  itemBuilder: (context, index) {
-                    final order = activeOrders[index];
-                    return _buildOrderCard(
-                      context: context,
-                      isDark: isDark,
-                      textPrimary: textPrimary,
-                      textSecondary: textSecondary,
-                      cardColor: cardColor,
-                      id: order['id'].toString(),
-                      imageUrl: order['imageUrl'],
-                      title: order['name'],
-                      status: order['status'],
-                      date: order['date'],
-                      price: order['price'],
-                      progress: order['progress'],
-                      isSample: false,
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Card Layout Builder with InkWell Click Callback
-  Widget _buildOrderCard({
-    required BuildContext context,
-    required bool isDark,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color cardColor,
-    required String id,
-    required String imageUrl,
-    required String title,
-    required String status,
-    required String date,
-    required double price,
-    required double progress,
-    required bool isSample,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04), 
-            blurRadius: 14,
-            offset: const Offset(0, 6)
-          )
-        ],
-      ),
-      // 🎯 CLICKABLE WRAPPER: Takes the user back to the /booking/:id details path
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          context.push('/booking/$id');
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: RefreshIndicator(
+        onRefresh: _loadOrders,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(imageUrl, width: 64, height: 64, fit: BoxFit.cover),
-                  ),
-                  const Gap(16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'In Progress', 
-                          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 13)
-                        ),
-                        const Gap(2),
-                        Text(
-                          title, 
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: textPrimary), 
-                          maxLines: 1, 
-                          overflow: TextOverflow.ellipsis
-                        ),
-                        const Gap(2),
-                        Text(
-                          'Arriving: $date ${isSample ? "" : "(Customized)"}', 
-                          style: TextStyle(color: textSecondary, fontSize: 13)
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Text(
+                'My Orders',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textPrimary,
+                ),
               ),
               const Gap(16),
-              
-              // Tracking Status Information
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today_outlined, size: 16, color: AppColors.primary),
-                  const Gap(8),
-                  Text(
-                    status, 
-                    style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary, fontSize: 14)
-                  ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.grey800 : AppColors.grey100,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: Icon(Icons.more_horiz, color: textPrimary, size: 18),
-                  ),
-                ],
-              ),
-              const Gap(12),
-              
-              // 🎯 FIXED: Removed syntax breaking label here
-              LinearProgressIndicator(
-                value: progress, 
-                backgroundColor: isDark ? AppColors.grey800 : AppColors.grey200, 
-                color: AppColors.primary, 
-                minHeight: 6,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const Gap(12),
-              
-              // Bottom Artisan Verification Tag
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.verified_outlined, size: 14, color: AppColors.primary),
-                    const Gap(6),
-                    Text(
-                      'Sourced directly from Artisans',
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
-                    ),
-                  ],
-                ),
+              _buildToggle(isDark: isDark),
+              const Gap(24),
+              _buildContent(
+                context: context,
+                isDark: isDark,
+                textPrimary: textPrimary,
+                textSecondary: textSecondary,
+                cardColor: cardColor,
               ),
             ],
           ),
@@ -318,65 +97,273 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
     );
   }
 
-  // Past Orders Row Item Component
-  Widget _buildPastOrderRow({
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color cardColor,
-    required String imageUrl,
-    required String title,
-    required String date,
-    required String price,
-    required String subPrice,
-    required String actionLabel,
-  }) {
+  Widget _buildToggle({required bool isDark}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(16),
+        color: isDark ? AppColors.grey900 : AppColors.grey200,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(imageUrl, width: 48, height: 48, fit: BoxFit.cover),
-          ),
-          const Gap(12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text(date, style: TextStyle(color: textSecondary, fontSize: 11)),
-                Row(
-                  children: [
-                    Text(price, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 12)),
-                    const Gap(6),
-                    Text(subPrice, style: TextStyle(color: textSecondary, fontSize: 10)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFDF6F0),
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-            child: Text(
-              actionLabel, 
-              style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)
-            ),
-          ),
+          _toggleItem(label: 'Active', selected: !_showPast, onTap: () => setState(() => _showPast = false)),
+          _toggleItem(label: 'Past Orders', selected: _showPast, onTap: () => setState(() => _showPast = true)),
         ],
       ),
     );
+  }
+
+  Widget _toggleItem({required String label, required bool selected, required VoidCallback onTap}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: selected ? (isDark ? AppColors.grey800 : Colors.white) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: selected ? AppColors.primary : Colors.grey,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent({
+    required BuildContext context,
+    required bool isDark,
+    required Color textPrimary,
+    required Color textSecondary,
+    required Color cardColor,
+  }) {
+    if (_isLoading) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 80),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_error != null) {
+      return _emptyState(
+        icon: Icons.error_outline,
+        title: 'Unable to load orders',
+        message: _error!,
+        buttonLabel: 'Retry',
+        onPressed: _loadOrders,
+        textPrimary: textPrimary,
+        textSecondary: textSecondary,
+      );
+    }
+
+    final orders = _visibleOrders;
+    if (orders.isEmpty) {
+      return _emptyState(
+        icon: _showPast ? Icons.history_outlined : Icons.shopping_bag_outlined,
+        title: _showPast ? 'No past orders yet' : 'No active orders yet',
+        message: _showPast
+            ? 'Delivered and cancelled orders will appear here.'
+            : 'Start from a product detail page and confirm a gift order.',
+        buttonLabel: 'Browse Gifts',
+        onPressed: () => context.go('/gifts'),
+        textPrimary: textPrimary,
+        textSecondary: textSecondary,
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: orders.length,
+      itemBuilder: (context, index) {
+        final order = orders[index];
+        return _buildOrderCard(
+          context: context,
+          isDark: isDark,
+          textPrimary: textPrimary,
+          textSecondary: textSecondary,
+          cardColor: cardColor,
+          order: order,
+        );
+      },
+    );
+  }
+
+  Widget _emptyState({
+    required IconData icon,
+    required String title,
+    required String message,
+    required String buttonLabel,
+    required VoidCallback onPressed,
+    required Color textPrimary,
+    required Color textSecondary,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 70),
+      child: Center(
+        child: Column(
+          children: [
+            Icon(icon, size: 72, color: AppColors.primary.withValues(alpha: 0.75)),
+            const Gap(16),
+            Text(
+              title,
+              style: TextStyle(color: textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Gap(8),
+            Text(
+              message,
+              style: TextStyle(color: textSecondary),
+              textAlign: TextAlign.center,
+            ),
+            const Gap(20),
+            ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(buttonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrderCard({
+    required BuildContext context,
+    required bool isDark,
+    required Color textPrimary,
+    required Color textSecondary,
+    required Color cardColor,
+    required Map<String, dynamic> order,
+  }) {
+    final id = order['id'].toString();
+    final imageUrl = order['imageUrl']?.toString() ?? '';
+    final title = order['name']?.toString() ?? 'Gift item';
+    final status = order['status']?.toString() ?? 'Order Processing';
+    final date = order['date']?.toString() ?? '';
+    final price = (order['price'] as num?)?.toDouble() ?? 0.0;
+    final progress = (order['progress'] as num?)?.toDouble() ?? 0.25;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () => context.push('/orders/$id'),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      imageUrl,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 64,
+                        height: 64,
+                        color: AppColors.grey200,
+                        child: const Icon(Icons.image_not_supported_outlined, size: 22),
+                      ),
+                    ),
+                  ),
+                  const Gap(16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          status,
+                          style: TextStyle(
+                            color: _statusColor(status),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const Gap(2),
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: textPrimary,
+                              ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Gap(2),
+                        Text(
+                          date.isEmpty ? 'Delivery date not set' : 'Arriving: $date',
+                          style: TextStyle(color: textSecondary, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: textSecondary),
+                ],
+              ),
+              const Gap(16),
+              Row(
+                children: [
+                  const Icon(Icons.receipt_long_outlined, size: 16, color: AppColors.primary),
+                  const Gap(8),
+                  Text(
+                    '\$${price.toStringAsFixed(2)}',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: textPrimary, fontSize: 14),
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () => context.push('/orders/$id'),
+                    child: const Text('Track Order'),
+                  ),
+                ],
+              ),
+              const Gap(8),
+              LinearProgressIndicator(
+                value: progress.clamp(0.0, 1.0).toDouble(),
+                backgroundColor: isDark ? AppColors.grey800 : AppColors.grey200,
+                color: _statusColor(status),
+                minHeight: 6,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _statusColor(String status) {
+    final value = status.toLowerCase();
+    if (value.contains('cancel')) return AppColors.error;
+    if (value.contains('delivered')) return AppColors.success;
+    if (value.contains('wrap')) return AppColors.goldDark;
+    return AppColors.primary;
   }
 }

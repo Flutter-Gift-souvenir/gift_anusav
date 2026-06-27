@@ -191,7 +191,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _SettingsTile(
                       icon: Icons.shopping_bag_outlined,
                       label: 'My Orders',
-                      onTap: () => context.go('/booking'),
+                      onTap: () => context.go('/orders'),
                     ),
                     _SettingsTile(
                       icon: Icons.location_on_outlined,

@@ -107,7 +107,11 @@ class _DetailScreenState extends State<DetailScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.favorite_border, color: textPrimary),
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Saved to favorites')),
+              );
+            },
           ),
         ],
       ),
@@ -314,6 +318,14 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                         IconButton(
+                          tooltip: 'View artisan',
+                          icon: const Icon(Icons.person_outline, color: AppColors.primary),
+                          onPressed: () {
+                            context.push('/artisan/${product.artisanId}');
+                          },
+                        ),
+                        IconButton(
+                          tooltip: 'Chat with artisan',
                           icon: const Icon(Icons.chat_bubble_outline, color: AppColors.primary),
                           onPressed: () {
                             context.push('/chat/${product.artisanId}');
@@ -445,7 +457,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.shopping_bag_outlined, color: AppColors.primary),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.push('/booking/${product.id}');
+                        },
                       ),
                     ),
                     const Gap(12),
