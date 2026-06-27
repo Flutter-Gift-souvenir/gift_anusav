@@ -580,7 +580,7 @@ class _ChatScreenState extends State<ChatScreen> {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: suggestions.length,
-        separatorBuilder: (_, _) => const Gap(8),
+        separatorBuilder: (_, __) => const Gap(8),
         itemBuilder: (context, index) {
           final suggestion = suggestions[index];
 

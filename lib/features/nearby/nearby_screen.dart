@@ -114,7 +114,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
                             AppConstants.defaultPadding,
                           ),
                           itemCount: _filteredShops.length,
-                          separatorBuilder: (_, _) => const Gap(16),
+                          separatorBuilder: (_, __) => const Gap(16),
                           itemBuilder: (context, index) {
                             return _NearbyShopCard(
                               shop: _filteredShops[index],
