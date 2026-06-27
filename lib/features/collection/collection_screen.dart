@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../theme/app_colors.dart';
+import '../../data/supabase_repository.dart';
 
 class CollectionScreen extends StatelessWidget {
   final String collectionId;
@@ -12,33 +11,19 @@ class CollectionScreen extends StatelessWidget {
   const CollectionScreen({super.key, required this.collectionId});
 
   Future<Map<String, dynamic>> _loadScreenData() async {
-    final String collectionString =
-        await rootBundle.loadString('assets/mock/collections.json');
-    final List<dynamic> collectionList = json.decode(collectionString);
+    // Collection + its products now come from Supabase (not mock JSON).
+    final Map<String, dynamic>? collectionData =
+        await SupabaseRepository.getCollectionById(collectionId);
 
-    if (collectionList.isEmpty) {
-      throw Exception('No collections found in collections.json');
+    if (collectionData == null) {
+      throw Exception('Collection "$collectionId" not found in Supabase.');
     }
 
-    final Map<String, dynamic> collectionData = Map<String, dynamic>.from(
-      collectionList.firstWhere(
-        (item) => item['id'] == collectionId,
-        orElse: () => collectionList.first,
-      ),
-    );
+    final List<String> productIds =
+        List<String>.from(collectionData['productIds'] ?? const []);
 
-    final String productString =
-        await rootBundle.loadString('assets/mock/items.json');
-    final List<dynamic> productList = json.decode(productString);
-
-    final List<dynamic> productIds = collectionData['productIds'] is List
-        ? collectionData['productIds'] as List
-        : [];
-
-    final List<Map<String, dynamic>> collectionProducts = productList
-        .where((product) => productIds.contains(product['id']))
-        .map((product) => Map<String, dynamic>.from(product))
-        .toList();
+    final List<Map<String, dynamic>> collectionProducts =
+        await SupabaseRepository.getProductsByIds(productIds);
 
     return {
       'collection': collectionData,

@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../theme/app_colors.dart';
+import '../../data/supabase_repository.dart';
 
 class ArtisanScreen extends StatelessWidget {
   final String artisanId;
@@ -13,87 +12,31 @@ class ArtisanScreen extends StatelessWidget {
   const ArtisanScreen({super.key, required this.artisanId});
 
   Future<Map<String, dynamic>> _loadScreenData() async {
-    final String artisanString =
-        await rootBundle.loadString('assets/mock/artisans.json');
-    final List<dynamic> artisanList = json.decode(artisanString);
+    // Load the artisan from Supabase (instead of assets/mock/artisans.json)
+    final Map<String, dynamic>? fetchedArtisan =
+        await SupabaseRepository.getArtisanRawById(artisanId);
 
-    if (artisanList.isEmpty) {
-      throw Exception('No artisan data found in assets/mock/artisans.json');
+    if (fetchedArtisan == null) {
+      throw Exception('Artisan "$artisanId" not found in Supabase.');
     }
 
-    final dynamic selectedArtisan = artisanList.firstWhere(
-      (item) => item is Map && _cleanString(item['id']) == artisanId,
-      orElse: () => artisanList.first,
-    );
-
     final Map<String, dynamic> artisanData =
-        Map<String, dynamic>.from(selectedArtisan as Map);
-
-    final String productString =
-        await rootBundle.loadString('assets/mock/items.json');
-    final List<dynamic> productList = json.decode(productString);
+        Map<String, dynamic>.from(fetchedArtisan);
 
     final List<String> productIds = _asStringList(artisanData['productIds']);
-
-    final List<Map<String, dynamic>> artisanProducts = productList
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .where((product) {
-          final productId = _cleanString(product['id']);
-          final productArtisanId = _cleanString(product['artisanId']);
-
-          if (productIds.isNotEmpty) {
-            return productIds.contains(productId);
-          }
-
-          return productArtisanId == artisanId;
-        })
-        .toList();
-
-    final String collectionString =
-        await rootBundle.loadString('assets/mock/collections.json');
-    final List<dynamic> collectionList = json.decode(collectionString);
-
     final List<String> collectionIds =
         _asStringList(artisanData['collectionIds']);
 
-    final List<Map<String, dynamic>> artisanCollections = collectionList
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .where((collection) {
-          final collectionId = _cleanString(collection['id']);
-          final collectionArtisanId = _cleanString(collection['artisanId']);
-          final collectionArtisanIds = _asStringList(collection['artisanIds']);
-          final collectionProductIds = _asStringList(collection['productIds']);
+    // Products + collections now come from Supabase (not mock JSON).
+    final List<Map<String, dynamic>> artisanProducts =
+        await SupabaseRepository.getProductsByIds(productIds);
 
-          if (collectionIds.isNotEmpty) {
-            return collectionIds.contains(collectionId);
-          }
+    final List<Map<String, dynamic>> artisanCollections =
+        await SupabaseRepository.getCollectionsByIds(collectionIds);
 
-          if (collectionArtisanId == artisanId ||
-              collectionArtisanIds.contains(artisanId)) {
-            return true;
-          }
-
-          return collectionProductIds.any(productIds.contains);
-        })
-        .toList();
-
-    final String reviewString =
-        await rootBundle.loadString('assets/mock/reviews.json');
-    final List<dynamic> reviewList = json.decode(reviewString);
-
-    final List<Map<String, dynamic>> artisanReviews = reviewList
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .where((review) {
-          final reviewArtisanId = _cleanString(review['artisanId']);
-          final reviewProductId = _cleanString(review['productId']);
-
-          return reviewArtisanId == artisanId ||
-              (reviewProductId.isNotEmpty && productIds.contains(reviewProductId));
-        })
-        .toList();
+    // Artisan review preview now comes from Supabase
+    final List<Map<String, dynamic>> artisanReviews =
+        await SupabaseRepository.getReviewsByArtisanId(artisanId);
 
     return {
       'artisan': artisanData,

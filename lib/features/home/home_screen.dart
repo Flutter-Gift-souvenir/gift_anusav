@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // ← NEW: for navigation
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../data/supabase_repository.dart'; // ← Supabase
+import '../../models/artisan_model.dart';     // ← Artisan model
 
 
 class AppColors {
@@ -172,6 +174,9 @@ class _HomeScreenState extends State<HomeScreen>
   final CarouselSliderController _carouselController = CarouselSliderController();
   final TextEditingController _emailController = TextEditingController();
 
+  // Artisans loaded from Supabase (falls back to empty until loaded)
+  List<ArtisanItem> _artisans = [];
+
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
@@ -203,6 +208,26 @@ class _HomeScreenState extends State<HomeScreen>
       curve: Curves.easeOut,
     );
     _fadeController.forward();
+    _loadArtisans();
+  }
+
+  // Load real artisans from Supabase and map them to ArtisanItem
+  Future<void> _loadArtisans() async {
+    final list = await SupabaseRepository.getArtisans();
+    if (!mounted) return;
+    setState(() {
+      _artisans = list
+          .map((a) => ArtisanItem(
+                id: a.id,
+                name: a.name,
+                location: a.location,
+                craft: a.specialty,
+                rating: a.rating,
+                badge: a.masterTitle.isNotEmpty ? a.masterTitle : 'Verified',
+                imageUrl: a.photoUrl,
+              ))
+          .toList();
+    });
   }
 
   @override
@@ -650,10 +675,10 @@ class _HomeScreenState extends State<HomeScreen>
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: 20),
-              itemCount: artisans.length,
+              itemCount: _artisans.length,
               separatorBuilder: (_, _) => const SizedBox(width: 14),
               itemBuilder: (context, index) =>
-                  _buildArtisanCard(artisans[index]),
+                  _buildArtisanCard(_artisans[index]),
             ),
           ),
         ],
@@ -687,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ClipRRect(
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.asset(
+                  child: Image.network(
                     artisan.imageUrl,
                     height: 120,
                     width: double.infinity,

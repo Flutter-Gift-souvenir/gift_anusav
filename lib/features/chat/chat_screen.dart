@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/artisan_model.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -39,12 +39,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _loadArtisan() async {
     try {
-      final artisan = await MockRepository.getArtisanById(widget.artisanId);
+      final artisan = await SupabaseRepository.getArtisanById(widget.artisanId);
 
       if (!mounted) return;
 
-      // Load messages for this artisan from mock JSON
-      final messages = await MockRepository.getChatMessagesByArtisan(widget.artisanId);
+      // Load this user's saved messages with the artisan from Supabase
+      final messages =
+          await SupabaseRepository.getMessagesByArtisanId(widget.artisanId);
 
       if (!mounted) return;
 
@@ -66,45 +67,84 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     final text = _textController.text.trim();
     if (text.isEmpty) return;
 
+    final timeLabel = _nowTimeLabel();
+
+    // Optimistic UI: show the user's message immediately
     setState(() {
       _messages.add({
         'text': text,
         'isMe': true,
-        'time': 'Just now',
+        'time': timeLabel,
         'status': 'Sending...',
       });
     });
-
     _textController.clear();
     _scrollToBottom();
 
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted || _messages.isEmpty) return;
-
+    try {
+      // 1. Save the user's message
+      await SupabaseRepository.sendMessage(
+        artisanId: widget.artisanId,
+        text: text,
+        isMe: true,
+        time: timeLabel,
+        status: 'Sent',
+      );
+      if (!mounted) return;
       setState(() {
         _messages[_messages.length - 1]['status'] = 'Sent';
       });
-    });
 
-    Future.delayed(const Duration(milliseconds: 900), () {
+      // 2. Save a canned artisan reply (so it persists on reload too)
+      const replyText =
+          'Thank you for your message. I will prepare the details and reply to you soon.';
+      final replyTime = _nowTimeLabel();
+      await SupabaseRepository.sendMessage(
+        artisanId: widget.artisanId,
+        text: replyText,
+        isMe: false,
+        time: replyTime,
+        status: '',
+      );
       if (!mounted) return;
-
       setState(() {
         _messages.add({
-          'text':
-              'Thank you for your message. I will prepare the details and reply to you soon.',
+          'text': replyText,
           'isMe': false,
-          'time': 'Just now',
+          'time': replyTime,
           'status': '',
         });
       });
-
       _scrollToBottom();
-    });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        if (_messages.isNotEmpty) {
+          _messages[_messages.length - 1]['status'] = 'Failed';
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString().contains('logged in')
+                ? 'Please log in to send a message.'
+                : 'Could not send message. Please try again.',
+          ),
+        ),
+      );
+    }
+  }
+
+  String _nowTimeLabel() {
+    final now = TimeOfDay.fromDateTime(DateTime.now());
+    final h = now.hourOfPeriod == 0 ? 12 : now.hourOfPeriod;
+    final m = now.minute.toString().padLeft(2, '0');
+    final period = now.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$h:$m $period';
   }
 
   void _sendQuickMessage(String message) {

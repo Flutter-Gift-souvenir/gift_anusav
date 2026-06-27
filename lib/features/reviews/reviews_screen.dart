@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/app_scaffold.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 
 class ReviewsScreen extends StatefulWidget {
   final String productId;
@@ -46,8 +46,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   Future<void> _loadReviews() async {
     try {
       final loaded = _isArtisanReviewMode
-          ? await MockRepository.getRawReviewsByArtisan(widget.productId)
-          : await MockRepository.getRawReviewsByProduct(widget.productId);
+          ? await SupabaseRepository.getReviewsByArtisanId(widget.productId)
+          : await SupabaseRepository.getReviewsByProductId(widget.productId);
 
       if (!mounted) return;
 
@@ -119,6 +119,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   void _showWriteReviewSheet() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final TextEditingController commentController = TextEditingController();
+    int selectedRating = 5;
+    bool isSubmitting = false;
 
     showModalBottomSheet(
       context: context,
@@ -127,100 +130,162 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.grey800 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const Gap(20),
-              Text(
-                'Write a Review',
-                style: AppTextStyles.titleLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                ),
-              ),
-              const Gap(8),
-              Text(
-                'This is frontend demo mode. Your review form UI is ready, backend can be added later.',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : Colors.grey.shade600,
-                  height: 1.5,
-                ),
-              ),
-              const Gap(18),
-              Row(
-                children: List.generate(
-                  5,
-                  (index) => const Padding(
-                    padding: EdgeInsets.only(right: 6),
-                    child: Icon(Icons.star_rounded, color: Color(0xFFF2C94C), size: 32),
-                  ),
-                ),
-              ),
-              const Gap(16),
-              TextField(
-                maxLines: 4,
-                style: TextStyle(
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Share your experience...',
-                  hintStyle: AppTextStyles.bodyMedium.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : Colors.grey.shade400,
-                  ),
-                  filled: true,
-                  fillColor: isDark ? AppColors.grey800 : Colors.grey.shade100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const Gap(18),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-              if (context.canPop()) {
-                context.pop();
-              } else if (_isArtisanReviewMode) {
-                context.go('/artisan/${widget.productId}');
-              } else {
-                context.go('/');
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (sheetContext, setSheetState) {
+            Future<void> submit() async {
+              final comment = commentController.text.trim();
+              if (comment.isEmpty) {
+                ScaffoldMessenger.of(sheetContext).showSnackBar(
+                  const SnackBar(content: Text('Please write a comment first.')),
+                );
+                return;
               }
-            },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              setSheetState(() => isSubmitting = true);
+              try {
+                await SupabaseRepository.createReview(
+                  productId: _isArtisanReviewMode ? null : widget.productId,
+                  artisanId: _isArtisanReviewMode ? widget.productId : null,
+                  rating: selectedRating.toDouble(),
+                  comment: comment,
+                );
+                if (sheetContext.mounted) Navigator.pop(sheetContext);
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Thanks! Your review was posted.')),
+                );
+                await _loadReviews(); // refresh the list
+              } catch (e) {
+                setSheetState(() => isSubmitting = false);
+                if (!sheetContext.mounted) return;
+                ScaffoldMessenger.of(sheetContext).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      e.toString().contains('logged in')
+                          ? 'Please log in to write a review.'
+                          : 'Could not post review. Please try again.',
+                    ),
                   ),
-                  child: const Text(
-                    'Submit Review',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
+                );
+              }
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 20,
               ),
-            ],
-          ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 44,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.grey800 : Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  const Gap(20),
+                  Text(
+                    'Write a Review',
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                    ),
+                  ),
+                  const Gap(8),
+                  Text(
+                    'Tap the stars to rate, then share your experience.',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : Colors.grey.shade600,
+                      height: 1.5,
+                    ),
+                  ),
+                  const Gap(18),
+                  Row(
+                    children: List.generate(
+                      5,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: GestureDetector(
+                          onTap: () =>
+                              setSheetState(() => selectedRating = index + 1),
+                          child: Icon(
+                            index < selectedRating
+                                ? Icons.star_rounded
+                                : Icons.star_outline_rounded,
+                            color: const Color(0xFFF2C94C),
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Gap(16),
+                  TextField(
+                    controller: commentController,
+                    maxLines: 4,
+                    style: TextStyle(
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Share your experience...',
+                      hintStyle: AppTextStyles.bodyMedium.copyWith(
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : Colors.grey.shade400,
+                      ),
+                      filled: true,
+                      fillColor: isDark ? AppColors.grey800 : Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const Gap(18),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: isSubmitting ? null : submit,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: isSubmitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Submit Review',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

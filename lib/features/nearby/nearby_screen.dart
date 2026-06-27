@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/shop_model.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -43,7 +43,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
   }
 
   Future<void> _loadShops() async {
-    final shops = await MockRepository.getShops();
+    final shops = await SupabaseRepository.getShops();
     setState(() {
       _allShops = shops;
       _filteredShops = shops;
