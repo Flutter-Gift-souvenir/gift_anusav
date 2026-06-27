@@ -176,7 +176,13 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                   ? AppColors.textPrimaryDark
                   : AppColors.textPrimaryLight,
             ),
-            onPressed: () => context.go('/map'),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/gifts');
+              }
+            },
           ),
           Expanded(
             child: Text(

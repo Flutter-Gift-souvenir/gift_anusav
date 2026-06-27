@@ -246,7 +246,7 @@ decoration: BoxDecoration(
                         ),
                       ),
                       TextButton(
-                        onPressed: () => context.go('/promotions'),
+                        onPressed: () => context.push('/promotions'),
                         child: Text(
                           '         All',
                           style: AppTextStyles.labelMedium.copyWith(
@@ -297,7 +297,7 @@ decoration: BoxDecoration(
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => context.go('/nearby'),
+                      onTap: () => context.push('/nearby'),
                       child: Text(
                         '${_shops.length} Shops found',
                         style: AppTextStyles.labelMedium.copyWith(

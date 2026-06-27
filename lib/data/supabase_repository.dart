@@ -324,8 +324,8 @@ class SupabaseRepository {
 
   // ── Bookings (user-data) ──────────────────────────────────
 
-  // Create a booking as the logged-in user.
-  static Future<void> createBooking({
+  // Create a booking as the logged-in user and return the new booking id.
+  static Future<String> createBooking({
     required String productId,
     required String productName,
     required String productImageUrl,
@@ -336,26 +336,33 @@ class SupabaseRepository {
     bool giftWrap = false,
     bool greetingCard = false,
     String status = 'Order Processing',
-    double progress = 0.75,
+    double progress = 0.25,
   }) async {
     final user = _db.auth.currentUser;
     if (user == null) {
       throw Exception('You must be logged in to place an order.');
     }
-    await _db.from('bookings').insert({
-      'user_id': user.id,
-      'product_id': productId,
-      'product_name': productName,
-      'product_image_url': productImageUrl,
-      'recipient': recipient,
-      'note': note,
-      'delivery_date': deliveryDate,
-      'gift_wrap': giftWrap,
-      'greeting_card': greetingCard,
-      'price': price,
-      'status': status,
-      'progress': progress,
-    });
+
+    final row = await _db
+        .from('bookings')
+        .insert({
+          'user_id': user.id,
+          'product_id': productId,
+          'product_name': productName,
+          'product_image_url': productImageUrl,
+          'recipient': recipient,
+          'note': note,
+          'delivery_date': deliveryDate,
+          'gift_wrap': giftWrap,
+          'greeting_card': greetingCard,
+          'price': price,
+          'status': status,
+          'progress': progress,
+        })
+        .select('id')
+        .single();
+
+    return row['id'].toString();
   }
 
   // Turn a booking row into the map shape the history screen reads.
@@ -388,14 +395,35 @@ class SupabaseRepository {
         .toList();
   }
 
-  // One booking by id (RLS still limits this to the owner).
+  // One booking by id for the logged-in user.
   static Future<Map<String, dynamic>?> getBookingById(String id) async {
     final user = _db.auth.currentUser;
     if (user == null) return null;
-    final row =
-        await _db.from('bookings').select().eq('id', id).maybeSingle();
+    final row = await _db
+        .from('bookings')
+        .select()
+        .eq('id', id)
+        .eq('user_id', user.id)
+        .maybeSingle();
     if (row == null) return null;
     return _bookingRowToMap(row);
+  }
+
+  // Cancel one booking owned by the logged-in user.
+  static Future<void> cancelBooking(String id) async {
+    final user = _db.auth.currentUser;
+    if (user == null) {
+      throw Exception('You must be logged in to cancel an order.');
+    }
+
+    await _db
+        .from('bookings')
+        .update({
+          'status': 'Cancelled',
+          'progress': 1.0,
+        })
+        .eq('id', id)
+        .eq('user_id', user.id);
   }
 
   // ── Chat messages (user-data) ─────────────────────────────

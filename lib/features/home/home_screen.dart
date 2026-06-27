@@ -364,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => context.push('/gifts'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
@@ -427,7 +427,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () => context.push('/gifts'),
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   padding: EdgeInsets.zero,
@@ -462,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildCategoryItem(CategoryItem item) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => context.push('/gifts'),
       child: Column(
         children: [
           Container(
@@ -658,7 +658,9 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: _artisans.isEmpty
+                      ? null
+                      : () => context.push('/artisan/${_artisans.first.id}'),
                   icon: Icon(
                     Icons.arrow_forward,
                     color: _themedTextDark,

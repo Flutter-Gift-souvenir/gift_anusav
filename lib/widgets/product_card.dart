@@ -44,7 +44,7 @@ class ProductCard extends StatelessWidget {
                   product.imageUrl,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Container(
+                  errorBuilder: (context, error, stackTrace) => Container(
                     color: AppColors.grey200,
                     child: const Icon(Icons.image_not_supported),
                   ),
@@ -88,7 +88,7 @@ class ProductCard extends StatelessWidget {
                     height: 36,
                     child: OutlinedButton(
                       onPressed: () {
-                        
+                        context.push('/booking/${product.id}');
                       },
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: AppColors.primary),

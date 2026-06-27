@@ -308,14 +308,14 @@ class _BookingScreenState extends State<BookingScreen> {
                         onPressed: () async {
                           if (!_formKey.currentState!.validate()) return;
                           try {
-                            // Save the booking to Supabase
-                            await SupabaseRepository.createBooking(
+                            // Save the booking to Supabase and open the saved order.
+                            final bookingId = await SupabaseRepository.createBooking(
                               productId: product.id,
                               productName: product.name,
                               productImageUrl: product.imageUrl,
                               price: finalTotal,
-                              recipient: _recipientController.text,
-                              note: _noteController.text,
+                              recipient: _recipientController.text.trim(),
+                              note: _noteController.text.trim(),
                               deliveryDate:
                                   "${_selectedDate.toLocal()}".split(' ')[0],
                               giftWrap: _includeGiftWrap,
@@ -323,6 +323,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               status: _includeGiftWrap
                                   ? 'Gift Being Wrapped'
                                   : 'Order Processing',
+                              progress: _includeGiftWrap ? 0.50 : 0.25,
                             );
 
                             if (!context.mounted) return;
@@ -338,15 +339,15 @@ class _BookingScreenState extends State<BookingScreen> {
                                   ],
                                 ),
                                 content: const Text(
-                                    'Your order has been saved. You can track it in My Orders.'),
+                                    'Your order has been saved. Open the order detail to track it.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(ctx).pop();
-                                      context.go('/booking'); // My Orders tab
+                                      context.go('/orders/$bookingId');
                                     },
                                     child: const Text(
-                                      'Awesome',
+                                      'View Order',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: AppColors.primary),

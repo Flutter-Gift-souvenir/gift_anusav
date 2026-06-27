@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
         context.go(AppRouter.map);
         break;
       case 3:
-        context.go(AppRouter.booking);
+        context.go(AppRouter.orders);
         break;
       case 4:
         context.go(AppRouter.settings);
@@ -80,7 +80,7 @@ class AppScaffold extends StatelessWidget {
               color: headerTextColor,
             ),
             onPressed: () {
-              // TODO: open cart
+              context.go(AppRouter.orders);
             },
           ),
         ],
@@ -225,7 +225,7 @@ class _AppDrawer extends StatelessWidget {
         context.go(AppRouter.map);
         break;
       case 3:
-        context.go(AppRouter.booking);
+        context.go(AppRouter.orders);
         break;
       case 4:
         context.go(AppRouter.settings);
