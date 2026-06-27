@@ -6,6 +6,7 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/shimmer_card.dart';
+import '../../services/auth_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -23,9 +24,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _simulateLoad();
   }
 
-  Future<void> _simulateLoad() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (mounted) setState(() => _isLoading = false);
+Future<void> _simulateLoad() async {
+    try {
+      final profile = await AuthService.getProfile();
+      if (profile != null && mounted) {
+        setState(() {
+          _nameController.text = profile['full_name'] ?? '';
+          _phoneController.text = profile['phone'] ?? '';
+          _birthdayController.text = profile['birthday'] ?? '';
+          _selectedGender = profile['gender'] ?? 'Female';
+        });
+      }
+    } catch (e) {
+      // silently fail — fields stay empty
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   // --- Controllers ---
@@ -82,11 +96,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  // --- Save Changes ---
-  void _saveChanges() {
+Future<void> _saveChanges() async {
     final email = _emailController.text.trim();
 
-    // Only validate email if user typed something (since fields are optional placeholders)
     if (email.isNotEmpty) {
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
@@ -95,8 +107,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
 
-    AppHelpers.showSnackBar(context, 'Profile updated successfully!');
-    context.pop();
+    try {
+      await AuthService.updateProfile(
+        fullName: _nameController.text.trim().isNotEmpty
+            ? _nameController.text.trim()
+            : null,
+        phone: _phoneController.text.trim().isNotEmpty
+            ? _phoneController.text.trim()
+            : null,
+        birthday: _birthdayController.text.isNotEmpty
+            ? _birthdayController.text
+            : null,
+        gender: _selectedGender,
+      );
+
+      if (!mounted) return;
+      AppHelpers.showSnackBar(context, 'Profile updated successfully!');
+      context.pop();
+    } catch (e) {
+      AppHelpers.showSnackBar(context, 'Failed to update profile. Try again.');
+    }
   }
 
   @override

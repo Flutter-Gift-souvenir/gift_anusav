@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   static final _supabase = Supabase.instance.client;
@@ -72,6 +73,23 @@ class AuthService {
       rethrow;
     }
   }
+  // --- Facebook Sign In ---
+static Future<AuthResponse?> signInWithFacebook() async {
+  final loginResult = await FacebookAuth.instance.login();
+
+  if (loginResult.status != LoginStatus.success) {
+    print('DEBUG: Facebook login failed: ${loginResult.status}');
+    return null;
+  }
+
+  final accessToken = loginResult.accessToken?.tokenString;
+  if (accessToken == null) throw Exception('No Facebook access token');
+
+  return await _supabase.auth.signInWithIdToken(
+    provider: OAuthProvider.facebook,
+    idToken: accessToken,
+  );
+}
 
   // --- Sign Out ---
   static Future<void> signOut() async {
@@ -103,6 +121,51 @@ static Future<void> updatePassword(String newPassword) async {
   await _supabase.auth.updateUser(
     UserAttributes(password: newPassword),
   );
+}
+// --- Get current user profile ---
+static Future<Map<String, dynamic>?> getProfile() async {
+  final userId = currentUser?.id;
+  if (userId == null) return null;
+
+  final response = await _supabase
+      .from('profiles')
+      .select()
+      .eq('id', userId)
+      .single();
+
+  return response;
+}
+
+// --- Update user profile ---
+static Future<void> updateProfile({
+  String? fullName,
+  String? phone,
+  String? birthday,
+  String? gender,
+}) async {
+  final userId = currentUser?.id;
+  print('DEBUG: updateProfile called');
+  print('DEBUG: userId = $userId');
+  print('DEBUG: fullName = $fullName');
+  
+  if (userId == null) {
+    print('DEBUG: userId is null - user not logged in!');
+    return;
+  }
+
+  try {
+    final response = await _supabase.from('profiles').upsert({
+      'id': userId,
+      'full_name': ?fullName,
+      'phone': ?phone,
+      'birthday': ?birthday,
+      'gender': ?gender,
+      'updated_at': DateTime.now().toIso8601String(),
+    });
+    print('DEBUG: upsert response = $response');
+  } catch (e) {
+    print('DEBUG: upsert error = $e');
+  }
 }
 
   // --- Auth state stream ---

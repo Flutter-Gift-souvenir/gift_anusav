@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _isLoading = false;
   bool _isGoogleLoading = false;
+  bool _isFacebookLoading = false;
   String? _errorMessage;
 
   @override
@@ -90,6 +91,30 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) setState(() => _isGoogleLoading = false);
     }
   }
+  // --- Facebook Login ---
+Future<void> _handleFacebookLogin() async {
+  setState(() {
+    _isFacebookLoading = true;
+    _errorMessage = null;
+  });
+
+  try {
+    final response = await AuthService.signInWithFacebook();
+
+    if (!mounted) return;
+
+    if (response?.user != null) {
+      AppHelpers.showSnackBar(context, 'Welcome back!');
+      context.go('/');
+    }
+  } on Exception catch (e) {
+    setState(() {
+      _errorMessage = _parseError(e.toString());
+    });
+  } finally {
+    if (mounted) setState(() => _isFacebookLoading = false);
+  }
+}
 
   // --- Parse Supabase error messages ---
   String _parseError(String error) {
@@ -401,41 +426,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const Gap(12),
 
-                  // Facebook
+// Facebook
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => AppHelpers.showComingSoon(
-                          context, 'Facebook login'),
+                      onPressed: _isFacebookLoading ? null : _handleFacebookLogin,
                       style: OutlinedButton.styleFrom(
                         foregroundColor: textColor,
                         side: BorderSide(
-                          color:
-                              isDark ? AppColors.grey800 : AppColors.grey200,
+                          color: isDark ? AppColors.grey800 : AppColors.grey200,
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.facebook,
-                            color: Color(0xFF1877F2),
-                            size: 20,
-                          ),
-                          const Gap(8),
-                          Text(
-                            'Facebook',
-                            style: AppTextStyles.labelMedium.copyWith(
-                              color: textColor,
-                              fontWeight: FontWeight.w600,
+                      child: _isFacebookLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.facebook,
+                                  color: Color(0xFF1877F2),
+                                  size: 20,
+                                ),
+                                const Gap(8),
+                                Text(
+                                  'Facebook',
+                                  style: AppTextStyles.labelMedium.copyWith(
+                                    color: textColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ],
