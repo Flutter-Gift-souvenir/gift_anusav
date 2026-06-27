@@ -55,6 +55,25 @@ class Promotion {
     );
   }
 
+  // Convert a Supabase row (snake_case) to a Promotion object
+  factory Promotion.fromSupabase(Map<String, dynamic> m) {
+    return Promotion(
+      id: m['id'] as String,
+      title: m['title'] as String? ?? '',
+      description: m['description'] as String? ?? '',
+      imageUrl: m['image_url'] as String? ?? '',
+      couponCode: m['coupon_code'] as String? ?? '',
+      discountPercent: (m['discount_percent'] as num?)?.toDouble() ?? 0,
+      minimumOrder: (m['minimum_order'] as num?)?.toDouble(),
+      occasion: m['occasion'] as String? ?? '',
+      startDate: DateTime.tryParse(m['start_date']?.toString() ?? '') ??
+          DateTime.now(),
+      endDate: DateTime.tryParse(m['end_date']?.toString() ?? '') ??
+          DateTime.now().add(const Duration(days: 365)),
+      isActive: (m['is_active'] as bool?) ?? true,
+    );
+  }
+
   // Convert Promotion object to JSON map
   Map<String, dynamic> toJson() {
     return {

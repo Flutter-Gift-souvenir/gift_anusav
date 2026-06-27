@@ -6,7 +6,6 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../models/product_model.dart';
-import '../../data/mock_repository.dart';
 import '../../data/supabase_repository.dart';
 
 class QuizScreen extends StatefulWidget {

@@ -2,6 +2,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/product_model.dart';
 import '../models/artisan_model.dart';
 import '../models/shop_model.dart';
+import '../models/collection_model.dart';
+import '../models/promotion_model.dart';
 
 class SupabaseRepository {
   static final _db = Supabase.instance.client;
@@ -135,6 +137,36 @@ class SupabaseRepository {
     final rows = await _db.from('collections').select();
     return (rows as List)
         .map((r) => _collectionRowToMap(r as Map<String, dynamic>))
+        .toList();
+  }
+
+  // All collections as Collection objects (for the Gifts screen)
+  static Future<List<Collection>> getCollectionObjects() async {
+    final rows = await _db.from('collections').select();
+    return (rows as List)
+        .map((r) => Collection.fromSupabase(r as Map<String, dynamic>))
+        .toList();
+  }
+
+  // ── Promotions ────────────────────────────────────────────
+
+  // All promotions (for the Promotions screen)
+  static Future<List<Promotion>> getPromotions() async {
+    final rows = await _db
+        .from('promotions')
+        .select()
+        .order('start_date', ascending: false);
+    return (rows as List)
+        .map((r) => Promotion.fromSupabase(r as Map<String, dynamic>))
+        .toList();
+  }
+
+  // Active promotions only (for the Map banner)
+  static Future<List<Promotion>> getActivePromotions() async {
+    final rows =
+        await _db.from('promotions').select().eq('is_active', true);
+    return (rows as List)
+        .map((r) => Promotion.fromSupabase(r as Map<String, dynamic>))
         .toList();
   }
 

@@ -117,6 +117,12 @@ class AppRouter {
             name: 'booking_history',
             builder: (context, state) => const BookingHistoryScreen(),
           ),
+          // Settings / Account — INSIDE the shell so the bottom nav stays
+          GoRoute(
+            path: settings,
+            name: 'settings',
+            builder: (context, state) => const SettingsScreen(),
+          ),
         ],
       ),
       // Login (no bottom nav)
@@ -140,11 +146,6 @@ GoRoute(
 ),
 
       // ─── Stack Screens (NO bottom nav bar) ───────────────────────────────
-      GoRoute(
-        path: settings,
-        name: 'settings',
-        builder: (context, state) => const SettingsScreen(),
-      ),
       GoRoute(
         path: editProfile,
         name: 'editProfile',

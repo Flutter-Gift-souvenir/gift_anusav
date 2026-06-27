@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
-import '../../data/mock_repository.dart';
 import '../../models/product_model.dart';
 import '../../models/collection_model.dart';
 import '../../utils/helpers.dart';
@@ -43,7 +42,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
 
   Future<void> _loadData() async {
     final products = await SupabaseRepository.getProducts();
-    final collections = await MockRepository.getCollections();
+    final collections = await SupabaseRepository.getCollectionObjects();
     setState(() {
       _products = products;
       _collections = collections;

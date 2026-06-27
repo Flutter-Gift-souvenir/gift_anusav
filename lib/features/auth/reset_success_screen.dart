@@ -12,8 +12,6 @@ class ResetSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor =
-        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final secondaryColor =
         isDark ? AppColors.textSecondaryDark : AppColors.grey600;
 

@@ -47,18 +47,14 @@ class AuthService {
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        print('DEBUG: Google sign in cancelled by user');
         return null;
       }
 
-      print('DEBUG: Google user signed in: ${googleUser.email}');
 
       final googleAuth = await googleUser.authentication;
       final accessToken = googleAuth.accessToken;
       final idToken = googleAuth.idToken;
 
-      print('DEBUG: accessToken: ${accessToken != null ? 'present' : 'null'}');
-      print('DEBUG: idToken: ${idToken != null ? 'present' : 'null'}');
 
       if (accessToken == null) throw Exception('No access token');
       if (idToken == null) throw Exception('No ID token');
@@ -69,7 +65,6 @@ class AuthService {
         accessToken: accessToken,
       );
     } catch (e) {
-      print('DEBUG: Google sign in error: $e');
       rethrow;
     }
   }
@@ -78,7 +73,6 @@ static Future<AuthResponse?> signInWithFacebook() async {
   final loginResult = await FacebookAuth.instance.login();
 
   if (loginResult.status != LoginStatus.success) {
-    print('DEBUG: Facebook login failed: ${loginResult.status}');
     return null;
   }
 
@@ -144,27 +138,24 @@ static Future<void> updateProfile({
   String? gender,
 }) async {
   final userId = currentUser?.id;
-  print('DEBUG: updateProfile called');
-  print('DEBUG: userId = $userId');
-  print('DEBUG: fullName = $fullName');
   
   if (userId == null) {
-    print('DEBUG: userId is null - user not logged in!');
     return;
   }
 
   try {
-    final response = await _supabase.from('profiles').upsert({
+    final Map<String, dynamic> updates = {
       'id': userId,
-      'full_name': ?fullName,
-      'phone': ?phone,
-      'birthday': ?birthday,
-      'gender': ?gender,
       'updated_at': DateTime.now().toIso8601String(),
-    });
-    print('DEBUG: upsert response = $response');
+    };
+    if (fullName != null) updates['full_name'] = fullName;
+    if (phone != null) updates['phone'] = phone;
+    if (birthday != null) updates['birthday'] = birthday;
+    if (gender != null) updates['gender'] = gender;
+
+    await _supabase.from('profiles').upsert(updates);
   } catch (e) {
-    print('DEBUG: upsert error = $e');
+    rethrow;
   }
 }
 
