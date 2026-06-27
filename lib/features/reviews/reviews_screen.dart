@@ -359,7 +359,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList.separated(
                     itemCount: reviews.length,
-                    separatorBuilder: (_, _) => const Gap(12),
+                    separatorBuilder: (_, __) => const Gap(12),
                     itemBuilder: (context, index) {
                       return _buildReviewCard(context, reviews[index]);
                     },
@@ -588,7 +588,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         itemCount: _filters.length,
-        separatorBuilder: (_, _) => const Gap(8),
+        separatorBuilder: (_, __) => const Gap(8),
         itemBuilder: (context, index) {
           final selected = _selectedFilterIndex == index;
 

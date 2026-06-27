@@ -153,7 +153,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               return Image.network(
                                 currentImg,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => Container(
+                                errorBuilder: (_, __, ___) => Container(
                                   color: AppColors.grey200,
                                   child: const Icon(Icons.image_not_supported, size: 48),
                                 ),
