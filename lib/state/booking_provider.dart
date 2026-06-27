@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BookingProvider extends ChangeNotifier {
-  // --- Booking State ---
+  // --- Booking State (in-progress draft) ---
   String? _productId;
   String? _productName;
   double? _productPrice;
@@ -11,6 +11,11 @@ class BookingProvider extends ChangeNotifier {
   DateTime? _deliveryDate;
   int _quantity = 1;
 
+  // --- Orders / notification badge state ---
+  // Tracks how many newly placed orders the user hasn't viewed yet.
+  // Used to show a badge on the cart icon (AppBar) and Orders icon (footer).
+  int _unseenOrdersCount = 0;
+
   // --- Getters ---
   String? get productId => _productId;
   String? get productName => _productName;
@@ -19,6 +24,8 @@ class BookingProvider extends ChangeNotifier {
   bool get isGiftWrapped => _isGiftWrapped;
   DateTime? get deliveryDate => _deliveryDate;
   int get quantity => _quantity;
+  int get unseenOrdersCount => _unseenOrdersCount;
+  bool get hasUnseenOrders => _unseenOrdersCount > 0;
 
   // Calculate total price
   double get totalPrice {
@@ -92,6 +99,23 @@ class BookingProvider extends ChangeNotifier {
     _isGiftWrapped = false;
     _deliveryDate = null;
     _quantity = 1;
+    notifyListeners();
+  }
+
+  // --- Orders / notification badge ---
+
+  // Call this right after an order is successfully placed
+  // (e.g. after the Supabase insert into your orders table succeeds).
+  void markOrderPlaced() {
+    _unseenOrdersCount++;
+    notifyListeners();
+  }
+
+  // Call this when the user opens the My Orders screen,
+  // so the badge clears once they've seen their orders.
+  void markOrdersSeen() {
+    if (_unseenOrdersCount == 0) return;
+    _unseenOrdersCount = 0;
     notifyListeners();
   }
 }
