@@ -226,7 +226,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
           horizontal: AppConstants.defaultPadding,
         ),
         itemCount: _recipients.length,
-        separatorBuilder: (_, _) => const Gap(16),
+        separatorBuilder: (_, __) => const Gap(16),
         itemBuilder: (context, index) {
           final recipient = _recipients[index];
           return Column(

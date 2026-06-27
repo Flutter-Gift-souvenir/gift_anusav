@@ -269,7 +269,7 @@ decoration: BoxDecoration(
                       horizontal: AppConstants.defaultPadding,
                     ),
                     itemCount: _promotions.length,
-                    separatorBuilder: (_, _) => const Gap(12),
+                    separatorBuilder: (_, __) => const Gap(12),
                     itemBuilder: (context, index) {
                       return _PromotionCard(
                         promotion: _promotions[index],
@@ -320,7 +320,7 @@ decoration: BoxDecoration(
                   horizontal: AppConstants.defaultPadding,
                 ),
                 itemCount: _shops.length,
-                separatorBuilder: (_, _) => const Gap(12),
+                separatorBuilder: (_, __) => const Gap(12),
                 itemBuilder: (context, index) {
                   return ShopCard(shop: _shops[index]);
                 },

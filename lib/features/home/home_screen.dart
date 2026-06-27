@@ -682,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen>
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: 20),
               itemCount: _artisans.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 14),
+              separatorBuilder: (_, __) => const SizedBox(width: 14),
               itemBuilder: (context, index) =>
                   _buildArtisanCard(_artisans[index]),
             ),
