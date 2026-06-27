@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/product_model.dart';
 import '../../theme/app_colors.dart';
-import 'booking_cache.dart'; // Handles local caching for your /booking page tracker
+import '../../data/supabase_repository.dart';
 
 class BookingScreen extends StatefulWidget {
   final String productId;
@@ -27,73 +27,24 @@ class _BookingScreenState extends State<BookingScreen> {
   final TextEditingController _recipientController = TextEditingController();
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 2));
 
-  // Pure Frontend Mock Data List
-  final List<Product> _mockProducts = [
-    Product(
-      id: '1',
-      name: 'Handwoven Golden Silk Lotus Scarf',
-      category: 'Textiles',
-      isAvailable: true,
-      description: 'Inspired by the lotus flowers of the Tonle Sap lake, this scarf is hand-woven by women from the Siem Reap province.',
-      price: 120.00,
-      imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600',
-      rating: 4.8,
-      reviewCount: 24,
-      artisanName: 'Sopheak Vuthy',
-      artisanId: 'artisan_01',
-      origin: 'Siem Reap Province',
-      tags: ['Silk', 'Scarves', 'Traditional'],
-      images: ['https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600'],
-    ),
-    Product(
-      id: '2',
-      name: 'Cambodian Silver Plated Bracelet',
-      category: 'Jewelry',
-      isAvailable: true,
-      description: 'Crafted carefully in the historical silver-smithing village of Kampong Luong.',
-      price: 45.00,
-      imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600',
-      rating: 4.9,
-      reviewCount: 18,
-      artisanName: 'Chantha Piseth',
-      artisanId: 'artisan_02',
-      origin: 'Kandal Province',
-      tags: ['Silver', 'Jewelry', 'Handcarved'],
-      images: ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600'],
-    ),
-    Product(
-      id: '3',
-      name: 'Premium Cotton Krama Scarf',
-      category: 'Textiles',
-      isAvailable: true,
-      description: 'The iconic traditional Cambodian gingham scarf woven with love.',
-      price: 15.00,
-      imageUrl: 'https://images.unsplash.com/photo-1520635360276-79f3dbd809f6?q=80&w=600',
-      rating: 4.7,
-      reviewCount: 32,
-      artisanName: 'Srey Mom',
-      artisanId: 'artisan_03',
-      origin: 'Takeo Province',
-      tags: ['Cotton', 'Krama', 'Everyday'],
-      images: ['https://images.unsplash.com/photo-1520635360276-79f3dbd809f6?q=80&w=600'],
-    ),
-    Product(
-      id: '4',
-      name: 'Handmade Kampot Ceramic Teaset',
-      category: 'Ceramics',
-      isAvailable: true,
-      description: 'An elegant clay teaset sculpted carefully using the iconic rich, iron-dense clay.',
-      price: 65.00,
-      imageUrl: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=600',
-      rating: 4.9,
-      reviewCount: 12,
-      artisanName: 'Kosal Sopheap',
-      artisanId: 'artisan_04',
-      origin: 'Kampot Province',
-      tags: ['Clay', 'Ceramics', 'Kitchen'],
-      images: ['https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=600'],
-    ),
-  ];
+  // Real product loaded from Supabase
+  Product? _product;
+  bool _isLoadingProduct = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProduct();
+  }
+
+  Future<void> _loadProduct() async {
+    final p = await SupabaseRepository.getProductById(widget.productId);
+    if (!mounted) return;
+    setState(() {
+      _product = p;
+      _isLoadingProduct = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -125,18 +76,21 @@ class _BookingScreenState extends State<BookingScreen> {
     final textSecondary = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
     final cardColor = isDark ? AppColors.grey900 : AppColors.grey100;
 
-    final product = _mockProducts.firstWhere(
-      (p) => p.id == widget.productId || 
-             widget.productId.toLowerCase().contains(p.id.toLowerCase()) ||
-             p.name.toLowerCase().contains(widget.productId.toLowerCase()),
-      orElse: () {
-        int index = int.tryParse(widget.productId) ?? 1;
-        if (index > 0 && index <= _mockProducts.length) {
-          return _mockProducts[index - 1];
-        }
-        return _mockProducts.first;
-      },
-    );
+    // Show spinner while the product loads from Supabase
+    if (_isLoadingProduct) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_product == null) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+        body: const Center(child: Text('Product not found')),
+      );
+    }
+    final product = _product!;
 
     double addonTotal = 0.0;
     if (_includeGiftWrap) addonTotal += 5.0;
@@ -351,8 +305,27 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) return;
+                          try {
+                            // Save the booking to Supabase
+                            await SupabaseRepository.createBooking(
+                              productId: product.id,
+                              productName: product.name,
+                              productImageUrl: product.imageUrl,
+                              price: finalTotal,
+                              recipient: _recipientController.text,
+                              note: _noteController.text,
+                              deliveryDate:
+                                  "${_selectedDate.toLocal()}".split(' ')[0],
+                              giftWrap: _includeGiftWrap,
+                              greetingCard: _includeGreetingCard,
+                              status: _includeGiftWrap
+                                  ? 'Gift Being Wrapped'
+                                  : 'Order Processing',
+                            );
+
+                            if (!context.mounted) return;
                             showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -364,37 +337,33 @@ class _BookingScreenState extends State<BookingScreen> {
                                     Text('Kado Confirmed!'),
                                   ],
                                 ),
-                                content: const Text('Your customization settings have been mocked locally. When we hook up Supabase next week, this transaction will insert live records directly into the backend database tables!'),
+                                content: const Text(
+                                    'Your order has been saved. You can track it in My Orders.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      // 1. Log order items cache into the notifier state background layer
-                                      bookedItemsNotifier.value = [
-                                        ...bookedItemsNotifier.value,
-                                        {
-                                          'id': product.id,
-                                          'name': product.name,
-                                          'price': finalTotal,
-                                          'imageUrl': product.imageUrl,
-                                          'recipient': _recipientController.text,
-                                          'date': "${_selectedDate.toLocal()}".split(' ')[0],
-                                          'status': _includeGiftWrap ? 'Gift Being Wrapped' : 'Order Processing',
-                                          'progress': 0.75,
-                                        }
-                                      ];
-
-                                      // 2. Dismiss the success dialog popup window
                                       Navigator.of(ctx).pop();
-                                      
-                                      // 3. 🎯 Redirects user back to Gifts view page tab layout
-                                      context.go('/gifts');
+                                      context.go('/booking'); // My Orders tab
                                     },
                                     child: const Text(
                                       'Awesome',
-                                      style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.primary),
                                     ),
                                   )
                                 ],
+                              ),
+                            );
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  e.toString().contains('logged in')
+                                      ? 'Please log in to place an order.'
+                                      : 'Could not place order. Please try again.',
+                                ),
                               ),
                             );
                           }

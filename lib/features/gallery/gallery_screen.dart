@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -33,25 +33,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   Future<void> _loadGallery() async {
     try {
-      final loadedPhotos = await MockRepository.getGalleryByArtisanAndType(widget.artisanId, 'photo');
-      final loadedVideos = await MockRepository.getGalleryByArtisanAndType(widget.artisanId, 'video');
+      // Atelier gallery now comes from Supabase artisans.atelier_gallery
+      final gallery = await SupabaseRepository
+          .getAtelierGalleryByArtisanId(widget.artisanId);
 
       if (!mounted) return;
 
       setState(() {
-        photos = loadedPhotos.map((e) => Map<String, String>.from({
-              'title': e['title'] ?? '',
-              'subtitle': e['subtitle'] ?? '',
-              'image': e['image'] ?? e['thumbnail'] ?? '',
-            })).toList();
+        photos = gallery
+            .map((e) => Map<String, String>.from({
+                  'title': (e['caption'] ?? '').toString(),
+                  'subtitle': '',
+                  'image': (e['imageUrl'] ?? e['image'] ?? '').toString(),
+                }))
+            .where((p) => (p['image'] ?? '').isNotEmpty)
+            .toList();
 
-        videos = loadedVideos.map((e) => Map<String, String>.from({
-          'title': e['title'] ?? '',
-          'subtitle': e['subtitle'] ?? '',
-          'thumbnail': e['thumbnail'] ?? e['image'] ?? '',
-          'duration': e['duration'] ?? '',
-          'videoUrl': e['videoUrl'] ?? '',
-        })).toList();
+        // No video data in atelier_gallery yet — keep empty (shows empty state)
+        videos = [];
 
         _isLoading = false;
       });
@@ -248,40 +247,59 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ),
 
             if (selectedTabIndex == 0)
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final photo = photos[index];
-                      return buildPhotoCard(context, photo, index);
-                    },
-                    childCount: photos.length,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 14,
-                    childAspectRatio: 0.78,
-                  ),
-                ),
-              )
+              photos.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: _buildEmptyGalleryState(
+                        context,
+                        Icons.photo_library_outlined,
+                        'No photos yet',
+                        'Workshop photos for this artisan will appear here.',
+                      ),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final photo = photos[index];
+                            return buildPhotoCard(context, photo, index);
+                          },
+                          childCount: photos.length,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 14,
+                          crossAxisSpacing: 14,
+                          childAspectRatio: 0.78,
+                        ),
+                      ),
+                    )
             else
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final video = videos[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: buildVideoCard(context, video),
-                      );
-                    },
-                    childCount: videos.length,
-                  ),
-                ),
-              ),
+              videos.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: _buildEmptyGalleryState(
+                        context,
+                        Icons.videocam_outlined,
+                        'No videos yet',
+                        'Process videos for this artisan will appear here.',
+                      ),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final video = videos[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: buildVideoCard(context, video),
+                            );
+                          },
+                          childCount: videos.length,
+                        ),
+                      ),
+                    ),
 
             const SliverToBoxAdapter(child: Gap(40)),
           ],
@@ -290,8 +308,51 @@ class _GalleryScreenState extends State<GalleryScreen> {
     );
   }
 
-  Widget buildTopHeader(BuildContext context) {
+  Widget _buildEmptyGalleryState(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2C1F0E) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? const Color(0xFF423525) : Colors.grey.shade200,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 40, color: const Color(0xFF8B4513)),
+          const Gap(12),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: isDark ? Colors.white : const Color(0xFF4A3B32),
+            ),
+          ),
+          const Gap(6),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: isDark ? Colors.white70 : Colors.grey.shade600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTopHeader(BuildContext context) {    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Row(
       children: [

@@ -7,6 +7,7 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../models/product_model.dart';
 import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -31,7 +32,7 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _loadProducts() async {
-    final products = await MockRepository.getProducts();
+    final products = await SupabaseRepository.getProducts();
     setState(() {
       _allProducts = products;
       _productsLoaded = true;

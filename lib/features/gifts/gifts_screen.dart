@@ -9,6 +9,7 @@ import '../../data/mock_repository.dart';
 import '../../models/product_model.dart';
 import '../../models/collection_model.dart';
 import '../../utils/helpers.dart';
+import '../../data/supabase_repository.dart';
 
 class GiftsScreen extends StatefulWidget {
   const GiftsScreen({super.key});
@@ -41,7 +42,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
   }
 
   Future<void> _loadData() async {
-    final products = await MockRepository.getProducts();
+    final products = await SupabaseRepository.getProducts();
     final collections = await MockRepository.getCollections();
     setState(() {
       _products = products;

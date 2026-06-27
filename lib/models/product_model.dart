@@ -51,6 +51,23 @@ class Product {
     );
   }
 
+  factory Product.fromSupabase(Map<String, dynamic> m) => Product(
+  id: m['id'] as String,
+  name: m['name'] as String,
+  description: m['description'] as String? ?? '',
+  price: (m['price'] as num).toDouble(),
+  imageUrl: m['image_url'] as String? ?? '',
+  images: List<String>.from(m['images'] ?? const []),
+  category: m['category'] as String? ?? '',
+  artisanId: m['artisan_id'] as String? ?? '',
+  artisanName: m['artisan_name'] as String? ?? '',
+  rating: (m['rating'] as num?)?.toDouble() ?? 0,
+  reviewCount: (m['review_count'] as int?) ?? 0,
+  isAvailable: (m['is_available'] as bool?) ?? true,
+  origin: m['origin'] as String? ?? '',
+  tags: List<String>.from(m['tags'] ?? const []),
+);
+
   // Convert Product object to JSON map
   Map<String, dynamic> toJson() {
     return {

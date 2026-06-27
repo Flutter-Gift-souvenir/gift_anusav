@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gap/gap.dart';
 import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/shop_model.dart';
 import '../../models/promotion_model.dart';
 import '../../theme/app_colors.dart';
@@ -43,7 +44,7 @@ class _MapScreenState extends State<MapScreen> {
 
   // --- Load data from mock repository ---
   Future<void> _loadData() async {
-    final shops = await MockRepository.getShops();
+    final shops = await SupabaseRepository.getShops();
     final promotions = await MockRepository.getActivePromotions();
     setState(() {
       _shops = shops;

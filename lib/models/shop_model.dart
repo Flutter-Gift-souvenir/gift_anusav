@@ -42,6 +42,23 @@ class Shop {
     );
   }
 
+  // Convert a Supabase row (snake_case) to a Shop object
+  factory Shop.fromSupabase(Map<String, dynamic> m) {
+    return Shop(
+      id: m['id'] as String,
+      name: m['name'] as String,
+      area: m['area'] as String? ?? '',
+      distance: (m['distance'] as num?)?.toDouble() ?? 0,
+      rating: (m['rating'] as num?)?.toDouble() ?? 0,
+      imageUrl: m['image_url'] as String? ?? '',
+      latitude: (m['latitude'] as num?)?.toDouble() ?? 0,
+      longitude: (m['longitude'] as num?)?.toDouble() ?? 0,
+      icon: m['icon'] as String? ?? '',
+      status: m['status'] as String? ?? '',
+      tags: List<String>.from(m['tags'] ?? const []),
+    );
+  }
+
   // Convert Shop object to JSON map
   Map<String, dynamic> toJson() {
     return {

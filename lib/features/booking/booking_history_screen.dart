@@ -2,10 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/app_colors.dart';
-import 'booking_cache.dart'; // 📦 Reads from your static list local cache
+import '../../data/supabase_repository.dart';
 
-class BookingHistoryScreen extends StatelessWidget {
+class BookingHistoryScreen extends StatefulWidget {
   const BookingHistoryScreen({super.key});
+
+  @override
+  State<BookingHistoryScreen> createState() => _BookingHistoryScreenState();
+}
+
+class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
+  List<Map<String, dynamic>> _orders = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOrders();
+  }
+
+  Future<void> _loadOrders() async {
+    final orders = await SupabaseRepository.getMyBookings();
+    if (!mounted) return;
+    setState(() {
+      _orders = orders;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +92,18 @@ class BookingHistoryScreen extends StatelessWidget {
             ),
             const Gap(24),
 
-            // 🎯 Dynamic Active Bookings Monitor List
-            ValueListenableBuilder<List<Map<String, dynamic>>>(
-              valueListenable: bookedItemsNotifier,
-              builder: (context, activeOrders, child) {
-                // FALLBACK SAMPLE CARD: Shows up if the cache list is empty
-                if (activeOrders.isEmpty) {
+            // 🎯 Active Bookings — loaded from Supabase (this user's orders)
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else
+              Builder(
+                builder: (context) {
+                  final activeOrders = _orders;
+                  // FALLBACK SAMPLE CARD: Shows up if the user has no orders
+                  if (activeOrders.isEmpty) {
                   return Column(
                     children: [
                       _buildOrderCard(

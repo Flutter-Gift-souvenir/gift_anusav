@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/product_model.dart';
 import '../../theme/app_colors.dart';
+import '../../data/supabase_repository.dart';
 
 class DetailScreen extends StatefulWidget {
   final String productId;
@@ -22,81 +23,33 @@ class _DetailScreenState extends State<DetailScreen> {
   bool _isMaterialsExpanded = false;
   bool _isDimensionsExpanded = false;
 
-  // 📦 Pure Frontend Mock Data List
-  final List<Product> _mockProducts = [
-    Product(
-      id: '1',
-      name: 'Handwoven Golden Silk Lotus Scarf',
-      category: 'Textiles',
-      isAvailable: true,
-      description: 'Inspired by the lotus flowers of the Tonle Sap lake, this scarf is hand-woven by women from the Siem Reap province. Each piece takes approximately 12 days to complete, utilizing natural dyes extracted from the bark of indigenous trees.',
-      price: 120.00,
-      imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600',
-      rating: 4.8,
-      reviewCount: 24,
-      artisanName: 'Sopheak Vuthy',
-      artisanId: 'artisan_01',
-      origin: 'Siem Reap Province',
-      tags: ['Silk', 'Scarves', 'Traditional'],
-      images: [
-        'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600',
-      ],
-    ),
-    Product(
-      id: '2',
-      name: 'Cambodian Silver Plated Bracelet',
-      category: 'Jewelry',
-      isAvailable: true,
-      description: 'Crafted carefully in the historical silver-smithing village of Kampong Luong. Features traditional Angkorian floral carvings engraved intricately by hand over pure silver alloys.',
-      price: 45.00,
-      imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600',
-      rating: 4.9,
-      reviewCount: 18,
-      artisanName: 'Chantha Piseth',
-      artisanId: 'artisan_02',
-      origin: 'Kandal Province',
-      tags: ['Silver', 'Jewelry', 'Handcarved'],
-      images: [
-        'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=600',
-      ],
-    ),
-    Product(
-      id: '3',
-      name: 'Premium Cotton Krama Scarf',
-      category: 'Textiles',
-      isAvailable: true,
-      description: 'The iconic traditional Cambodian gingham scarf woven with love. Soft, breathable, and highly durable multi-purpose textile representing Khmer utility and identity.',
-      price: 15.00,
-      imageUrl: 'https://images.unsplash.com/photo-1520635360276-79f3dbd809f6?q=80&w=600',
-      rating: 4.7,
-      reviewCount: 32,
-      artisanName: 'Srey Mom',
-      artisanId: 'artisan_03',
-      origin: 'Takeo Province',
-      tags: ['Cotton', 'Krama', 'Everyday'],
-      images: [
-        'https://images.unsplash.com/photo-1520635360276-79f3dbd809f6?q=80&w=600',
-      ],
-    ),
-    Product(
-      id: '4',
-      name: 'Handmade Kampot Ceramic Teaset',
-      category: 'Ceramics',
-      isAvailable: true,
-      description: 'An elegant clay teaset sculpted carefully using the iconic rich, iron-dense clay found in the foothills of Kampot. Finished with an organic salt-glaze technique inside wood-fired kilns.',
-      price: 65.00,
-      imageUrl: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=600',
-      rating: 4.9,
-      reviewCount: 12,
-      artisanName: 'Kosal Sopheap',
-      artisanId: 'artisan_04',
-      origin: 'Kampot Province',
-      tags: ['Clay', 'Ceramics', 'Kitchen'],
-      images: [
-        'https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=600',
-      ],
-    ),
-  ];
+  // Real product loaded from Supabase
+  Product? _product;
+  bool _isLoading = true;
+
+  // Controls the image gallery so dots can switch images on tap
+  final PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProduct();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProduct() async {
+    final product = await SupabaseRepository.getProductById(widget.productId);
+    if (!mounted) return;
+    setState(() {
+      _product = product;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,20 +60,31 @@ class _DetailScreenState extends State<DetailScreen> {
     final textPrimary = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final textSecondary = isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
 
-    // 🎯 Smart Lookup: Checks exact ID, partial strings, or falls back to standard index positions
-    final product = _mockProducts.firstWhere(
-      (p) => p.id == widget.productId || 
-             widget.productId.toLowerCase().contains(p.id.toLowerCase()) ||
-             p.name.toLowerCase().contains(widget.productId.toLowerCase()),
-      orElse: () {
-        int index = int.tryParse(widget.productId) ?? 1;
-        if (index > 0 && index <= _mockProducts.length) {
-          return _mockProducts[index - 1];
-        }
-        return _mockProducts.first;
-      },
-    );
+    // Show a spinner while the product loads from Supabase
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
 
+    // Show a friendly message if the product wasn't found
+    if (_product == null) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: textPrimary),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: const Center(child: Text('Product not found')),
+      );
+    }
+
+    final product = _product!;
     final int khrPrice = (product.price * 4000).round();
 
     return Scaffold(
@@ -175,6 +139,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(28),
                           child: PageView.builder(
+                            controller: _pageController,
                             itemCount: product.images.isNotEmpty ? product.images.length : 1,
                             onPageChanged: (index) {
                               setState(() {
@@ -202,18 +167,30 @@ class _DetailScreenState extends State<DetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
                           product.images.isNotEmpty ? product.images.length : 1,
-                          (index) => AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            height: 6,
-                            width: _currentImageIndex == index ? 20 : 6,
-                            decoration: BoxDecoration(
-                              color: _currentImageIndex == index 
-                                  ? AppColors.primary 
-                                  : AppColors.grey400.withValues(alpha: 0.4),
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                          ),
+                          (index) {
+                            final bool isActive = _currentImageIndex == index;
+                            return GestureDetector(
+                              onTap: () {
+                                _pageController.animateToPage(
+                                  index,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                height: 6,
+                                width: isActive ? 24 : 6,
+                                decoration: BoxDecoration(
+                                  color: isActive
+                                      ? Colors.red            // active = red and wider
+                                      : Colors.grey.shade400, // inactive = small gray dot
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
