@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart'; // ← NEW: for navigation
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../data/supabase_repository.dart'; // ← Supabase
-import '../../models/artisan_model.dart';     // ← Artisan model
 
 
 class AppColors {
@@ -38,10 +37,12 @@ class CategoryItem {
 }
 
 class CollectionItem {
+  final String id;
   final String title;
   final String subtitle;
   final String imageUrl;
   CollectionItem({
+    required this.id,
     required this.title,
     required this.subtitle,
     required this.imageUrl,
@@ -68,97 +69,6 @@ class ArtisanItem {
 }
 
 
-final List<HeroItem> heroItems = [
-  HeroItem(
-    badge: 'Heritage Collection',
-    title: 'Crafted in Cambodia',
-    subtitle: 'Discover the soul of Khmer artistry through our gifts from local artisans.',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  HeroItem(
-    badge: 'Silk Collection',
-    title: 'Women with Tradition',
-    subtitle: 'Authentic Cambodian silk crafted by skilled weavers from Siem Reap.',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  HeroItem(
-    badge: 'New Arrivals',
-    title: 'Silver & Stone',
-    subtitle: 'Handcrafted silverware with ancient Khmer motifs passed down through generations.',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-];
-
-final List<CategoryItem> categories = [
-  CategoryItem(label: 'Textile',  icon: Icons.checkroom_outlined),
-  CategoryItem(label: 'Silver',   icon: Icons.diamond_outlined),
-  CategoryItem(label: 'Wood',     icon: Icons.forest_outlined),
-  CategoryItem(label: 'Edible',   icon: Icons.restaurant_outlined),
-  CategoryItem(label: 'Jewelry',  icon: Icons.auto_awesome_outlined),
-];
-
-final List<CollectionItem> collections = [
-  CollectionItem(
-    title: 'For Him',
-    subtitle: '24 Items',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  CollectionItem(
-    title: 'Songkran Set',
-    subtitle: 'Festive Limited',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  CollectionItem(
-    title: 'Wedding',
-    subtitle: 'Elegant Gifts',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  CollectionItem(
-    title: 'Tourist',
-    subtitle: 'Best Souvenirs',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-];
-
-// ← NEW: added id to each artisan — must match Rasy's artisanId
-final List<ArtisanItem> artisans = [
-  ArtisanItem(
-    id: 'a001',          // ← make sure Rasy uses same id
-    name: 'Srey Mao',
-    location: 'Kampong Chhnang',
-    craft: 'Clay & Ceramics',
-    rating: 4.9,
-    badge: 'Master Potter',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  ArtisanItem(
-    id: 'a002',
-    name: 'Sovann Rith',
-    location: 'Siem Reap',
-    craft: 'Traditional Wood Carving',
-    rating: 4.8,
-    badge: 'Wood Carver',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  ArtisanItem(
-    id: 'a003',
-    name: 'Bopha Keo',
-    location: 'Phnom Penh',
-    craft: 'Silk Painting',
-    rating: 4.7,
-    badge: 'Silk Artist',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-  ArtisanItem(
-    id: 'a004',
-    name: 'Dara Chea',
-    location: 'Siem Reap',
-    craft: 'Silversmithing',
-    rating: 4.9,
-    badge: 'Silver Master',
-    imageUrl: 'assets/images/craft.jpg',
-  ),
-];
 
 
 class HomeScreen extends StatefulWidget {
@@ -174,8 +84,12 @@ class _HomeScreenState extends State<HomeScreen>
   final CarouselSliderController _carouselController = CarouselSliderController();
   final TextEditingController _emailController = TextEditingController();
 
-  // Artisans loaded from Supabase (falls back to empty until loaded)
+  // Data loaded from Supabase
+  List<HeroItem> _heroItems = [];
+  List<CategoryItem> _categories = [];
+  List<CollectionItem> _collections = [];
   List<ArtisanItem> _artisans = [];
+  bool _isLoading = true;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -208,26 +122,81 @@ class _HomeScreenState extends State<HomeScreen>
       curve: Curves.easeOut,
     );
     _fadeController.forward();
-    _loadArtisans();
+    _loadHomeData();
   }
 
-  // Load real artisans from Supabase and map them to ArtisanItem
-  Future<void> _loadArtisans() async {
-    final list = await SupabaseRepository.getArtisans();
-    if (!mounted) return;
-    setState(() {
-      _artisans = list
-          .map((a) => ArtisanItem(
-                id: a.id,
-                name: a.name,
-                location: a.location,
-                craft: a.specialty,
-                rating: a.rating,
-                badge: a.masterTitle.isNotEmpty ? a.masterTitle : 'Verified',
-                imageUrl: a.photoUrl,
-              ))
-          .toList();
-    });
+  IconData _iconForCraft(String label) {
+    final l = label.toLowerCase();
+    if (l.contains('textile') || l.contains('silk')) return Icons.checkroom_outlined;
+    if (l.contains('silver') || l.contains('jewel')) return Icons.diamond_outlined;
+    if (l.contains('wood')) return Icons.forest_outlined;
+    if (l.contains('food') || l.contains('spice') || l.contains('pepper')) {
+      return Icons.restaurant_outlined;
+    }
+    if (l.contains('ceramic') || l.contains('pottery')) {
+      return Icons.emoji_food_beverage_outlined;
+    }
+    if (l.contains('paint')) return Icons.brush_outlined;
+    if (l.contains('souvenir')) return Icons.card_giftcard_outlined;
+    return Icons.auto_awesome_outlined;
+  }
+
+  // Load every Home section from Supabase
+  Future<void> _loadHomeData() async {
+    try {
+      final featured = await SupabaseRepository.getFeaturedCollections();
+      final allCollections = await SupabaseRepository.getCollections();
+      final crafts = await SupabaseRepository.getCraftCategories();
+      final artisanList = await SupabaseRepository.getArtisans();
+
+      if (!mounted) return;
+      setState(() {
+        // Hero — from featured collections
+        _heroItems = featured
+            .map((c) => HeroItem(
+                  badge: (c['occasion'] ?? 'Featured').toString(),
+                  title: (c['title'] ?? '').toString(),
+                  subtitle: (c['description'] ?? '').toString(),
+                  imageUrl: (c['coverImageUrl'] ?? '').toString(),
+                ))
+            .toList();
+
+        // Browse by Craft — from distinct product categories
+        _categories = crafts
+            .map((label) =>
+                CategoryItem(label: label, icon: _iconForCraft(label)))
+            .toList();
+
+        // Curated Collections — first 4 collections
+        _collections = allCollections
+            .take(4)
+            .map((c) => CollectionItem(
+                  id: (c['id'] ?? '').toString(),
+                  title: (c['title'] ?? '').toString(),
+                  subtitle: (c['occasion'] ?? '').toString(),
+                  imageUrl: (c['coverImageUrl'] ?? '').toString(),
+                ))
+            .toList();
+
+        // Meet the Artisans
+        _artisans = artisanList
+            .map((a) => ArtisanItem(
+                  id: a.id,
+                  name: a.name,
+                  location: a.location,
+                  craft: a.specialty,
+                  rating: a.rating,
+                  badge: a.masterTitle.isNotEmpty ? a.masterTitle : 'Verified',
+                  imageUrl: a.photoUrl,
+                ))
+            .toList();
+
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -241,25 +210,45 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHero(),
-            _buildBrowseByCraft(),
-            _buildCollections(),
-            _buildMeetArtisans(),
-            _buildKadoCircle(),
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
+      child: _isLoading
+          ? const SizedBox(
+              height: 600,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHero(),
+                  _buildBrowseByCraft(),
+                  _buildCollections(),
+                  _buildMeetArtisans(),
+                  _buildKadoCircle(),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
     );
   }
 
   // ─── Section 1: Hero (unchanged) ─────────────────────────────────────────
   Widget _buildHero() {
+    if (_heroItems.isEmpty) {
+      return Container(
+        height: 480,
+        color: AppColors.primary,
+        alignment: Alignment.center,
+        child: const Text(
+          'Crafted in Cambodia',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      );
+    }
     return Stack(
       children: [
         CarouselSlider(
@@ -275,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen>
               setState(() => _heroIndex = index);
             },
           ),
-          items: heroItems.map((item) => _buildHeroSlide(item)).toList(),
+          items: _heroItems.map((item) => _buildHeroSlide(item)).toList(),
         ),
         Positioned(
           right: 16,
@@ -284,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: Center(
             child: AnimatedSmoothIndicator(
               activeIndex: _heroIndex,
-              count: heroItems.length,
+              count: _heroItems.length,
               effect: const WormEffect(
                 dotHeight: 8,
                 dotWidth: 8,
@@ -302,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.asset(
+        Image.network(
           item.imageUrl,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
@@ -460,10 +449,10 @@ class _HomeScreenState extends State<HomeScreen>
             height: 90,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              itemCount: _categories.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 16),
               itemBuilder: (context, index) =>
-                  _buildCategoryItem(categories[index]),
+                  _buildCategoryItem(_categories[index]),
             ),
           ),
         ],
@@ -531,26 +520,41 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _buildCollectionCard(collections[0], height: 295),
+          if (_collections.length < 4)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: _themedSurface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: _themedBorder),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  children: [
-                    _buildCollectionCard(collections[1], height: 145),
-                    const SizedBox(height: 10),
-                    _buildCollectionCard(collections[2], height: 68),
-                    const SizedBox(height: 10),
-                    _buildCollectionCard(collections[3], height: 68),
-                  ],
+              child: Text(
+                'Collections will appear here soon.',
+                style: TextStyle(fontSize: 13, color: _themedTextGrey),
+              ),
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildCollectionCard(_collections[0], height: 295),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    children: [
+                      _buildCollectionCard(_collections[1], height: 145),
+                      const SizedBox(height: 10),
+                      _buildCollectionCard(_collections[2], height: 68),
+                      const SizedBox(height: 10),
+                      _buildCollectionCard(_collections[3], height: 68),
+                    ],
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -558,7 +562,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildCollectionCard(CollectionItem item, {required double height}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (item.id.isNotEmpty) context.push('/collection/${item.id}');
+      },
       child: Container(
         height: height,
         decoration: BoxDecoration(
@@ -576,7 +582,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(
+              Image.network(
                 item.imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(

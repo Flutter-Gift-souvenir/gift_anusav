@@ -5,7 +5,6 @@ import '../../state/theme_provider.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
-import '../../widgets/app_scaffold.dart';
 import '../../widgets/shimmer_card.dart';
 import '../../utils/helpers.dart';
 import 'package:go_router/go_router.dart';
@@ -37,11 +36,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final themeProvider = context.watch<ThemeProvider>();
     final isDark = themeProvider.isDarkMode;
 
-    return AppScaffold(
-      currentIndex: 4,
-      body: _isLoading
-          ? const _SettingsShimmer()
-          : SingleChildScrollView(
+    return _isLoading
+        ? const _SettingsShimmer()
+        : SingleChildScrollView(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppConstants.defaultPadding,
               ),
@@ -276,8 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Gap(24),
                 ],
               ),
-            ),
-    );
+            );
   }
 
   // --- Logout Confirmation Dialog ---

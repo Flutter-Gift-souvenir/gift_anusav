@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gap/gap.dart';
-import '../../data/mock_repository.dart';
 import '../../data/supabase_repository.dart';
 import '../../models/shop_model.dart';
 import '../../models/promotion_model.dart';
@@ -45,20 +44,12 @@ class _MapScreenState extends State<MapScreen> {
   // --- Load data from mock repository ---
   Future<void> _loadData() async {
     final shops = await SupabaseRepository.getShops();
-    final promotions = await MockRepository.getActivePromotions();
+    final promotions = await SupabaseRepository.getActivePromotions();
     setState(() {
       _shops = shops;
       _promotions = promotions;
       _isLoading = false;
     });
-  }
-
-  // --- Move map to current location (mock) ---
-  void _goToMyLocation() {
-    _mapController.move(
-      LatLng(AppConstants.defaultLatitude, AppConstants.defaultLongitude),
-      AppConstants.defaultZoom,
-    );
   }
 
   @override

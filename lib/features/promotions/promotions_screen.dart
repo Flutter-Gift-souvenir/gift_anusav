@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/promotion_model.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -29,7 +29,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   Future<void> _loadPromotions() async {
-    final promotions = await MockRepository.getPromotions();
+    final promotions = await SupabaseRepository.getPromotions();
     setState(() {
       _promotions = promotions;
       _isLoading = false;

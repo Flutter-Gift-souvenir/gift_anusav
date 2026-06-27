@@ -35,6 +35,22 @@ class Collection {
     );
   }
 
+  // Convert a Supabase row (snake_case) to a Collection object
+  factory Collection.fromSupabase(Map<String, dynamic> m) {
+    return Collection(
+      id: m['id'] as String,
+      title: m['title'] as String? ?? '',
+      description: m['description'] as String? ?? '',
+      coverImageUrl: m['cover_image_url'] as String? ?? '',
+      occasion: m['occasion'] as String? ?? '',
+      productIds: List<String>.from(m['product_ids'] ?? const []),
+      isFeatured: (m['is_featured'] as bool?) ?? false,
+      validUntil: m['valid_until'] != null
+          ? DateTime.tryParse(m['valid_until'].toString())
+          : null,
+    );
+  }
+
   // Convert Collection object to JSON map
   Map<String, dynamic> toJson() {
     return {

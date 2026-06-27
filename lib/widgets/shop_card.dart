@@ -28,7 +28,7 @@ class ShopCard extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: CachedNetworkImage(
-            imageUrl: shop.imageUrl ?? '',
+            imageUrl: shop.imageUrl,
             width: 80,
             height: 80,
             fit: BoxFit.cover,
@@ -84,7 +84,7 @@ class ShopCard extends StatelessWidget {
                       ),
                       const Gap(2),
                       Text(
-                        shop.rating.toString() ?? '0.0',
+                        shop.rating.toString(),
                         style: AppTextStyles.labelMedium,
                       ),
                     ],
