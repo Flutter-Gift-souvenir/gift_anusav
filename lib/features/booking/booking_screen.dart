@@ -308,7 +308,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         onPressed: () async {
                           if (!_formKey.currentState!.validate()) return;
                           try {
-                            // Save the booking to Supabase and open the saved order.
+                          
                             final bookingId = await SupabaseRepository.createBooking(
                               productId: product.id,
                               productName: product.name,
