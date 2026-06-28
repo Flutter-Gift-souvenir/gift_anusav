@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.0
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -40,6 +40,16 @@ dependencies:
 
   # Video
   video_player: ^2.9.1
+
+  url_launcher: ^6.3.1
+
+  # Firebase & Supabase
+  supabase_flutter: ^2.8.4
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^7.1.1
+
+  # Media Picking (profile photo upload)
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

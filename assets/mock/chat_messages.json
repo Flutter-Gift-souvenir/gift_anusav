@@ -1,0 +1,242 @@
+[
+  {
+    "id": "m001",
+    "artisanId": "a001",
+    "text": "Hello Sokha Meas, I am interested in your silk & textile weaving for a gift.",
+    "isMe": true,
+    "time": "10:00 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m002",
+    "artisanId": "a001",
+    "text": "Hello! Thank you for your interest. I make my pieces by hand in Takeo.",
+    "isMe": false,
+    "time": "10:04 AM",
+    "status": ""
+  },
+  {
+    "id": "m003",
+    "artisanId": "a001",
+    "text": "Can you customize the gift wrapping and add a personal message?",
+    "isMe": true,
+    "time": "10:06 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m004",
+    "artisanId": "a001",
+    "text": "Yes, I can prepare gift wrapping and include a message card for your order.",
+    "isMe": false,
+    "time": "10:09 AM",
+    "status": ""
+  },
+  {
+    "id": "m005",
+    "artisanId": "a001",
+    "text": "Great! How long does it usually take to prepare?",
+    "isMe": true,
+    "time": "10:11 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m006",
+    "artisanId": "a001",
+    "text": "Most handmade gifts are ready within 2–4 days depending on the design.",
+    "isMe": false,
+    "time": "10:13 AM",
+    "status": ""
+  },
+  {
+    "id": "m007",
+    "artisanId": "a002",
+    "text": "Hello Dara Chea, I am interested in your traditional silversmithing for a gift.",
+    "isMe": true,
+    "time": "10:00 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m008",
+    "artisanId": "a002",
+    "text": "Hello! Thank you for your interest. I make my pieces by hand in Phnom Penh.",
+    "isMe": false,
+    "time": "10:04 AM",
+    "status": ""
+  },
+  {
+    "id": "m009",
+    "artisanId": "a002",
+    "text": "Can you customize the gift wrapping and add a personal message?",
+    "isMe": true,
+    "time": "10:06 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m010",
+    "artisanId": "a002",
+    "text": "Yes, I can prepare gift wrapping and include a message card for your order.",
+    "isMe": false,
+    "time": "10:09 AM",
+    "status": ""
+  },
+  {
+    "id": "m011",
+    "artisanId": "a002",
+    "text": "Great! How long does it usually take to prepare?",
+    "isMe": true,
+    "time": "10:11 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m012",
+    "artisanId": "a002",
+    "text": "Most handmade gifts are ready within 2–4 days depending on the design.",
+    "isMe": false,
+    "time": "10:13 AM",
+    "status": ""
+  },
+  {
+    "id": "m013",
+    "artisanId": "a003",
+    "text": "Hello Sreymom Heng, I am interested in your silk painting & ceramics for a gift.",
+    "isMe": true,
+    "time": "10:00 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m014",
+    "artisanId": "a003",
+    "text": "Hello! Thank you for your interest. I make my pieces by hand in Siem Reap.",
+    "isMe": false,
+    "time": "10:04 AM",
+    "status": ""
+  },
+  {
+    "id": "m015",
+    "artisanId": "a003",
+    "text": "Can you customize the gift wrapping and add a personal message?",
+    "isMe": true,
+    "time": "10:06 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m016",
+    "artisanId": "a003",
+    "text": "Yes, I can prepare gift wrapping and include a message card for your order.",
+    "isMe": false,
+    "time": "10:09 AM",
+    "status": ""
+  },
+  {
+    "id": "m017",
+    "artisanId": "a003",
+    "text": "Great! How long does it usually take to prepare?",
+    "isMe": true,
+    "time": "10:11 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m018",
+    "artisanId": "a003",
+    "text": "Most handmade gifts are ready within 2–4 days depending on the design.",
+    "isMe": false,
+    "time": "10:13 AM",
+    "status": ""
+  },
+  {
+    "id": "m019",
+    "artisanId": "a004",
+    "text": "Hello Bunna Keo, I am interested in your kampot pepper farming for a gift.",
+    "isMe": true,
+    "time": "10:00 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m020",
+    "artisanId": "a004",
+    "text": "Hello! Thank you for your interest. I make my pieces by hand in Kampot.",
+    "isMe": false,
+    "time": "10:04 AM",
+    "status": ""
+  },
+  {
+    "id": "m021",
+    "artisanId": "a004",
+    "text": "Can you customize the gift wrapping and add a personal message?",
+    "isMe": true,
+    "time": "10:06 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m022",
+    "artisanId": "a004",
+    "text": "Yes, I can prepare gift wrapping and include a message card for your order.",
+    "isMe": false,
+    "time": "10:09 AM",
+    "status": ""
+  },
+  {
+    "id": "m023",
+    "artisanId": "a004",
+    "text": "Great! How long does it usually take to prepare?",
+    "isMe": true,
+    "time": "10:11 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m024",
+    "artisanId": "a004",
+    "text": "Most handmade gifts are ready within 2–4 days depending on the design.",
+    "isMe": false,
+    "time": "10:13 AM",
+    "status": ""
+  },
+  {
+    "id": "m025",
+    "artisanId": "a005",
+    "text": "Hello Virak Pov, I am interested in your wood carving & stone sculpting for a gift.",
+    "isMe": true,
+    "time": "10:00 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m026",
+    "artisanId": "a005",
+    "text": "Hello! Thank you for your interest. I make my pieces by hand in Kampong Thom.",
+    "isMe": false,
+    "time": "10:04 AM",
+    "status": ""
+  },
+  {
+    "id": "m027",
+    "artisanId": "a005",
+    "text": "Can you customize the gift wrapping and add a personal message?",
+    "isMe": true,
+    "time": "10:06 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m028",
+    "artisanId": "a005",
+    "text": "Yes, I can prepare gift wrapping and include a message card for your order.",
+    "isMe": false,
+    "time": "10:09 AM",
+    "status": ""
+  },
+  {
+    "id": "m029",
+    "artisanId": "a005",
+    "text": "Great! How long does it usually take to prepare?",
+    "isMe": true,
+    "time": "10:11 AM",
+    "status": "Seen"
+  },
+  {
+    "id": "m030",
+    "artisanId": "a005",
+    "text": "Most handmade gifts are ready within 2–4 days depending on the design.",
+    "isMe": false,
+    "time": "10:13 AM",
+    "status": ""
+  }
+]

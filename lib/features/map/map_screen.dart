@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gift_anusav/router/app_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:gap/gap.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/shop_model.dart';
 import '../../models/promotion_model.dart';
 import '../../theme/app_colors.dart';
@@ -44,21 +43,13 @@ class _MapScreenState extends State<MapScreen> {
 
   // --- Load data from mock repository ---
   Future<void> _loadData() async {
-    final shops = await MockRepository.getShops();
-    final promotions = await MockRepository.getActivePromotions();
+    final shops = await SupabaseRepository.getShops();
+    final promotions = await SupabaseRepository.getActivePromotions();
     setState(() {
       _shops = shops;
       _promotions = promotions;
       _isLoading = false;
     });
-  }
-
-  // --- Move map to current location (mock) ---
-  void _goToMyLocation() {
-    _mapController.move(
-      LatLng(AppConstants.defaultLatitude, AppConstants.defaultLongitude),
-      AppConstants.defaultZoom,
-    );
   }
 
   @override
@@ -77,12 +68,10 @@ class _MapScreenState extends State<MapScreen> {
                   right: 16,
                   child: Column(
                     children: [
-                      _MapButton(
+_MapButton(
   icon: Icons.layers_outlined,
   onTap: () => AppHelpers.showComingSoon(context, 'Map layers'),
 ),
-                      const Gap(8),
-                      _MapButton(icon: Icons.layers_outlined, onTap: () {}),
                     ],
                   ),
                 ),
@@ -112,7 +101,7 @@ class _MapScreenState extends State<MapScreen> {
         // --- Map Tiles ---
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.giftanusav.app',
+          userAgentPackageName: 'com.anusav.app',
         ),
 
         // --- Markers ---
@@ -210,10 +199,12 @@ class _MapScreenState extends State<MapScreen> {
       minChildSize: 0.15,
       maxChildSize: 0.85,
       builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+return Container(
+  decoration: BoxDecoration(
+    color: isDark ? AppColors.surfaceDark : AppColors.white,
+    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black12,
@@ -232,10 +223,10 @@ class _MapScreenState extends State<MapScreen> {
                   margin: const EdgeInsets.only(top: 12, bottom: 16),
                   width: 40,
                   height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.grey400,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+decoration: BoxDecoration(
+  color: isDark ? AppColors.grey600 : AppColors.grey400,
+  borderRadius: BorderRadius.circular(2),
+),
                 ),
               ),
 
@@ -255,9 +246,9 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => context.go('/promotions'),
+                        onPressed: () => context.push('/promotions'),
                         child: Text(
-                          'View All',
+                          '         All',
                           style: AppTextStyles.labelMedium.copyWith(
                             color: AppColors.primary,
                           ),
@@ -278,7 +269,7 @@ class _MapScreenState extends State<MapScreen> {
                       horizontal: AppConstants.defaultPadding,
                     ),
                     itemCount: _promotions.length,
-                    separatorBuilder: (_, _) => const Gap(12),
+                    separatorBuilder: (_, __) => const Gap(12),
                     itemBuilder: (context, index) {
                       return _PromotionCard(
                         promotion: _promotions[index],
@@ -306,7 +297,7 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => context.go('/nearby'),
+                      onTap: () => context.push('/nearby'),
                       child: Text(
                         '${_shops.length} Shops found',
                         style: AppTextStyles.labelMedium.copyWith(
@@ -329,7 +320,7 @@ class _MapScreenState extends State<MapScreen> {
                   horizontal: AppConstants.defaultPadding,
                 ),
                 itemCount: _shops.length,
-                separatorBuilder: (_, _) => const Gap(12),
+                separatorBuilder: (_, __) => const Gap(12),
                 itemBuilder: (context, index) {
                   return ShopCard(shop: _shops[index]);
                 },

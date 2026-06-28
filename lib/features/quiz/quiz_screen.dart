@@ -6,7 +6,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
 import '../../models/product_model.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -16,19 +16,28 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  @override
-void initState() {
-  super.initState();
-  _loadProducts();
-}
+  final ScrollController _scrollController = ScrollController();
 
-Future<void> _loadProducts() async {
-  final products = await MockRepository.getProducts();
-  setState(() {
-    _allProducts = products;
-    _productsLoaded = true;
-  });
-}
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProducts() async {
+    final products = await SupabaseRepository.getProducts();
+    setState(() {
+      _allProducts = products;
+      _productsLoaded = true;
+    });
+  }
+
   // --- State ---
   int _currentStep = 0;
   String? _selectedRecipient;
@@ -142,431 +151,451 @@ final List<Map<String, String>> _preferences = [
   static const int _totalSteps = 5;
 
 @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: AppColors.backgroundLight,
-    body: SafeArea(
-      child: Column(
-        children: [
-          // --- Progress Bar ---
-          _buildProgressBar(),
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-          // --- Content ---
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppConstants.defaultPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // --- Header ---
-                  _buildHeader(),
-                  const Gap(16),
-
-                  // --- Step content ---
-                  if (_currentStep == 0) _buildStep1(),
-                  if (_currentStep == 1) _buildStep2(),
-                  if (_currentStep == 2) _buildStep3(),
-                  if (_currentStep == 3) _buildStep4(),
-                  if (_currentStep == 4) _buildResults(),
-
-                  const Gap(32),
-                ],
-              ),
-            ),
-          ),
-
-          // --- Bottom Buttons ---
-          if (_currentStep < 4) _buildBottomButtons(),
-        ],
-      ),
-    ),
-  );
-}
-
-  // --- Step 1 ---
-Widget _buildStep1() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildStepLabel(1),
-      const Gap(12),
-      Text(
-        'Who are you buying for?',
-        style: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      const Gap(8),
-      Text(
-        'Select the lucky recipient to personalize your Anusav experience.',
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-        textAlign: TextAlign.center,
-      ),
-      const Gap(24),
-      _buildOptionsGrid(_recipients, _selectedRecipient, (val) {
-        setState(() => _selectedRecipient = val);
-      }),
-      const Gap(24),
-      _buildVibeSection(),
-    ],
-  );
-}
-
-// --- Step 2 ---
-Widget _buildStep2() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildStepLabel(2),
-      const Gap(12),
-      Text(
-        'What is your budget?',
-        style: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      const Gap(8),
-      Text(
-        'Choose a budget range to find the perfect gift.',
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-        textAlign: TextAlign.center,
-      ),
-      const Gap(24),
-      _buildOptionsGrid(_budgets, _selectedBudget, (val) {
-        setState(() => _selectedBudget = val);
-      }),
-    ],
-  );
-}
-
-// --- Step 3 ---
-Widget _buildStep3() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildStepLabel(3),
-      const Gap(12),
-      Text(
-        'What is the occasion?',
-        style: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      const Gap(8),
-      Text(
-        'Pick the occasion to find the most meaningful gift.',
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-        textAlign: TextAlign.center,
-      ),
-      const Gap(24),
-      _buildOptionsGrid(_occasions, _selectedOccasion, (val) {
-        setState(() => _selectedOccasion = val);
-      }),
-    ],
-  );
-}
-Widget _buildStep4() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildStepLabel(4),
-      const Gap(12),
-      Text(
-        'Any gift preferences?',
-        style: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      const Gap(8),
-      Text(
-        'Select a category that resonates with their style.',
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-        textAlign: TextAlign.center,
-      ),
-      const Gap(24),
-      _buildOptionsGrid(_preferences, _selectedPreference, (val) {
-        setState(() => _selectedPreference = val);
-      }),
-    ],
-  );
-}
-
-Widget _buildResults() {
-  if (!_productsLoaded) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(40),
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  final matched = _getMatchedProducts();
-  final topMatch = matched.isNotEmpty ? matched.first : null;
-  final others = matched.length > 1 ? matched.sublist(1, matched.length > 4 ? 4 : matched.length) : [];
-
-  const khrRate = 4000;
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Gap(16),
-
-      // --- Title ---
-      Text(
-        'Handpicked for You',
-        style: AppTextStyles.headlineMedium.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      const Gap(8),
-      Text(
-        'Based on your love for $_selectedPreference and ${_selectedOccasion?.toLowerCase()} gifts.',
-        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey600),
-        textAlign: TextAlign.center,
-      ),
-
-      const Gap(20),
-
-      // --- Top Match Card ---
-      if (topMatch != null) ...[
-        Stack(
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
-              child: CachedNetworkImage(
-                imageUrl: topMatch.imageUrl,
-                height: 220,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  height: 220,
-                  color: AppColors.grey200,
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: 220,
-                  color: AppColors.grey200,
-                  child: const Icon(Icons.image, color: AppColors.grey400),
-                ),
-              ),
-            ),
-            // Top Match badge
-            Positioned(
-              top: 12,
-              left: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.gold,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+            // --- Progress Bar ---
+            _buildProgressBar(),
+
+            // --- Content ---
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.star, size: 14, color: AppColors.white),
-                    const Gap(4),
-                    Text(
-                      'TOP MATCH',
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
-                    ),
+                    // --- Header ---
+                    _buildHeader(isDark),
+                    const Gap(16),
+
+                    // --- Step content ---
+                    if (_currentStep == 0) _buildStep1(isDark),
+                    if (_currentStep == 1) _buildStep2(isDark),
+                    if (_currentStep == 2) _buildStep3(isDark),
+                    if (_currentStep == 3) _buildStep4(isDark),
+                    if (_currentStep == 4) _buildResults(isDark),
+
+                    const Gap(32),
                   ],
                 ),
               ),
             ),
+
+            // --- Bottom Buttons ---
+            if (_currentStep < 4) _buildBottomButtons(isDark),
           ],
         ),
+      ),
+    );
+  }
 
+  // --- Step 1 ---
+  Widget _buildStep1(bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStepLabel(1),
         const Gap(12),
+        Text(
+          'Who are you buying for?',
+          style: AppTextStyles.headlineMedium.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Text(
+          'Select the lucky recipient to personalize your Anusav experience.',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Gap(24),
+        _buildOptionsGrid(_recipients, _selectedRecipient, (val) {
+          setState(() => _selectedRecipient = val);
+        }),
+        const Gap(24),
+        _buildVibeSection(isDark),
+      ],
+    );
+  }
 
-        // Name + price row
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    topMatch.name,
-                    style: AppTextStyles.titleLarge.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+  // --- Step 2 ---
+  Widget _buildStep2(bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStepLabel(2),
+        const Gap(12),
+        Text(
+          'What is your budget?',
+          style: AppTextStyles.headlineMedium.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Text(
+          'Choose a budget range to find the perfect gift.',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Gap(24),
+        _buildOptionsGrid(_budgets, _selectedBudget, (val) {
+          setState(() => _selectedBudget = val);
+        }),
+      ],
+    );
+  }
+
+  // --- Step 3 ---
+  Widget _buildStep3(bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStepLabel(3),
+        const Gap(12),
+        Text(
+          'What is the occasion?',
+          style: AppTextStyles.headlineMedium.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Text(
+          'Pick the occasion to find the most meaningful gift.',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Gap(24),
+        _buildOptionsGrid(_occasions, _selectedOccasion, (val) {
+          setState(() => _selectedOccasion = val);
+        }),
+      ],
+    );
+  }
+  Widget _buildStep4(bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStepLabel(4),
+        const Gap(12),
+        Text(
+          'Any gift preferences?',
+          style: AppTextStyles.headlineMedium.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Text(
+          'Select a category that resonates with their style.',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Gap(24),
+        _buildOptionsGrid(_preferences, _selectedPreference, (val) {
+          setState(() => _selectedPreference = val);
+        }),
+      ],
+    );
+  }
+
+  Widget _buildResults(bool isDark) {
+    if (!_productsLoaded) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    final matched = _getMatchedProducts();
+    final topMatch = matched.isNotEmpty ? matched.first : null;
+    final others = matched.length > 1 ? matched.sublist(1, matched.length > 4 ? 4 : matched.length) : [];
+
+    const khrRate = 4000;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Gap(16),
+
+        // --- Title ---
+        Text(
+          'Handpicked for You',
+          style: AppTextStyles.headlineMedium.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Text(
+          'Based on your love for $_selectedPreference and ${_selectedOccasion?.toLowerCase()} gifts.',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600
+          ),
+          textAlign: TextAlign.center,
+        ),
+
+        const Gap(20),
+
+        // --- Top Match Card ---
+        if (topMatch != null) ...[
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+                child: CachedNetworkImage(
+                  imageUrl: topMatch.imageUrl,
+                  height: 220,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    height: 220,
+                    color: isDark ? AppColors.grey800 : AppColors.grey200,
                   ),
-                  const Gap(4),
-                  Row(
+                  errorWidget: (context, url, error) => Container(
+                    height: 220,
+                    color: isDark ? AppColors.grey800 : AppColors.grey200,
+                    child: const Icon(Icons.image, color: AppColors.grey400),
+                  ),
+                ),
+              ),
+              // Top Match badge
+              Positioned(
+                top: 12,
+                left: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star, size: 14, color: AppColors.gold),
+                      const Icon(Icons.star, size: 14, color: AppColors.white),
                       const Gap(4),
                       Text(
-                        topMatch.rating.toString(),
-                        style: AppTextStyles.labelMedium.copyWith(
+                        'TOP MATCH',
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: AppColors.white,
                           fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const Gap(4),
-                      Text(
-                        '(${topMatch.reviewCount} reviews)',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.grey600,
+                          letterSpacing: 1,
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
+            ],
+          ),
+
+          const Gap(12),
+
+          // Name + price row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      topMatch.name,
+                      style: AppTextStyles.titleLarge.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                      ),
+                    ),
+                    const Gap(4),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 14, color: AppColors.gold),
+                        const Gap(4),
+                        Text(
+                          topMatch.rating.toString(),
+                          style: AppTextStyles.labelMedium.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                          ),
+                        ),
+                        const Gap(4),
+                        Text(
+                          '(${topMatch.reviewCount} reviews)',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '\$${topMatch.price.toStringAsFixed(2)}',
+                    style: AppTextStyles.titleLarge.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    '${(topMatch.price * khrRate).toInt()} KHR',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
+                    ),
+                  ),
                 ],
               ),
+            ],
+          ),
+
+          const Gap(12),
+
+          // Why it's a match box
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.surfaceDark : AppColors.grey100,
+              borderRadius: BorderRadius.circular(8),
+              border: const Border(
+                left: BorderSide(color: AppColors.gold, width: 3),
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '\$${topMatch.price.toStringAsFixed(2)}',
-                  style: AppTextStyles.titleLarge.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
+                  'WHY IT\'S A MATCH',
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: AppColors.goldDark,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
                   ),
                 ),
+                const Gap(6),
                 Text(
-                  '${(topMatch.price * khrRate).toInt()} KHR',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.grey600,
+                  '"Perfect for your $_selectedBudget budget and expressed interest in $_selectedPreference for $_selectedOccasion."',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-
-        const Gap(12),
-
-        // Why it's a match box
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.grey100,
-            borderRadius: BorderRadius.circular(8),
-            border: const Border(
-              left: BorderSide(color: AppColors.gold, width: 3),
-            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'WHY IT\'S A MATCH',
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: AppColors.goldDark,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1,
-                ),
-              ),
-              const Gap(6),
-              Text(
-                '"Perfect for your $_selectedBudget budget and expressed interest in $_selectedPreference for $_selectedOccasion."',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textPrimaryLight,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ),
-        ),
 
-        const Gap(24),
-      ],
+          const Gap(24),
+        ],
 
-      // --- Other Recommendations ---
-      if (others.isNotEmpty) ...[
-        Text(
-          'OTHER RECOMMENDATIONS',
-          style: AppTextStyles.labelMedium.copyWith(
-            color: AppColors.grey600,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1,
-          ),
-        ),
-        const Gap(12),
-        ...others.map((product) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _RecommendationCard(
-                product: product,
-                khrRate: khrRate,
-              ),
-            )),
-      ],
-
-      const Gap(16),
-
-      // --- Retake Quiz ---
-      Center(
-        child: TextButton.icon(
-          onPressed: () {
-            setState(() {
-              _currentStep = 0;
-              _selectedRecipient = null;
-              _selectedBudget = null;
-              _selectedOccasion = null;
-              _selectedPreference = null;
-              _selectedVibe = null;
-            });
-          },
-          icon: const Icon(Icons.refresh, size: 18, color: AppColors.gold),
-          label: Text(
-            'Retake Quiz',
-            style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.goldDark,
+        // --- Other Recommendations ---
+        if (others.isNotEmpty) ...[
+          Text(
+            'OTHER RECOMMENDATIONS',
+            style: AppTextStyles.labelMedium.copyWith(
+              color: isDark ? AppColors.textSecondaryDark : AppColors.grey600,
               fontWeight: FontWeight.w700,
-              decoration: TextDecoration.underline,
+              letterSpacing: 1,
             ),
           ),
-        ),
-      ),
-
-      const Gap(8),
-
-      // --- Browse All Collections ---
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => context.go('/gifts'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Browse All Collections',
-                style: AppTextStyles.labelLarge.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w600,
+          const Gap(12),
+          ...others.map((product) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _RecommendationCard(
+                  product: product,
+                  khrRate: khrRate,
                 ),
+              )),
+        ],
+
+        const Gap(16),
+
+        // --- Retake Quiz ---
+        Center(
+          child: TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _currentStep = 0;
+                _selectedRecipient = null;
+                _selectedBudget = null;
+                _selectedOccasion = null;
+                _selectedPreference = null;
+                _selectedVibe = null;
+              });
+              _scrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            },
+            icon: const Icon(Icons.refresh, size: 18, color: AppColors.gold),
+            label: Text(
+              'Retake Quiz',
+              style: AppTextStyles.labelLarge.copyWith(
+                color: AppColors.goldDark,
+                fontWeight: FontWeight.w700,
+                decoration: TextDecoration.underline,
               ),
-              const Gap(8),
-              const Icon(Icons.arrow_forward, size: 18, color: AppColors.white),
-            ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
+
+        const Gap(8),
+
+        // --- Browse All Collections ---
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => context.go('/gifts'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Browse All Collections',
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Gap(8),
+                const Icon(Icons.arrow_forward, size: 18, color: AppColors.white),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
 // --- Step Label ---
 Widget _buildStepLabel(int step) {
@@ -628,16 +657,16 @@ List<Product> _getMatchedProducts() {
   }
 
   // --- Header (X + Title) ---
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Close button
         GestureDetector(
           onTap: () => context.go('/gifts'),
-          child: const Icon(
+          child: Icon(
             Icons.close,
-            color: AppColors.textPrimaryLight,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
             size: 24,
           ),
         ),
@@ -688,7 +717,7 @@ List<Product> _getMatchedProducts() {
 }
 
   // --- Vibe Section ---
-  Widget _buildVibeSection() {
+  Widget _buildVibeSection(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -696,7 +725,7 @@ List<Product> _getMatchedProducts() {
           'Select Your Vibe',
           style: AppTextStyles.titleLarge.copyWith(
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimaryLight,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
           ),
         ),
 
@@ -719,17 +748,17 @@ List<Product> _getMatchedProducts() {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.primary
-                        : AppColors.white,
+                        : (isDark ? AppColors.surfaceDark : AppColors.white),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected
                           ? AppColors.gold
-                          : AppColors.grey200,
+                          : (isDark ? AppColors.grey800 : AppColors.grey200),
                       width: isSelected ? 2.5 : 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withOpacity(0.06),
+                        color: AppColors.black.withValues(alpha: 0.06),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -739,7 +768,7 @@ List<Product> _getMatchedProducts() {
                     vibe['icon'] as IconData,
                     color: isSelected
                         ? AppColors.white
-                        : AppColors.grey600,
+                        : (isDark ? AppColors.textSecondaryDark : AppColors.grey600),
                     size: 24,
                   ),
                 ),
@@ -760,14 +789,14 @@ List<Product> _getMatchedProducts() {
 }
 
   // --- Bottom Buttons ---
-  Widget _buildBottomButtons() {
+  Widget _buildBottomButtons(bool isDark) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.06),
+            color: AppColors.black.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -786,16 +815,16 @@ List<Product> _getMatchedProducts() {
             },
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.arrow_back,
                   size: 18,
-                  color: AppColors.textPrimaryLight,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                 ),
                 const Gap(6),
                 Text(
                   'Back',
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.textPrimaryLight,
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                   ),
                 ),
               ],
@@ -819,7 +848,7 @@ List<Product> _getMatchedProducts() {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: AppColors.white,
-              disabledBackgroundColor: AppColors.primary.withOpacity(0.5),
+              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
               padding: const EdgeInsets.symmetric(
                 horizontal: 24,
                 vertical: 14,
@@ -879,7 +908,7 @@ class _OptionCard extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: AppColors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

@@ -1,4 +1,4 @@
-package com.example.gift_anusav
+package com.anusav.app
 
 import io.flutter.embedding.android.FlutterActivity
 

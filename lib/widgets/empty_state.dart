@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/constants.dart';
-import 'package:gift_anusav/widgets/custom_button.dart'; // Make sure the path matches your project
+// Make sure the path matches your project
 
 class EmptyState extends StatelessWidget {
   final IconData icon;
@@ -34,7 +34,7 @@ class EmptyState extends StatelessWidget {
               width: 96,
               height: 96,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(

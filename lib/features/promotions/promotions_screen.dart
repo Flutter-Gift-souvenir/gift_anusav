@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
-import '../../data/mock_repository.dart';
+import '../../data/supabase_repository.dart';
 import '../../models/promotion_model.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -29,7 +29,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   Future<void> _loadPromotions() async {
-    final promotions = await MockRepository.getPromotions();
+    final promotions = await SupabaseRepository.getPromotions();
     setState(() {
       _promotions = promotions;
       _isLoading = false;
@@ -39,11 +39,10 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   List<Promotion> get _activePromotions =>
       _promotions.where((p) => p.isActive).toList();
 
-  List<Promotion> get _expiringSoon =>
-      _activePromotions.where((p) {
-        final daysLeft = p.endDate.difference(DateTime.now()).inDays;
-        return daysLeft <= 30;
-      }).toList();
+  List<Promotion> get _expiringSoon => _activePromotions.where((p) {
+    final daysLeft = p.endDate.difference(DateTime.now()).inDays;
+    return daysLeft <= 30;
+  }).toList();
 
   void _copyCode(BuildContext context, String code) {
     Clipboard.setData(ClipboardData(text: code));
@@ -52,9 +51,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
         content: Text('Code "$code" copied!'),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(AppConstants.defaultPadding),
         duration: const Duration(seconds: 2),
       ),
@@ -63,21 +60,35 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       body: SafeArea(
         child: Column(
           children: [
             // --- Header ---
-            _buildHeader(context),
+            _buildHeader(context, isDark),
 
             // --- Content ---
             Expanded(
@@ -89,7 +100,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                       ),
                       children: [
                         // --- Active Coupons Banner ---
-                        _buildActiveCouponsBanner(),
+                        _buildActiveCouponsBanner(isDark),
 
                         const Gap(20),
 
@@ -106,7 +117,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         Text(
                           'Upcoming Occasions',
                           style: AppTextStyles.headlineSmall.copyWith(
-                            color: AppColors.textPrimaryLight,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -114,10 +127,16 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         const Gap(16),
 
                         // --- Promotion List ---
-                        ..._promotions.skip(1).map(
+                        ..._promotions
+                            .skip(1)
+                            .map(
                               (promo) => Padding(
                                 padding: const EdgeInsets.only(bottom: 16),
-                                child: _buildPromotionCard(context, promo),
+                                child: _buildPromotionCard(
+                                  context,
+                                  promo,
+                                  isDark,
+                                ),
                               ),
                             ),
 
@@ -127,7 +146,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         Text(
                           'Terms and conditions apply to all offers. Anusav reserves the right to modify promotions without prior notice.',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.grey600,
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : AppColors.grey600,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -143,31 +164,43 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   // --- Header ---
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, bool isDark) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios,
-              color: AppColors.textPrimaryLight,
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
             ),
-            onPressed: () => context.go('/map'),
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/gifts');
+              }
+            },
           ),
           Expanded(
             child: Text(
               'Special Offers',
               style: AppTextStyles.headlineMedium.copyWith(
-                color: AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const Icon(
+          Icon(
             Icons.shopping_bag_outlined,
-            color: AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           const Gap(8),
         ],
@@ -176,13 +209,15 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   // --- Active Coupons Banner ---
-  Widget _buildActiveCouponsBanner() {
+  Widget _buildActiveCouponsBanner(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey200),
+        border: Border.all(
+          color: isDark ? AppColors.grey800 : AppColors.grey200,
+        ),
       ),
       child: Row(
         children: [
@@ -191,7 +226,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
+              color: AppColors.gold.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -212,6 +247,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                   '${_activePromotions.length} Active Coupons',
                   style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimaryLight,
                   ),
                 ),
                 if (_expiringSoon.isNotEmpty)
@@ -261,7 +299,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           image: NetworkImage(promo.imageUrl),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            AppColors.primary.withOpacity(0.7),
+            AppColors.primary.withValues(alpha: 0.7),
             BlendMode.srcOver,
           ),
         ),
@@ -304,7 +342,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           Text(
             promo.description,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.white.withOpacity(0.85),
+              color: AppColors.white.withValues(alpha: 0.85),
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -316,16 +354,11 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
           GestureDetector(
             onTap: () => _copyCode(context, promo.couponCode),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: AppColors.white.withOpacity(0.15),
+                color: AppColors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: AppColors.white.withOpacity(0.4),
-                ),
+                border: Border.all(color: AppColors.white.withValues(alpha: 0.4)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -338,11 +371,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                     ),
                   ),
                   const Gap(8),
-                  const Icon(
-                    Icons.copy,
-                    size: 16,
-                    color: AppColors.white,
-                  ),
+                  const Icon(Icons.copy, size: 16, color: AppColors.white),
                 ],
               ),
             ),
@@ -353,14 +382,18 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
   }
 
   // --- Promotion Card ---
-  Widget _buildPromotionCard(BuildContext context, Promotion promo) {
+  Widget _buildPromotionCard(
+    BuildContext context,
+    Promotion promo,
+    bool isDark,
+  ) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.surfaceDark : AppColors.white,
         borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
+            color: AppColors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -379,17 +412,12 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                height: 150,
-                color: AppColors.grey200,
-              ),
+              placeholder: (context, url) =>
+                  Container(height: 150, color: AppColors.grey200),
               errorWidget: (context, url, error) => Container(
                 height: 150,
                 color: AppColors.grey200,
-                child: const Icon(
-                  Icons.image,
-                  color: AppColors.grey400,
-                ),
+                child: const Icon(Icons.image, color: AppColors.grey400),
               ),
             ),
           ),
@@ -409,6 +437,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                         promo.title,
                         style: AppTextStyles.titleMedium.copyWith(
                           fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimaryLight,
                         ),
                       ),
                     ),
@@ -428,7 +459,9 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                 Text(
                   promo.description,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.grey600,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.grey600,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -439,16 +472,20 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                 // Expiry date
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.calendar_today_outlined,
                       size: 12,
-                      color: AppColors.grey600,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.grey600,
                     ),
                     const Gap(4),
                     Text(
                       'Exp: ${_formatDate(promo.endDate)}',
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.grey600,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.grey600,
                       ),
                     ),
                   ],
@@ -463,10 +500,7 @@ class _PromotionsScreenState extends State<PromotionsScreen> {
                     onPressed: () => _copyCode(context, promo.couponCode),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.gold,
-                      side: const BorderSide(
-                        color: AppColors.gold,
-                        width: 1.5,
-                      ),
+                      side: const BorderSide(color: AppColors.gold, width: 1.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
