@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart'; 
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../utils/constants.dart';
@@ -17,6 +19,15 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isLoading = true;
+  bool _isUploadingPhoto = false; 
+
+
+  String? _avatarUrl;
+
+
+  File? _pickedImageFile;
+
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -24,7 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _simulateLoad();
   }
 
-Future<void> _simulateLoad() async {
+  Future<void> _simulateLoad() async {
     try {
       final profile = await AuthService.getProfile();
       if (profile != null && mounted) {
@@ -33,6 +44,7 @@ Future<void> _simulateLoad() async {
           _phoneController.text = profile['phone'] ?? '';
           _birthdayController.text = profile['birthday'] ?? '';
           _selectedGender = profile['gender'] ?? 'Female';
+          _avatarUrl = profile['avatar_url']; 
         });
       }
     } catch (e) {
@@ -58,6 +70,46 @@ Future<void> _simulateLoad() async {
     _phoneController.dispose();
     _birthdayController.dispose();
     super.dispose();
+  }
+
+
+  Future<void> _pickAndUploadAvatar() async {
+    try {
+
+      final XFile? picked = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (picked == null) return;
+
+      final file = File(picked.path);
+
+
+      setState(() {
+        _pickedImageFile = file;
+        _isUploadingPhoto = true;
+      });
+
+      final newUrl = await AuthService.uploadAvatar(file);
+
+      if (!mounted) return;
+      setState(() {
+        _avatarUrl = newUrl;
+        _isUploadingPhoto = false;
+      });
+      AppHelpers.showSnackBar(context, 'Profile photo updated!');
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isUploadingPhoto = false;
+        _pickedImageFile = null; 
+      });
+      debugPrint('🔴 Avatar upload error: $e'); 
+      AppHelpers.showSnackBar(context, 'Could not update photo. Try again.');
+    }
   }
 
   // --- Date Picker ---
@@ -96,7 +148,7 @@ Future<void> _simulateLoad() async {
     }
   }
 
-Future<void> _saveChanges() async {
+  Future<void> _saveChanges() async {
     final email = _emailController.text.trim();
 
     if (email.isNotEmpty) {
@@ -194,30 +246,35 @@ Future<void> _saveChanges() async {
                                   ),
                                 ),
                                 child: ClipOval(
-                                  child: Image.network(
-                                    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200',
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Container(
-                                      color: AppColors.grey200,
-                                      child: const Icon(
-                                        Icons.person,
-                                        size: 56,
-                                        color: AppColors.grey400,
+                                  child: _buildAvatarImage(),
+                                ),
+                              ),
+                              if (_isUploadingPhoto)
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black26,
+                                    ),
+                                    child: const Center(
+                                      child: SizedBox(
+                                        width: 28,
+                                        height: 28,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.5,
+                                          color: AppColors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
                               Positioned(
                                 bottom: 0,
                                 right: 0,
                                 child: GestureDetector(
-                                  onTap: () => AppHelpers.showComingSoon(
-                                    context,
-                                    'Photo upload',
-                                  ),
+                                  onTap: _isUploadingPhoto
+                                      ? null
+                                      : _pickAndUploadAvatar,
                                   child: Container(
                                     width: 36,
                                     height: 36,
@@ -399,6 +456,35 @@ Future<void> _saveChanges() async {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+
+  Widget _buildAvatarImage() {
+    if (_pickedImageFile != null) {
+      return Image.file(_pickedImageFile!, fit: BoxFit.cover);
+    }
+    if (_avatarUrl != null && _avatarUrl!.isNotEmpty) {
+      return Image.network(
+        _avatarUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: AppColors.grey200,
+          child: const Icon(
+            Icons.person,
+            size: 56,
+            color: AppColors.grey400,
+          ),
+        ),
+      );
+    }
+    return Container(
+      color: AppColors.grey200,
+      child: const Icon(
+        Icons.person,
+        size: 56,
+        color: AppColors.grey400,
       ),
     );
   }

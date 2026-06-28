@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -137,6 +138,7 @@ class AuthService {
     String? phone,
     String? birthday,
     String? gender,
+    String? avatarUrl, 
   }) async {
     final userId = currentUser?.id;
 
@@ -153,12 +155,40 @@ class AuthService {
       if (phone != null) updates['phone'] = phone;
       if (birthday != null) updates['birthday'] = birthday;
       if (gender != null) updates['gender'] = gender;
+      if (avatarUrl != null) updates['avatar_url'] = avatarUrl; 
 
       await _supabase.from('profiles').upsert(updates);
     } catch (e) {
       rethrow;
     }
-  } // <-- This brace was missing, closing updateProfile method cleanly!
+  }
+
+  static Future<String> uploadAvatar(File imageFile) async {
+    final userId = currentUser?.id;
+    if (userId == null) {
+      throw Exception('You must be logged in to update your profile photo.');
+    }
+
+    
+    final ext = imageFile.path.split('.').last.toLowerCase();
+    final safeExt = ext.length <= 5 ? ext : 'jpg';
+    final path = '$userId/avatar.$safeExt';
+
+
+    await _supabase.storage.from('avatars').upload(
+          path,
+          imageFile,
+          fileOptions: const FileOptions(upsert: true),
+        );
+
+
+    final baseUrl = _supabase.storage.from('avatars').getPublicUrl(path);
+    final publicUrl = '$baseUrl?updated=${DateTime.now().millisecondsSinceEpoch}';
+
+    await updateProfile(avatarUrl: publicUrl);
+
+    return publicUrl;
+  }
 
   // --- Auth state stream ---
   static Stream<AuthState> get authStateChanges =>
