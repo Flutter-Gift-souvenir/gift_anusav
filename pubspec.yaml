@@ -48,6 +48,9 @@ dependencies:
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.1.1
 
+  # Media Picking (profile photo upload)
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

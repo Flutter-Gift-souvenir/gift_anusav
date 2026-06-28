@@ -20,15 +20,36 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isLoading = true;
 
+
+  String _fullName = '';
+  String _email = '';
+  String? _avatarUrl;
+
   @override
   void initState() {
     super.initState();
-    _simulateLoad();
+    _loadProfile();
   }
 
-  Future<void> _simulateLoad() async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (mounted) setState(() => _isLoading = false);
+
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await AuthService.getProfile();
+      final user = AuthService.currentUser;
+      if (mounted) {
+        setState(() {
+          _fullName = (profile?['full_name'] as String?)?.trim().isNotEmpty == true
+              ? profile!['full_name']
+              : (user?.email?.split('@').first ?? 'Guest');
+          _email = user?.email ?? '';
+          _avatarUrl = profile?['avatar_url'];
+        });
+      }
+    } catch (e) {
+      // silently fail — fields stay at their defaults
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -65,19 +86,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ),
                               child: ClipOval(
-                                child: Image.network(
-                                  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                    color: AppColors.grey200,
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 48,
-                                      color: AppColors.grey400,
-                                    ),
-                                  ),
-                                ),
+
+                                child: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                                    ? Image.network(
+                                        _avatarUrl!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) =>
+                                            Container(
+                                          color: AppColors.grey200,
+                                          child: const Icon(
+                                            Icons.person,
+                                            size: 48,
+                                            color: AppColors.grey400,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        color: AppColors.grey200,
+                                        child: const Icon(
+                                          Icons.person,
+                                          size: 48,
+                                          color: AppColors.grey400,
+                                        ),
+                                      ),
                               ),
                             ),
                             Positioned(
@@ -107,8 +138,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const Gap(12),
 
                         // Name
+                        // ← CHANGED: was hardcoded 'Sopheak Vuthy'
                         Text(
-                          'Sopheak Vuthy',
+                          _fullName,
                           style: AppTextStyles.titleLarge.copyWith(
                             fontWeight: FontWeight.w700,
                             color: isDark
@@ -118,8 +150,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
 
                         // Email
+                        // ← CHANGED: was hardcoded 'sopheak.v@anusav.com'
                         Text(
-                          'sopheak.v@anusav.com',
+                          _email,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.grey600,
                           ),
@@ -129,7 +162,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Edit Profile
                         GestureDetector(
-                          onTap: () => context.push('/edit-profile'),
+
+                          onTap: () async {
+                            await context.push('/edit-profile');
+                            if (mounted) _loadProfile();
+                          },
                           child: Text(
                             'Edit Profile',
                             style: AppTextStyles.labelMedium.copyWith(
@@ -315,10 +352,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
-  Navigator.pop(context); // close dialog
-  await AuthService.signOut(); // sign out from Supabase
-  if (context.mounted) context.go('/onboarding');
-},
+              Navigator.pop(context); // close dialog
+              await AuthService.signOut(); // sign out from Supabase
+              if (context.mounted) context.go('/onboarding');
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error,
               foregroundColor: AppColors.white,
